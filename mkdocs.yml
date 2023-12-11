@@ -1,11 +1,11 @@
 docs_dir: docs
 
-site_name: simulify
+site_name: simlify
 site_author: OASCI
 
 # Git host
-repo_name: oasci/software/simulify
-repo_url: https://gitlab.com/oasci/software/simulify
+repo_name: oasci/software/simlify
+repo_url: https://gitlab.com/oasci/software/simlify
 edit_uri: -/edit/main/study
 
 # https://squidfunk.github.io/mkdocs-material/
@@ -65,7 +65,7 @@ plugins:
   - mkdocstrings:
       handlers:
         python:
-          paths: ["simulify"]
+          paths: ["simlify"]
           options:
             annotations_path: brief
             docstring_style: google

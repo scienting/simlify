@@ -636,4 +636,4 @@ tests/tmp/*
 
 environment.yml
 
-!simulify/simulation/packages/*
+!simlify/simulation/packages/*

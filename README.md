@@ -1,8 +1,8 @@
-<h1 align="center">simulify</h1>
+<h1 align="center">simlify</h1>
 
 <h4 align="center">Simplify your molecular simulation workflow.</h4>
 
-Add information about simulify here.
+Add information about simlify here.
 
 ## Deploying
 

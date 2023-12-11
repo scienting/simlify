@@ -2,7 +2,7 @@ import os
 
 import pytest
 
-from simulify import enable_logging
+from simlify import enable_logging
 
 TEST_DIR = os.path.dirname(__file__)
 

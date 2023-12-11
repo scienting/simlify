@@ -8,7 +8,7 @@ from ast import literal_eval
 
 from loguru import logger
 
-logger.disable("simulify")
+logger.disable("simlify")
 
 LOG_FORMAT = (
     "<green>{time:HH:mm:ss}</green> | "
@@ -38,11 +38,11 @@ def enable_logging(
     # https://loguru.readthedocs.io/en/stable/api/logger.html#loguru._logger.Logger.configure
     logger.configure(**config)
 
-    logger.enable("simulify")
+    logger.enable("simlify")
 
 
-if literal_eval(os.environ.get("SIMULIFY_LOG", "False")):
-    level = int(os.environ.get("SIMULIFY_LOG_LEVEL", 20))
-    stdout = literal_eval(os.environ.get("SIMULIFY_STDOUT", "True"))
-    log_file_path = os.environ.get("SIMULIFY_LOG_FILE_PATH", None)
+if literal_eval(os.environ.get("simlify_LOG", "False")):
+    level = int(os.environ.get("simlify_LOG_LEVEL", 20))
+    stdout = literal_eval(os.environ.get("simlify_STDOUT", "True"))
+    log_file_path = os.environ.get("simlify_LOG_FILE_PATH", None)
     enable_logging(level, stdout, log_file_path)

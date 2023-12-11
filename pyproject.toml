@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "simulify"
+name = "simlify"
 version = "0.0.0"
 description = "Simplify your molecular simulation workflow."
 authors = [
@@ -48,7 +48,7 @@ mkdocs-gen-files = "^0.5.0"
 mkdocs-awesome-pages-plugin = "^2.9.2"
 
 [tool.poetry.scripts]
-simulify-validate-context = "simulify.simulation.contexts:cli_validate_yaml_context"
+simlify-validate-context = "simlify.simulation.contexts:cli_validate_yaml_context"
 
 [tool.bumpversion]
 current_version = "0.0.0"
@@ -144,7 +144,7 @@ warn_unused_ignores = true
 
 [tool.pytest.ini_options]
 norecursedirs = [
-    "simulify",
+    "simlify",
     "*.egg",
     ".eggs",
     "dist",
@@ -179,7 +179,7 @@ requires = [
 build-backend = "poetry_dynamic_versioning.backend"
 
 [coverage.paths]
-source = "simulify"
+source = "simlify"
 
 [coverage.run]
 branch = true

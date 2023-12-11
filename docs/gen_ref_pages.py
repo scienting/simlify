@@ -5,7 +5,7 @@ from pathlib import Path
 
 import mkdocs_gen_files
 
-src = Path(__file__).parent.parent / "simulify"
+src = Path(__file__).parent.parent / "simlify"
 write_dir = "api"
 
 for path in sorted(src.rglob("*.py")):
@@ -21,7 +21,7 @@ for path in sorted(src.rglob("*.py")):
         continue
 
     if len(parts) == 0:
-        parts = ("simulify",)
+        parts = ("simlify",)
 
     with mkdocs_gen_files.open(full_doc_path, "w") as fd:
         identifier = ".".join(parts)
