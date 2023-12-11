@@ -69,6 +69,10 @@ plugins:
           options:
             annotations_path: brief
             docstring_style: google
+            docstring_section_style: spacy
+            show_if_no_docstring: true
+            show_docstring_examples: true
+            show_docstring_raises: true
   - awesome-pages:
         collapse_single_pages: true
         strict: false
