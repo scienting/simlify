@@ -635,3 +635,5 @@ tests/tmp/*
 !tests/tmp/.gitkeep
 
 environment.yml
+
+!simulify/simulation/packages/*
