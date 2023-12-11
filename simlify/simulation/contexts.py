@@ -14,7 +14,9 @@ class SimulationContextManager:
     """Contexts for setting up molecular simulations."""
 
     # pylint: disable-next=too-many-statements
-    def __init__(self, yaml_paths: str | Iterable[str] | None = None, **kwargs: dict[str, Any]) -> None:
+    def __init__(
+        self, yaml_paths: str | Iterable[str] | None = None, **kwargs: dict[str, Any]
+    ) -> None:
         """
         Args:
             yaml_paths: Path(s) to YAML file(s) to load into the context.
