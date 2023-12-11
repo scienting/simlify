@@ -1,12 +1,12 @@
 """Simplify your molecular simulation workflow."""
 
+from typing import Any
+
 import os
 import sys
 from ast import literal_eval
 
 from loguru import logger
-
-from typing import Any
 
 logger.disable("simulify")
 

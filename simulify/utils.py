@@ -2,6 +2,7 @@ import importlib
 
 from loguru import logger
 
+
 def get_obj_from_string(import_string: str) -> object:
     """Retrieves an object based on an import string and object name.
 
