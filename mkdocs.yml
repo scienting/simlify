@@ -1,11 +1,12 @@
 docs_dir: docs
 
 site_name: simulify
-site_author: oasci
+site_author: OASCI
 
 # Git host
 repo_name: oasci/software/simulify
 repo_url: https://gitlab.com/oasci/software/simulify
+edit_uri: -/edit/main/study
 
 # https://squidfunk.github.io/mkdocs-material/
 theme:
@@ -68,6 +69,12 @@ plugins:
           options:
             annotations_path: brief
             docstring_style: google
+  - awesome-pages:
+        collapse_single_pages: true
+        strict: false
+        order: asc
+        sort_type: natural
+        order_by: title
 
 extra:
   generator: false
