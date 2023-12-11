@@ -19,7 +19,7 @@ for path in sorted(src.rglob("*.py")):
         continue
 
     if len(parts) == 0:
-        continue
+        parts = ("simulify",)
 
     with mkdocs_gen_files.open(full_doc_path, "w") as fd:
         identifier = ".".join(parts)
