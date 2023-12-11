@@ -47,6 +47,9 @@ mkdocstrings-python = "^1.7.3"
 mkdocs-gen-files = "^0.5.0"
 mkdocs-awesome-pages-plugin = "^2.9.2"
 
+[tool.poetry.scripts]
+simulify-validate-context = "simulify.simulation.contexts:cli_validate_yaml_context"
+
 [tool.bumpversion]
 current_version = "0.0.0"
 tag = true
