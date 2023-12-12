@@ -85,7 +85,7 @@ class SimPrep(ABC):
 
         **Notes:**
 
-        [`prepare_context`][simulation.amber.run.AmberSimPrep.prepare_context]
+        [`prepare_context`][simulation.amber.prep.AmberSimPrep.prepare_context]
         should be ran before this.
         """
         raise NotImplementedError
@@ -128,8 +128,8 @@ def run_simulation_slurm_prep(
         path_run: Local path to write a run script.
         path_slurm: Local path to write a slurm submission script.
         prep_class_string: Import string to a simulation preparation class. For example,
-            [`"simlify.simulation.amber.run.AmberSimPrep"`]
-            [simulation.amber.run.AmberSimPrep].
+            [`"simlify.simulation.amber.prep.AmberSimPrep"`]
+            [simulation.amber.prep.AmberSimPrep].
         sim_context_manager: Context manager for simulations.
     """
     sim_context_manager.dir_write = dir_write

@@ -78,7 +78,7 @@ class AmberSimPrep(SimPrep):
 
         **Notes:**
 
-        [`prepare_context`][simulation.amber.run.AmberSimPrep.prepare_context]
+        [`prepare_context`][simulation.amber.prep.AmberSimPrep.prepare_context]
         should be ran before this.
 
         **Uses:**
@@ -183,7 +183,7 @@ class AmberSimPrep(SimPrep):
 
         **Notes:**
 
-        [`prepare_context`][simulation.amber.run.AmberSimPrep.prepare_context]
+        [`prepare_context`][simulation.amber.prep.AmberSimPrep.prepare_context]
         should be ran before this.
         """
         if run_commands is None:
