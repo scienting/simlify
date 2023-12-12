@@ -5,7 +5,7 @@ from collections.abc import Iterable
 
 from loguru import logger
 
-from ...contexts import ContextValidator
+from ..contexts import ContextValidator
 
 AMBER_PROTEIN_STANDARD_CONTEXT = {
     "charge_anion_extra": 0,
