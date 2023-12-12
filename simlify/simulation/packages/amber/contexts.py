@@ -91,8 +91,8 @@ class AmberContextValidator(ContextValidator):
     def splits(value: Any, context: dict[str, Any]) -> bool:
         r"""Validate `splits`"""
         if value is not None:
-            if value > 1 and context["scratch_dir"] is None:
-                logger.error("scratch_dir must be set if splits > 1")
+            if value > 1 and context["dir_scratch"] is None:
+                logger.error("dir_scratch must be set if splits > 1")
                 return False
             if value >= 1000:
                 logger.error("splits cannot be larger than 999.")
