@@ -4,8 +4,8 @@ import os
 
 from loguru import logger
 
-from ...contexts import SimContextManager
-from ...prep import SimPrep
+from ..contexts import SimContextManager
+from ..prep import SimPrep
 from .contexts import AmberContextValidator
 
 
@@ -240,7 +240,7 @@ class AmberSimPrep(SimPrep):
             logger.debug("There is one stage.")
             n_stages = 1
 
-        run_commands = None
+        run_commands: list[str] = []
         for i_stage in range(1, n_stages + 1):
             logger.info("Preparing stage {}", i_stage - 1)
             sim_context_manager = cls.prepare_context(sim_context_manager)
