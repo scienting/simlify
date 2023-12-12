@@ -18,8 +18,6 @@ class TopoGen(ABC):
     def dry_run(  # pylint: disable=too-many-arguments
         cls,
         path_structure: str,
-        path_topo: str,
-        path_coord: str,
         sim_context_manager: SimContextManager,
         dir_work: str | None = None,
     ) -> dict[str, Any]:
@@ -27,8 +25,6 @@ class TopoGen(ABC):
 
         Args:
             path_structure: Path structure file for topology generation.
-            path_topo: Where to write topology file.
-            path_coord: Where to write coordinate file.
             sim_context_manager: Context manager for simulations.
             dir_work: Working directory to generate topology. Useful for
                 specifying relative paths.
