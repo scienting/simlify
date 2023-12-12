@@ -80,6 +80,8 @@ class SimContextManager:
         """Directory to be in when running the simulation."""
         self.dir_write: str | None = None
         """Local directory to write input files when running simulations."""
+        self.extra_lines_topo_gen: Iterable[str] | None = None
+        """Extra lines to include when generating a topology."""
         self.ff_dna: str | None = None
         """Molecular mechanics force fields for DNA."""
         self.ff_glycam: str | None = None
