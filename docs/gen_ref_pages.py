@@ -6,12 +6,12 @@ from pathlib import Path
 import mkdocs_gen_files
 
 src = Path(__file__).parent.parent / "simlify"
-write_dir = "api"
+dir_write = "api"
 
 for path in sorted(src.rglob("*.py")):
     module_path = path.relative_to(src).with_suffix("")
     doc_path = path.relative_to(src).with_suffix(".md")
-    full_doc_path = os.path.join(write_dir, doc_path)
+    full_doc_path = os.path.join(dir_write, doc_path)
     parts = tuple(module_path.parts)
 
     if parts[-1] == "__init__":
