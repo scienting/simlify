@@ -69,10 +69,12 @@ plugins:
           options:
             annotations_path: brief
             docstring_style: google
-            docstring_section_style: spacy
+            docstring_section_style: list
             show_if_no_docstring: true
+            show_docstring_yields: true
             show_docstring_examples: true
             show_docstring_raises: true
+            show_root_toc_entry: true
   - awesome-pages:
         collapse_single_pages: true
         strict: false
@@ -86,6 +88,7 @@ extra:
 extra_css:
   - css/base.css
   - css/colors.css
+  - css/mkdocstrings.css
 
 extra_javascript:
   - javascripts/mathjax.js
