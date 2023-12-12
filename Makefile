@@ -70,7 +70,7 @@ install:
 	- $(CONDA) mypy --install-types --non-interactive --explicit-package-bases $(PACKAGE_NAME)
 
 .PHONY: environment
-environment: conda-create from-conda-lock pre-commit-install install
+environment: conda-create nodejs-dependencies from-conda-lock pre-commit-install install
 
 .PHONY: locks
 locks: conda-create conda-setup conda-dependencies nodejs-dependencies conda-lock pre-commit-install poetry-lock install
