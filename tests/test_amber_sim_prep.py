@@ -1,4 +1,4 @@
-from simlify.simulation.packages.amber.prep import AmberSimPrep
+from simlify.simulation.amber.prep import AmberSimPrep
 
 
 class TestAmberSimPrep:

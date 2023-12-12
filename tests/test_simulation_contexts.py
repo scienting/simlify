@@ -1,4 +1,4 @@
-from simlify.simulation.packages.amber.contexts import AmberContextValidator
+from simlify.simulation.amber.contexts import AmberContextValidator
 
 
 class TestValidateContexts:

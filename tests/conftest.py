@@ -3,8 +3,8 @@ import os
 import pytest
 
 from simlify import enable_logging
+from simlify.simulation.amber.contexts import AMBER_PROTEIN_STANDARD_CONTEXT
 from simlify.simulation.contexts import SimContextManager
-from simlify.simulation.packages.amber.contexts import AMBER_PROTEIN_STANDARD_CONTEXT
 
 TEST_DIR = os.path.dirname(__file__)
 

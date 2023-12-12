@@ -128,8 +128,8 @@ def run_simulation_slurm_prep(
         path_run: Local path to write a run script.
         path_slurm: Local path to write a slurm submission script.
         prep_class_string: Import string to a simulation preparation class. For example,
-            [`"simlify.simulation.packages.amber.run.AmberSimPrep"`]
-            [simulation.packages.amber.run.AmberSimPrep].
+            [`"simlify.simulation.amber.run.AmberSimPrep"`]
+            [simulation.amber.run.AmberSimPrep].
         sim_context_manager: Context manager for simulations.
     """
     sim_context_manager.dir_write = dir_write
