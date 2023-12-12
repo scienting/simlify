@@ -10,7 +10,7 @@ from ..utils import get_obj_from_string
 
 
 # pylint: disable-next=too-many-instance-attributes
-class SimulationContextManager:
+class SimContextManager:
     """Contexts for setting up molecular simulations."""
 
     # pylint: disable-next=too-many-statements
@@ -24,9 +24,9 @@ class SimulationContextManager:
         # Default values in alphabetical order.
         self.charge_anion_extra: int = 0
         """Number of extra anions of type [`charge_anion_identity`]
-        [simulation.contexts.SimulationContextManager.charge_anion_identity] to add to
+        [simulation.contexts.SimContextManager.charge_anion_identity] to add to
         the system. This does not include any ions added if [`charge_neutralize`]
-        [simulation.contexts.SimulationContextManager.charge_neutralize] is `True`.
+        [simulation.contexts.SimContextManager.charge_neutralize] is `True`.
         """
         self.charge_anion_identity: str = "Cl-"
         """Many simulations include anions to either neutralize charge or prepare the
@@ -35,9 +35,9 @@ class SimulationContextManager:
         """
         self.charge_cation_extra: int = 0
         """Number of extra cations of type [`charge_cation_identity`]
-        [simulation.contexts.SimulationContextManager.charge_cation_identity] to add to the
+        [simulation.contexts.SimContextManager.charge_cation_identity] to add to the
         system. This does not include any ions added if [`charge_neutralize`]
-        [simulation.contexts.SimulationContextManager.charge_neutralize] is `True`.
+        [simulation.contexts.SimContextManager.charge_neutralize] is `True`.
         """
         self.charge_cation_identity: str = "Na+"
         """Many simulations include cations to either neutralize charge or prepare the
@@ -49,11 +49,11 @@ class SimulationContextManager:
         self.charge_neutralize: bool = True
         """Flag to determine if system charge should be neutralized by placing
         additional ions of type [`charge_cation_identity`]
-        [simulation.contexts.SimulationContextManager.charge_cation_identity]
+        [simulation.contexts.SimContextManager.charge_cation_identity]
         or [`charge_anion_identity`]
-        [simulation.contexts.SimulationContextManager.charge_anion_identity] based on
+        [simulation.contexts.SimContextManager.charge_anion_identity] based on
         the value of [`charge_net`]
-        [simulation.contexts.SimulationContextManager.charge_net]
+        [simulation.contexts.SimContextManager.charge_net]
         .
         """
         self.compute_platform: str = "mpi"
@@ -67,7 +67,7 @@ class SimulationContextManager:
         """
         self.cpu_cores: int | None = None
         """Number of CPU cores to use if [compute_platform]
-        [simulation.contexts.SimulationContextManager.compute_platform] is `mpi`."""
+        [simulation.contexts.SimContextManager.compute_platform] is `mpi`."""
         self.dir_input: str | None = None
         """Path to the directory that contains input files when running the simulation.
         """
@@ -153,7 +153,7 @@ class SimulationContextManager:
         """
         self.sbatch_lines: list[str] | None = None
         """Lines for a slurm submission script after [sbatch_options]
-        [simulation.contexts.SimulationContextManager.sbatch_options]
+        [simulation.contexts.SimContextManager.sbatch_options]
         """
         self.solvent_ionic_strength: float = 0.150
         """Ionic strength of the solvent in mole/L."""
@@ -239,7 +239,7 @@ class ContextValidator:
     # pylint: disable=unused-argument
 
     @classmethod
-    def validate(cls, context_manager: SimulationContextManager) -> bool:
+    def validate(cls, context_manager: SimContextManager) -> bool:
         """Validate contexts for simulations.
 
         Args:
@@ -280,8 +280,8 @@ class ContextValidator:
     def write(value: Any, context: dict[str, Any]) -> bool:
         """Validate `write`"""
         if value:
-            if context["write_dir"] is None:
-                logger.error("write_dir must be set if write is True")
+            if context["dir_write"] is None:
+                logger.error("dir_write must be set if write is True")
                 return False
         return True
 
@@ -322,7 +322,7 @@ def run_context_yaml_validator(
     """
     logger.info("Validating context built from {}", yaml_paths)
     validator_cls = get_obj_from_string(validator_obj_string)  # type: ignore
-    context_manager = SimulationContextManager(yaml_paths=yaml_paths)
+    context_manager = SimContextManager(yaml_paths=yaml_paths)
     is_valid: bool = validator_cls.validate(context_manager)  # type: ignore
     valid_string = "IS"
     if not is_valid:
