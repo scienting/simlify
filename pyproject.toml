@@ -49,6 +49,7 @@ mkdocs-awesome-pages-plugin = "^2.9.2"
 
 [tool.poetry.scripts]
 simlify-validate-context = "simlify.simulation.contexts:cli_validate_yaml_context"
+simlify-gen-topo = "simlify.simulation.topo:cli_run_gen_topo"
 
 [tool.bumpversion]
 current_version = "0.0.0"
