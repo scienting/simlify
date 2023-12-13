@@ -166,8 +166,6 @@ cleanup: pycache-remove dsstore-remove mypycache-remove ipynbcheckpoints-remove 
 
 ###   DOCS   ###
 
-###   MKDOCS   ###
-
 mkdocs_port := $(shell \
 	start_port=3000; \
 	max_attempts=100; \
@@ -197,3 +195,11 @@ docs:
 .PHONY: open-docs
 open-docs:
 	xdg-open public/index.html 2>/dev/null
+
+
+
+###   DATA   ###
+
+.PHONY: identifier
+identifier:
+	$(CONDA) python -c "import uuid; print(uuid.uuid4())"
