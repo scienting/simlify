@@ -33,6 +33,7 @@ conda-setup:
 # Conda-only packages specific to this project.
 .PHONY: conda-dependencies
 conda-dependencies:
+	$(CONDA) conda install -c conda-forge pandas
 	$(CONDA) conda install -c conda-forge ambertools
 	$(CONDA) conda install -c conda-forge openbabel
 

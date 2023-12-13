@@ -15,8 +15,8 @@ metadata:
   - url: conda-forge
     used_env_vars: []
   content_hash:
-    linux-64: 7fb30bd3476da6ff751e9b58e05df3f9541442855082097cee871029fff268a4
-    osx-64: 92059b3f9b242815db8bf1c09068e79590b2a0f45b1db3427a598dc8b910327a
+    linux-64: b04e1170d0d3fb0ad2b0c8c225900ce8ead16a4e8eb10c459a9c5c4ee8d2f6a0
+    osx-64: 340d559138c9330973efba8c483f6615151f709645e106be59e91c6747b3be57
   platforms:
   - linux-64
   - osx-64
