@@ -6,7 +6,7 @@ PACKAGE_PATH := $(PACKAGE_NAME)/
 TESTS_PATH := tests/
 CONDA_NAME := $(PACKAGE_NAME)-dev
 CONDA := conda run -n $(CONDA_NAME)
-CONDA_LOCK_OPTIONS := -p linux-64 -p osx-64 -p win-64 --channel conda-forge
+CONDA_LOCK_OPTIONS := -p linux-64 -p osx-64 --channel conda-forge
 
 
 ###   ENVIRONMENT   ###
@@ -33,7 +33,8 @@ conda-setup:
 # Conda-only packages specific to this project.
 .PHONY: conda-dependencies
 conda-dependencies:
-	echo "No conda-only packages are required."
+	$(CONDA) conda install -c conda-forge ambertools
+	$(CONDA) conda install -c conda-forge openbabel
 
 .PHONY: nodejs-dependencies
 nodejs-dependencies:
