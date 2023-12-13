@@ -153,7 +153,7 @@ class AmberTopoGen(TopoGen):
             # Total unperturbed charge:  -7.000000
             # Total perturbed charge:    -7.000000
             if "Total unperturbed charge:" in line:
-                tleap_info["system_charge"] = float(line.strip().split()[-1])
+                tleap_info["charge_net"] = float(line.strip().split()[-1])
 
         return tleap_info
 
@@ -327,7 +327,7 @@ class AmberTopoGen(TopoGen):
         cls._write_input(tleap_lines, tmp_input)
 
         completed_process = cls._run_tleap(tmp_input)
-        os.remove(tmp_input.name)  # Remove temporary input file.
+        # os.remove(tmp_input.name)  # Remove temporary input file.
 
         tleap_info = cls._parse_logs(completed_process.stdout.split("\n"))
 

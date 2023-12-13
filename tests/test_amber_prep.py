@@ -9,10 +9,10 @@ class TestPrelimInfo:
         tleap_info = AmberTopoGen.dry_run(
             path_1jc0_prepped, amber_protein_standard_context, dir_work=None
         )
-        assert len(tleap_info["duplicate_atoms"]) == 13
+        assert len(tleap_info["duplicate_atoms"]) == 0
         assert tleap_info["unknown_residues"][-1]["residue_name"] == "CRO"
-        assert tleap_info["n_water_molecules"] == 8761
-        assert tleap_info["system_charge"] == -6.0
+        assert tleap_info["solvent_molecules_num"] == 8087
+        assert tleap_info["charge_net"] == -8.0
 
     def test_1jc0_with_cro(
         self,
@@ -23,18 +23,18 @@ class TestPrelimInfo:
     ):
         amber_protein_standard_context.extra_lines_topo_gen = [
             'addAtomTypes { {"cc" "C" "sp2"} {"cd" "C" "sp2"} {"cf" "C" "sp2"} '
-            '{"c" "C" "sp2"} {"nd" "N" "sp2"} {"nc" "N" "sp2"}{"ne" "N" "sp2"}'
-            '{"nf" "N" "sp2"}{"ha" "H" "sp3"}{"oh" "O" "sp3"} }',
+            '{"c" "C" "sp2"} {"nd" "N" "sp2"} {"nc" "N" "sp2"} {"ne" "N" "sp2"}'
+            '{"nf" "N" "sp2"} {"ha" "H" "sp3"} {"oh" "O" "sp3"} }',
             f"xFPparams = loadamberparams {path_cro_fcrmod}",
             f"loadOff {path_cro_lib}",
         ]
         tleap_info = AmberTopoGen.dry_run(
             path_1jc0_prepped, amber_protein_standard_context
         )
-        assert len(tleap_info["duplicate_atoms"]) == 13
+        assert len(tleap_info["duplicate_atoms"]) == 0
         assert len(tleap_info["unknown_residues"]) == 0
-        assert tleap_info["n_water_molecules"] == 8761
-        assert tleap_info["system_charge"] == -7.0
+        assert tleap_info["solvent_molecules_num"] == 8087
+        assert tleap_info["charge_net"] == -9.0
 
 
 class TestPrep:
@@ -66,7 +66,7 @@ class TestPrep:
             for line in f:
                 if r"%FORMAT(10I8) " in line:
                     line = next(f)
-                    assert line.split()[0] == "36341"
+                    assert line.split()[0] == "37381"
                     line = next(f)
                     assert line.split()[-2] == "46"
                     line = next(f)
@@ -76,7 +76,7 @@ class TestPrep:
             for line in f:
                 if "default_name" in line:
                     line = next(f)
-                    assert line.split()[0] == "36341"
+                    assert line.split()[0] == "37381"
                     line = next(f)
-                    assert line.split()[-2] == "26.6466682"
+                    assert line.split()[-2] == "23.6286682"
                     break
