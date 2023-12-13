@@ -90,8 +90,8 @@ class SimPrep(ABC):
         """
         raise NotImplementedError
 
-    @abstractmethod
     @classmethod
+    @abstractmethod
     def prepare_stage(
         cls,
         context: dict[str, Any],
@@ -100,8 +100,8 @@ class SimPrep(ABC):
     ) -> tuple[list[str], list[str]]:
         raise NotImplementedError
 
-    @abstractmethod
     @classmethod
+    @abstractmethod
     def prepare(cls, sim_context_manager: SimContextManager) -> None:
         """Run all steps to prepare simulations.
 
