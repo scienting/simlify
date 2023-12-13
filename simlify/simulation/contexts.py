@@ -323,7 +323,7 @@ def run_context_yaml_validator(
         If the YAML context is valid.
     """
     logger.info("Validating context built from {}", yaml_paths)
-    validator_cls = get_obj_from_string(validator_obj_string)  # type: ignore
+    validator_cls = get_obj_from_string(validator_obj_string)
     context_manager = SimContextManager(yaml_paths=yaml_paths)
     is_valid: bool = validator_cls.validate(context_manager)  # type: ignore
     valid_string = "IS"
