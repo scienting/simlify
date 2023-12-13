@@ -117,21 +117,21 @@ class SimContextManager:
         restraints.
         """
         self.path_input: str | None = None
-        """Path to write the simulation input file during preparation."""
+        """Path to the input file during the simulation."""
         self.path_output: str | None = None
-        """Path to write the output file during the simulation."""
+        """Path to the output file during the simulation."""
         self.path_restart: str | None = None
         """Path to write the restart file during the simulation."""
         self.path_restart_prev: str | None = None
         """Path to restart file from previous stage or coordinates to start a
         simulation from.
         """
-        self.path_run: str | None = None
+        self.path_run_write: str | None = None
         """Local path to write a run script when preparing simulations."""
-        self.path_slurm: str | None = None
+        self.path_slurm_write: str | None = None
         """Local path to write a slurm submission script when preparing simulations."""
         self.path_topo: str | None = None
-        """Local path to write a topology file when preparing simulations."""
+        """Path to the topology file when the simulation is running."""
         self.sbatch_options: dict[str, Any] | None = None
         """[`sbatch` options](https://slurm.schedmd.com/sbatch.html#SECTION_OPTIONS)
         for a [slurm](https://slurm.schedmd.com/) submission script.

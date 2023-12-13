@@ -254,6 +254,6 @@ class AmberSimPrep(SimPrep):
                 sim_context_manager.update(sim_context_manager.stages[i_stage])  # type: ignore
 
         if context["write"]:
-            logger.debug("Writing run script at {}", context["path_run"])
-            with open(context["path_run"], "w", encoding="utf-8") as f:
+            logger.debug("Writing run script at {}", context["path_run_write"])
+            with open(context["path_run_write"], "w", encoding="utf-8") as f:
                 f.writelines([l + "\n" for l in run_commands])

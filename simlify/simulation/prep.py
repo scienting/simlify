@@ -67,8 +67,8 @@ class SimPrep(ABC):
         slurm_lines = [l + "\n" for l in slurm_lines if isinstance(l, str)]
         logger.debug("Slurm script:\n{}", "".join(slurm_lines))
         if write:
-            logger.info("Writing submissions script at {}", context["path_slurm"])
-            with open(context["path_slurm"], mode="w", encoding="utf-8") as f:
+            logger.info("Writing submissions script at {}", context["path_slurm_write"])
+            with open(context["path_slurm_write"], mode="w", encoding="utf-8") as f:
                 f.writelines(slurm_lines)
         return slurm_lines
 
@@ -115,8 +115,8 @@ class SimPrep(ABC):
 def run_simulation_slurm_prep(
     name_job: str,
     dir_write: str,
-    path_run: str,
-    path_slurm: str,
+    path_run_write: str,
+    path_slurm_write: str,
     prep_class_string: str,
     sim_context_manager: SimContextManager,
 ) -> None:
@@ -125,16 +125,16 @@ def run_simulation_slurm_prep(
     Args:
         name_job: Unique name for this slurm job..
         dir_write: Path to local directory where we will write the simulation files.
-        path_run: Local path to write a run script.
-        path_slurm: Local path to write a slurm submission script.
+        path_run_write: Local path to write a run script.
+        path_slurm_write: Local path to write a slurm submission script.
         prep_class_string: Import string to a simulation preparation class. For example,
             [`"simlify.simulation.amber.prep.AmberSimPrep"`]
             [simulation.amber.prep.AmberSimPrep].
         sim_context_manager: Context manager for simulations.
     """
     sim_context_manager.dir_write = dir_write
-    sim_context_manager.path_slurm = path_slurm
-    sim_context_manager.path_run = path_run
+    sim_context_manager.path_slurm_write = path_slurm_write
+    sim_context_manager.path_run_write = path_run_write
 
     sbatch_options = sim_context_manager.sbatch_options
     if sbatch_options is not None:
@@ -168,13 +168,13 @@ def cli_run_simulation_slurm_prep():
         help="Directory to write input files.",
     )
     parser.add_argument(
-        "path_run",
+        "path_run_write",
         type=str,
         nargs="?",
         help="Local path to write a run script.",
     )
     parser.add_argument(
-        "path_slurm",
+        "path_slurm_write",
         type=str,
         nargs="?",
         help="Local path to write a slurm submission script.",
@@ -201,8 +201,8 @@ def cli_run_simulation_slurm_prep():
     run_simulation_slurm_prep(
         args.name_job,
         args.dir_write,
-        args.path_run,
-        args.path_slurm,
+        args.path_run_write,
+        args.path_slurm_write,
         args.prep_class_string,
         sim_context_manager,
     )
