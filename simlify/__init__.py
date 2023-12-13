@@ -41,8 +41,8 @@ def enable_logging(
     logger.enable("simlify")
 
 
-if literal_eval(os.environ.get("simlify_LOG", "False")):
-    level = int(os.environ.get("simlify_LOG_LEVEL", 20))
-    stdout = literal_eval(os.environ.get("simlify_STDOUT", "True"))
-    log_file_path = os.environ.get("simlify_LOG_FILE_PATH", None)
+if literal_eval(os.environ.get("SIMLIFY_LOG", "False")):
+    level = int(os.environ.get("SIMLIFY_LOG_LEVEL", 20))
+    stdout = literal_eval(os.environ.get("SIMLIFY_STDOUT", "True"))
+    log_file_path = os.environ.get("SIMLIFY_LOG_FILE_PATH", None)
     enable_logging(level, stdout, log_file_path)
