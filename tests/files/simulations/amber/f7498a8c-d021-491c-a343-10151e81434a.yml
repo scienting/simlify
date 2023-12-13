@@ -137,7 +137,7 @@ stages:
     input_kwargs:
       irest: 0
       ntx: 1
-      ig: -1
+      ig: 36069871
       dt: 0.002
       nstlim: 10000
       nscm: 500
@@ -166,7 +166,7 @@ stages:
     input_kwargs:
       irest: 1
       ntx: 5
-      ig: -1
+      ig: 36069871
       dt: 0.002
       nstlim: 500000
       nscm: 500
@@ -199,7 +199,7 @@ stages:
     input_kwargs:
       irest: 1
       ntx: 5
-      ig: -1
+      ig: 36069871
       dt: 0.002
       nstlim: 500000
       nscm: 500
