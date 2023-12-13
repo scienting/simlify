@@ -7,7 +7,7 @@ from loguru import logger
 
 from ..contexts import ContextValidator
 
-AMBER_PROTEIN_STANDARD_CONTEXT = {
+AMBER_PROTEIN_STANDARD_CONTEXT: dict[str, Any] = {
     "charge_anion_extra": 0,
     "charge_anion_identity": "Cl-",
     "charge_cation_extra": 0,

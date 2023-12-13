@@ -234,8 +234,8 @@ class AmberSimPrep(SimPrep):
         multiple_stages: bool = bool(sim_context_manager.stages is not None)
         if multiple_stages:
             logger.debug("There are multiple stages")
-            n_stages: int = len(sim_context_manager.stages)
-            sim_context_manager.update(sim_context_manager.stages[0])
+            n_stages: int = len(sim_context_manager.stages)  # type: ignore
+            sim_context_manager.update(sim_context_manager.stages[0])  # type: ignore
         else:
             logger.debug("There is one stage.")
             n_stages = 1
@@ -251,7 +251,7 @@ class AmberSimPrep(SimPrep):
             sim_context_manager.path_coord_prev = sim_context_manager.path_coord
 
             if multiple_stages and i_stage < n_stages:
-                sim_context_manager.update(sim_context_manager.stages[i_stage])
+                sim_context_manager.update(sim_context_manager.stages[i_stage])  # type: ignore
 
         if context["write"]:
             logger.debug("Writing run script at {}", context["path_run"])
