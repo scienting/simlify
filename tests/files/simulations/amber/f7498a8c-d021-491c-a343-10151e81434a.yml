@@ -54,7 +54,7 @@ stages:
       cut: 10.0
       ntxo: 2
       ntwr: 100
-      ntpr: 10
+      ntpr: 100
       ntwx: 100
       ioutfm: 1
       iwrap: 1
@@ -78,7 +78,7 @@ stages:
       cut: 10.0
       ntxo: 2
       ntwr: 100
-      ntpr: 10
+      ntpr: 100
       ntwx: 100
       ioutfm: 1
       iwrap: 1
@@ -101,9 +101,9 @@ stages:
       ntc: 1
       cut: 10.0
       ntxo: 2
-      ntwr: 100
-      ntpr: 10
-      ntwx: 100
+      ntwr: 1000
+      ntpr: 1000
+      ntwx: 1000
       ioutfm: 1
       iwrap: 1
 
@@ -125,9 +125,9 @@ stages:
       ntc: 1
       cut: 10.0
       ntxo: 2
-      ntwr: 100
-      ntpr: 10
-      ntwx: 100
+      ntwr: 1000
+      ntpr: 1000
+      ntwx: 1000
       ioutfm: 1
       iwrap: 1
 
@@ -154,9 +154,9 @@ stages:
       gamma_ln: 5.0
       ntp: 0
       ntxo: 2
-      ntwr: 500
-      ntpr: 100
-      ntwx: 500
+      ntwr: 1000
+      ntpr: 1000
+      ntwx: 1000
       ioutfm: 1
       iwrap: 1
 
@@ -187,9 +187,9 @@ stages:
       comp: 44.6
       taup: 1.0
       ntxo: 2
-      ntwr: 5000
-      ntpr: 500
-      ntwx: 5000
+      ntwr: 50000
+      ntpr: 50000
+      ntwx: 50000
       ioutfm: 1
       iwrap: 1
 
@@ -218,8 +218,8 @@ stages:
       comp: 44.6
       taup: 1.0
       ntxo: 2
-      ntwr: 5000
-      ntpr: 500
-      ntwx: 5000
+      ntwr: 50000
+      ntpr: 50000
+      ntwx: 50000
       ioutfm: 1
       iwrap: 1
