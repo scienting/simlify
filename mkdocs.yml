@@ -58,7 +58,6 @@ plugins:
   - search
   - autorefs
   - material-plausible
-  - table-reader
   - gen-files:
       scripts:
         - docs/gen_ref_pages.py
