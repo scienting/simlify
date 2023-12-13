@@ -1,3 +1,4 @@
 nav:
     - Home: index.md
+    - Case studies: case-studies
     - API: api

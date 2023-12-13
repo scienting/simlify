@@ -1,0 +1,225 @@
+###  PATHS   ###
+input_dir: "$SLURM_SUBMIT_DIR/inputs"
+output_dir: "$SLURM_SUBMIT_DIR/outputs"
+
+###   COMPUTATIONS   ###
+compute_platform: "mpi"
+sbatch_options:
+  nodes: 2
+  ntasks-per-node: 48
+  output: slurm-%j.out
+  error: slurm-%j.err
+  time: "1-00:00:00"
+  cluster: mpi
+  partition: mpi
+
+###   SYSTEM   ###
+ff_protein: ff19SB
+ff_water: opc3
+ff_ions: ionslm_126_opc3
+charge_anion_identity: Cl-
+charge_anion_extra: 0
+charge_cation_identity: Na+
+charge_cation_extra: 0
+charge_neutralize: true
+solvent_ionic_strength: 0.150
+solvent_padding: 10.0
+
+extra_lines_topo_gen:
+  - 'addAtomTypes { {"cc" "C" "sp2"} {"cd" "C" "sp2"} {"cf" "C" "sp2"} '
+  - '{"c" "C" "sp2"} {"nd" "N" "sp2"} {"nc" "N" "sp2"} {"ne" "N" "sp2"}'
+  - '{"nf" "N" "sp2"} {"ha" "H" "sp3"} {"oh" "O" "sp3"} }'
+  - "xFPparams = loadamberparams ../../../methods/03-tleap/cro/frcmod.xFPchromophores.2022"
+  - "loadOff ../../../methods/03-tleap/cro/xFPchromophores.lib.2022"
+
+stages:
+
+  - stage_name: 01_min
+    topo_path: "$SLURM_SUBMIT_DIR/inputs/mol.prmtop"
+    prev_restart_path: "$SLURM_SUBMIT_DIR/inputs/mol.inpcrd"
+    ref_coord_path: "$SLURM_SUBMIT_DIR/inputs/mol.inpcrd"
+    input_kwargs:
+      imin: 1
+      ntx: 1
+      irest: 0
+      ntmin: 1
+      maxcyc: 5000
+      ncyc: 1000
+      ntr: 1
+      restraint_wt: 5.0
+      restraintmask: "!(@H=)"
+      ntb: 1
+      ntf: 1
+      ntc: 1
+      cut: 10.0
+      ntxo: 2
+      ntwr: 100
+      ntpr: 10
+      ntwx: 100
+      ioutfm: 1
+      iwrap: 1
+
+  - stage_name: 02_min
+    topo_path: "$SLURM_SUBMIT_DIR/inputs/mol.prmtop"
+    ref_coord_path: "$SLURM_SUBMIT_DIR/inputs/mol.inpcrd"
+    input_kwargs:
+      imin: 1
+      ntx: 1
+      irest: 0
+      ntmin: 1
+      maxcyc: 5000
+      ncyc: 1000
+      ntr: 1
+      restraint_wt: 5.0
+      restraintmask: "!(:WAT) & !(@H=) & !(:Na+,Cl-)"
+      ntb: 1
+      ntf: 1
+      ntc: 1
+      cut: 10.0
+      ntxo: 2
+      ntwr: 100
+      ntpr: 10
+      ntwx: 100
+      ioutfm: 1
+      iwrap: 1
+
+  - stage_name: 03_min
+    topo_path: "$SLURM_SUBMIT_DIR/inputs/mol.prmtop"
+    ref_coord_path: "$SLURM_SUBMIT_DIR/inputs/mol.inpcrd"
+    input_kwargs:
+      imin: 1
+      ntx: 1
+      irest: 0
+      ntmin: 1
+      maxcyc: 5000
+      ncyc: 1000
+      ntr: 1
+      restraint_wt: 2.0
+      restraintmask: "!(:WAT) & (@C,CA,N,O,O5',P,O3',C3',C4',C5')"
+      ntb: 1
+      ntf: 1
+      ntc: 1
+      cut: 10.0
+      ntxo: 2
+      ntwr: 100
+      ntpr: 10
+      ntwx: 100
+      ioutfm: 1
+      iwrap: 1
+
+  - stage_name: 04_min
+    topo_path: "$SLURM_SUBMIT_DIR/inputs/mol.prmtop"
+    ref_coord_path: "$SLURM_SUBMIT_DIR/inputs/mol.inpcrd"
+    input_kwargs:
+      imin: 1
+      ntx: 1
+      irest: 0
+      ntmin: 1
+      maxcyc: 5000
+      ncyc: 1000
+      ntr: 1
+      restraint_wt: 1.0
+      restraintmask: "!(:WAT) & (@C,CA,N,O,O5',P,O3',C3',C4',C5')"
+      ntb: 1
+      ntf: 1
+      ntc: 1
+      cut: 10.0
+      ntxo: 2
+      ntwr: 100
+      ntpr: 10
+      ntwx: 100
+      ioutfm: 1
+      iwrap: 1
+
+  - stage_name: 05_relax_nvt_r
+    topo_path: "$SLURM_SUBMIT_DIR/inputs/mol.prmtop"
+    ref_coord_path: "$SLURM_SUBMIT_DIR/inputs/mol.inpcrd"
+    input_kwargs:
+      irest: 0
+      ntx: 1
+      ig: -1
+      dt: 0.002
+      nstlim: 10000
+      nscm: 500
+      ntr: 1
+      restraint_wt: 1.0
+      restraintmask: "!(:WAT) & (@C,CA,N,O,O5',P,O3',C3',C4',C5')"
+      ntb: 1
+      ntf: 2
+      ntc: 2
+      cut: 10.0
+      ntt: 3
+      tempi: 100.0
+      temp0: 300.0
+      gamma_ln: 5.0
+      ntp: 0
+      ntxo: 2
+      ntwr: 500
+      ntpr: 100
+      ntwx: 500
+      ioutfm: 1
+      iwrap: 1
+
+  - stage_name: 06_relax_npt_r
+    topo_path: "$SLURM_SUBMIT_DIR/inputs/mol.prmtop"
+    ref_coord_path: "$SLURM_SUBMIT_DIR/inputs/mol.inpcrd"
+    input_kwargs:
+      irest: 1
+      ntx: 5
+      ig: -1
+      dt: 0.002
+      nstlim: 500000
+      nscm: 500
+      ntr: 1
+      restraint_wt: 0.5
+      restraintmask: "!(:WAT) & (@C,CA,N,O,O5',P,O3',C3',C4',C5')"
+      ntb: 2
+      ntf: 2
+      ntc: 2
+      cut: 10.0
+      ntt: 3
+      temp0: 300.0
+      gamma_ln: 5.0
+      ntp: 1
+      barostat: 2
+      pres0: 1.01325
+      mcbarint: 100
+      comp: 44.6
+      taup: 1.0
+      ntxo: 2
+      ntwr: 5000
+      ntpr: 500
+      ntwx: 5000
+      ioutfm: 1
+      iwrap: 1
+
+  - stage_name: 07_relax_npt
+    topo_path: "$SLURM_SUBMIT_DIR/inputs/mol.prmtop"
+    ref_coord_path: "$SLURM_SUBMIT_DIR/inputs/mol.inpcrd"
+    input_kwargs:
+      irest: 1
+      ntx: 5
+      ig: -1
+      dt: 0.002
+      nstlim: 500000
+      nscm: 500
+      ntr: 0
+      ntb: 2
+      ntf: 2
+      ntc: 2
+      cut: 10.0
+      ntt: 3
+      temp0: 300.0
+      gamma_ln: 5.0
+      ntp: 1
+      barostat: 2
+      pres0: 1.01325
+      mcbarint: 100
+      comp: 44.6
+      taup: 1.0
+      ntxo: 2
+      ntwr: 5000
+      ntpr: 500
+      ntwx: 5000
+      ioutfm: 1
+      iwrap: 1
