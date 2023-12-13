@@ -13,8 +13,8 @@ class TopoGen(ABC):
     def __init__(self):
         pass
 
-    @abstractmethod
     @classmethod
+    @abstractmethod
     def dry_run(  # pylint: disable=too-many-arguments
         cls,
         path_structure: str,
@@ -34,8 +34,8 @@ class TopoGen(ABC):
         """
         raise NotImplementedError
 
-    @abstractmethod
     @classmethod
+    @abstractmethod
     def run(  # pylint: disable=too-many-arguments
         cls,
         path_structure: str,
@@ -85,8 +85,6 @@ def run_gen_topo(
 
     topo_info_dry_run: dict[str, Any] = cls_topo.dry_run(  # type: ignore
         path_structure,
-        path_topo,
-        path_coord,
         sim_context_manager,
         dir_work,
     )
