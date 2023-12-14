@@ -27,14 +27,14 @@ conda-create:
 conda-setup:
 	$(CONDA) conda install -y -c conda-forge poetry
 	$(CONDA) conda install -y -c conda-forge pre-commit
-	$(CONDA) conda install -y -c conda-forge tomli tomli-w
 	$(CONDA) conda install -y -c conda-forge conda-poetry-liaison
 
 # Conda-only packages specific to this project.
 .PHONY: conda-dependencies
 conda-dependencies:
-	$(CONDA) conda install -c conda-forge ambertools
-	$(CONDA) conda install -c conda-forge openbabel
+	$(CONDA) conda install -y -c conda-forge scipy
+	$(CONDA) conda install -y -c conda-forge xarray
+	$(CONDA) conda install -y -c conda-forge ambertools
 
 .PHONY: nodejs-dependencies
 nodejs-dependencies:
