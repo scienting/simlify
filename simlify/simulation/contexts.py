@@ -82,7 +82,7 @@ class SimContextManager:
         scratch."""
         self.dir_work: str | None = None
         """Directory to be in when running the simulation."""
-        self.dir_write: str | None = None
+        self.dir_write: str = "."
         """Local directory to write input files when preparing simulations."""
         self.extra_lines_topo_gen: Iterable[str] | None = None
         """Extra lines to include when generating a topology."""
@@ -289,10 +289,6 @@ class ContextValidator:
     @staticmethod
     def write(value: Any, context: dict[str, Any]) -> bool:
         """Validate `write`"""
-        if value:
-            if context["dir_write"] is None:
-                logger.error("dir_write must be set if write is True")
-                return False
         return True
 
     @staticmethod
