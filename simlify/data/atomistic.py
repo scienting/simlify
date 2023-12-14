@@ -6,10 +6,12 @@ from .. import ureg
 
 
 @dataclass
-class Positions:
+class Coordinates:
     """Cartesian coordinates of a physical system."""
 
-    dtype: str = "<f8"
+    dtype: str = "f8"
+
+    ctype: str = "array"
 
     _units: Quantity = 1.0 * ureg.angstrom
 
