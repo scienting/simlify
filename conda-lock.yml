@@ -13,8 +13,8 @@
 version: 1
 metadata:
   content_hash:
-    linux-64: 63ca6f52226eb64185ab852fd894f6619a71f42f895fee85a79500386232178b
-    osx-64: f5516c6108840b30b7115c174da28432ae38c89b24163e858525613d9bf75970
+    linux-64: cf5f91cdb72744b2fc9e71970fc31b1c007005bd92eb6f3bd555977628c51022
+    osx-64: 360bcbd5903dcc3ea00b49b4eb05cdeec41242690bfe00469a81501e0fbe3d55
   channels:
   - url: conda-forge
     used_env_vars: []
@@ -4629,36 +4629,6 @@ package:
   hash:
     md5: daf5160ff9cde3a468556965329085b9
     sha256: 2adf9bd5482802837bc8814cbe28d7b2a4cbd2e2c52e381329eaa283b3ed1944
-  category: main
-  optional: false
-- name: xarray
-  version: 2023.12.0
-  manager: conda
-  platform: linux-64
-  dependencies:
-    numpy: '>=1.22'
-    packaging: '>=21.3'
-    pandas: '>=1.4'
-    python: '>=3.9'
-  url: https://conda.anaconda.org/conda-forge/noarch/xarray-2023.12.0-pyhd8ed1ab_0.conda
-  hash:
-    md5: e9b31d3ab1b0dd5fd8c24419f6560b90
-    sha256: ab89b70aa3d31a9cacf0e91a7c7a6f8cc45d866d71cdcee1219561cff0e8a9a5
-  category: main
-  optional: false
-- name: xarray
-  version: 2023.12.0
-  manager: conda
-  platform: osx-64
-  dependencies:
-    python: '>=3.9'
-    packaging: '>=21.3'
-    pandas: '>=1.4'
-    numpy: '>=1.22'
-  url: https://conda.anaconda.org/conda-forge/noarch/xarray-2023.12.0-pyhd8ed1ab_0.conda
-  hash:
-    md5: e9b31d3ab1b0dd5fd8c24419f6560b90
-    sha256: ab89b70aa3d31a9cacf0e91a7c7a6f8cc45d866d71cdcee1219561cff0e8a9a5
   category: main
   optional: false
 - name: xattr
