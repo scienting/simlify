@@ -71,6 +71,10 @@ class SimContextManager:
         self.dir_input: str | None = None
         """Path to the directory that contains input files when running the simulation.
         """
+        self.dir_input_write: str = ""
+        """Directory to write input files with respect to `dir_write` during
+        preparation.
+        """
         self.dir_output: str | None = None
         """Path to the directory that the simulation will store output files."""
         self.dir_scratch: str | None = None
@@ -79,7 +83,7 @@ class SimContextManager:
         self.dir_work: str | None = None
         """Directory to be in when running the simulation."""
         self.dir_write: str | None = None
-        """Local directory to write input files when running simulations."""
+        """Local directory to write input files when preparing simulations."""
         self.extra_lines_topo_gen: Iterable[str] | None = None
         """Extra lines to include when generating a topology."""
         self.ff_dna: str | None = None
@@ -110,6 +114,8 @@ class SimContextManager:
         An example path would be `$SLURM_SUBMIT_DIR/outputs/05-prod.nc`; Amber would
         then write the coordinates of the simulation to this file.
         """
+        self.path_coord_write: str | None = None
+        """Path to write coordinate file during preparation."""
         self.path_coord_prev: str | None = None
         """Path to coordinate file of previous stage."""
         self.path_coord_ref: str | None = None
@@ -127,11 +133,13 @@ class SimContextManager:
         simulation from.
         """
         self.path_run_write: str | None = None
-        """Local path to write a run script when preparing simulations."""
+        """Path to write a run script when preparing simulations."""
         self.path_slurm_write: str | None = None
-        """Local path to write a slurm submission script when preparing simulations."""
+        """Path to write a slurm submission script when preparing simulations."""
         self.path_topo: str | None = None
         """Path to the topology file when the simulation is running."""
+        self.path_topo_write: str | None = None
+        """Path to write the topology file during preparation."""
         self.sbatch_options: dict[str, Any] | None = None
         """[`sbatch` options](https://slurm.schedmd.com/sbatch.html#SECTION_OPTIONS)
         for a [slurm](https://slurm.schedmd.com/) submission script.
@@ -170,7 +178,7 @@ class SimContextManager:
         """Submit and run the simulation."""
         self.verbosity: int | str | None = None
         """Verbosity level for logging."""
-        self.write: bool = False
+        self.write: bool = True
         """Flag to write the files during preparation instead of a dry run."""
 
         if isinstance(yaml_paths, str):

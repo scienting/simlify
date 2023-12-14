@@ -184,12 +184,12 @@ class AmberTopoGen(TopoGen):
         tmp_input.close()  # Need to close before running the command.
 
     @staticmethod
-    def _run_tleap(tmp_input):
+    def _run_tleap(tmp_input, dir_work):
         logger.info("Running tleap")
         tleap_command = [TLEAP_PATH, "-f", tmp_input.name]
         logger.debug("tleap command: {}", tleap_command)
         completed_process = subprocess.run(
-            tleap_command, capture_output=True, text=True, check=False
+            tleap_command, capture_output=True, text=True, check=False, cwd=dir_work
         )
         os.remove(tmp_input.name)  # Remove temporary input file.
         logger.debug("tleap output:\n{}", completed_process.stdout)
@@ -234,6 +234,8 @@ class AmberTopoGen(TopoGen):
         quit
         ```
         """
+        if dir_work is None:
+            dir_work = os.getcwd()
         context = sim_context_manager.get()
 
         tmp_pdb = tempfile.NamedTemporaryFile(mode="r", suffix=".pdb", delete=True)
@@ -250,7 +252,7 @@ class AmberTopoGen(TopoGen):
 
         cls._write_input(tleap_lines, tmp_input)
 
-        completed_process = cls._run_tleap(tmp_input)
+        completed_process = cls._run_tleap(tmp_input, dir_work)
 
         tleap_info = cls._parse_logs(completed_process.stdout.split("\n"))
 
@@ -268,8 +270,8 @@ class AmberTopoGen(TopoGen):
     def run(  # pylint: disable=too-many-arguments
         cls,
         path_structure: str,
-        path_topo: str,
-        path_coord: str,
+        path_topo_write: str,
+        path_coord_write: str,
         sim_context_manager: SimContextManager,
         dir_work: str | None = None,
         **kwargs: dict[str, Any],
@@ -279,8 +281,8 @@ class AmberTopoGen(TopoGen):
         Args:
             path_structure: Path structure file for topology generation. For Amber,
                 this must be a PDB file.
-            path_topo: Where to write topology file.
-            path_coord: Where to write coordinate file.
+            path_topo_write: Where to write topology file.
+            path_coord_write: Where to write coordinate file.
             sim_context_manager: Context manager for simulations.
             dir_work: Working directory to generate topology. Useful for
                 specifying relative paths.
@@ -297,6 +299,8 @@ class AmberTopoGen(TopoGen):
                 -   `path_tleap_pdb`: Specify the prepared system as a PDB file after
                 tleap is finished.
         """
+        if dir_work is None:
+            dir_work = os.getcwd()
         context = sim_context_manager.get()
 
         if "path_tleap_pdb" not in kwargs:
@@ -321,12 +325,12 @@ class AmberTopoGen(TopoGen):
         )
         logger.debug("Setting PDB output to {}", path_tleap_pdb)
         tleap_lines.append(f"savepdb mol {path_tleap_pdb}")
-        tleap_lines.append(f"saveamberparm mol {path_topo} {path_coord}")
+        tleap_lines.append(f"saveamberparm mol {path_topo_write} {path_coord_write}")
         tleap_lines.extend(["charge mol", "quit"])
 
         cls._write_input(tleap_lines, tmp_input)
 
-        completed_process = cls._run_tleap(tmp_input)
+        completed_process = cls._run_tleap(tmp_input, dir_work)
         # os.remove(tmp_input.name)  # Remove temporary input file.
 
         tleap_info = cls._parse_logs(completed_process.stdout.split("\n"))

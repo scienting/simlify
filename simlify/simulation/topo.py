@@ -39,8 +39,8 @@ class TopoGen(ABC):
     def run(  # pylint: disable=too-many-arguments
         cls,
         path_structure: str,
-        path_topo: str,
-        path_coord: str,
+        path_topo_write: str,
+        path_coord_write: str,
         sim_context_manager: SimContextManager,
         dir_work: str | None = None,
         **kwargs: dict[str, Any],
@@ -49,8 +49,8 @@ class TopoGen(ABC):
 
         Args:
             path_structure: Path structure file for topology generation.
-            path_topo: Where to write topology file.
-            path_coord: Where to write coordinate file.
+            path_topo_write: Where to write topology file.
+            path_coord_write: Where to write coordinate file.
             sim_context_manager: Context manager for simulations.
             dir_work: Working directory to generate topology. Useful for
                 specifying relative paths.
@@ -61,8 +61,8 @@ class TopoGen(ABC):
 # pylint: disable-next=too-many-arguments
 def run_gen_topo(
     path_structure: str,
-    path_topo: str,
-    path_coord: str,
+    path_topo_write: str,
+    path_coord_write: str,
     import_string: str,
     sim_context_manager: SimContextManager,
     dir_work: str | None = None,
@@ -71,8 +71,8 @@ def run_gen_topo(
 
     Args:
         path_structure: Path structure file for topology generation.
-        path_topo: Where to write topology file.
-        path_coord: Where to write coordinate file.
+        path_topo_write: Where to write topology file.
+        path_coord_write: Where to write coordinate file.
         import_string: Import string to a topology generation class. For example,
             [`"simlify.simulation.amber.topo.AmberTopoGen"`]
             [simulation.amber.topo.AmberTopoGen].
@@ -90,8 +90,8 @@ def run_gen_topo(
     )
     topo_info: dict[str, Any] = cls_topo.run(  # type: ignore
         path_structure,
-        path_topo,
-        path_coord,
+        path_topo_write,
+        path_coord_write,
         sim_context_manager,
         dir_work,
         **topo_info_dry_run,

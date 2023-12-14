@@ -43,6 +43,10 @@ class AmberSimPrep(SimPrep):
             dir_run, context["name_stage"] + ".mdinfo"
         )
 
+        dir_input_write = os.path.join(context["dir_write"], context["dir_input_write"])
+        if not os.path.exists(dir_input_write):
+            os.makedirs(dir_input_write, exist_ok=True)
+
         if use_scratch:
             # We have to use absolute paths with scratch to ensure nothing gets
             # overwritten.
@@ -186,7 +190,7 @@ class AmberSimPrep(SimPrep):
         [`prepare_context`][simulation.amber.prep.AmberSimPrep.prepare_context]
         should be ran before this.
         """
-        if run_commands is None:
+        if run_commands is None or len(run_commands) == 0:
             run_commands = ["#!/usr/bin/env bash"]
 
         # We do not want to change source context in prepare_context, so we do this
@@ -207,7 +211,9 @@ class AmberSimPrep(SimPrep):
             stage_input_lines = cls.get_stage_input_lines(context)
             if write:
                 stage_path_input = os.path.join(
-                    context["dir_write"], context["name_stage"] + ".in"
+                    context["dir_write"],
+                    context["dir_input_write"],
+                    context["name_stage"] + ".in",
                 )
                 logger.info("Writing input file at {}", stage_path_input)
                 with open(stage_path_input, mode="w", encoding="utf-8") as f:

@@ -52,17 +52,17 @@ class TestPrep:
             f"xFPparams = loadamberparams {path_cro_fcrmod}",
             f"loadOff {path_cro_lib}",
         ]
-        path_topo = tempfile.NamedTemporaryFile().name
-        path_coord = tempfile.NamedTemporaryFile().name
+        path_topo_write = tempfile.NamedTemporaryFile().name
+        path_coord_write = tempfile.NamedTemporaryFile().name
         run_gen_topo(
             path_1jc0_prepped,
-            path_topo,
-            path_coord,
+            path_topo_write,
+            path_coord_write,
             "simlify.simulation.amber.topo.AmberTopoGen",
             amber_protein_standard_context,
             dir_work=None,
         )
-        with open(path_topo, "r", encoding="utf-8") as f:
+        with open(path_topo_write, "r", encoding="utf-8") as f:
             for line in f:
                 if r"%FORMAT(10I8) " in line:
                     line = next(f)
@@ -72,7 +72,7 @@ class TestPrep:
                     line = next(f)
                     assert line.split()[-3] == "1"
                     break
-        with open(path_coord, "r", encoding="utf-8") as f:
+        with open(path_coord_write, "r", encoding="utf-8") as f:
             for line in f:
                 if "default_name" in line:
                     line = next(f)

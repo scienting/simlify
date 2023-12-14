@@ -1,6 +1,7 @@
 from typing import Any
 
 import argparse
+import os
 from abc import ABC, abstractmethod
 from collections.abc import Collection
 
@@ -47,7 +48,7 @@ class SimPrep(ABC):
         raise NotImplementedError
 
     @classmethod
-    def prepare_slurm_lines(
+    def prepare_sbatch_lines(
         cls,
         context: dict[str, Any],
         write: bool = True,
@@ -59,18 +60,18 @@ class SimPrep(ABC):
 
         """
         logger.info("Preparing slurm submission script")
-        slurm_lines = ["#!/bin/bash"]
+        sbatch_lines = ["#!/bin/bash"]
         for k, v in context["sbatch_options"].items():
-            slurm_lines.append(f"#SBATCH --{k}={v}")
-        slurm_lines.extend(context["slurm_lines"])
+            sbatch_lines.append(f"#SBATCH --{k}={v}")
+        sbatch_lines.extend(context["sbatch_lines"])
 
-        slurm_lines = [l + "\n" for l in slurm_lines if isinstance(l, str)]
-        logger.debug("Slurm script:\n{}", "".join(slurm_lines))
+        sbatch_lines = [l + "\n" for l in sbatch_lines if isinstance(l, str)]
+        logger.debug("Slurm script:\n{}", "".join(sbatch_lines))
         if write:
             logger.info("Writing submissions script at {}", context["path_slurm_write"])
             with open(context["path_slurm_write"], mode="w", encoding="utf-8") as f:
-                f.writelines(slurm_lines)
-        return slurm_lines
+                f.writelines(sbatch_lines)
+        return sbatch_lines
 
     @classmethod
     @abstractmethod
@@ -112,7 +113,7 @@ class SimPrep(ABC):
 
 
 # pylint: disable-next=too-many-arguments
-def run_simulation_slurm_prep(
+def run_sim_slurm_prep(
     name_job: str,
     dir_write: str,
     path_run_write: str,
@@ -125,16 +126,17 @@ def run_simulation_slurm_prep(
     Args:
         name_job: Unique name for this slurm job..
         dir_write: Path to local directory where we will write the simulation files.
-        path_run_write: Local path to write a run script.
-        path_slurm_write: Local path to write a slurm submission script.
+        path_run_write: Local path to write a run script with respect to `dir_write`.
+        path_slurm_write: Local path to write a slurm submission script with respect to
+            `dir_write`.
         prep_class_string: Import string to a simulation preparation class. For example,
             [`"simlify.simulation.amber.prep.AmberSimPrep"`]
             [simulation.amber.prep.AmberSimPrep].
         sim_context_manager: Context manager for simulations.
     """
     sim_context_manager.dir_write = dir_write
-    sim_context_manager.path_slurm_write = path_slurm_write
-    sim_context_manager.path_run_write = path_run_write
+    sim_context_manager.path_slurm_write = os.path.join(dir_write, path_slurm_write)
+    sim_context_manager.path_run_write = os.path.join(dir_write, path_run_write)
 
     sbatch_options = sim_context_manager.sbatch_options
     if sbatch_options is not None:
@@ -144,13 +146,13 @@ def run_simulation_slurm_prep(
         raise RuntimeError("sbatch options cannot be None when preparing simulations")
 
     prep_cls = get_obj_from_string(prep_class_string)
-    prep_cls.prepare_slurm_lines(  # type: ignore
+    prep_cls.prepare_sbatch_lines(  # type: ignore
         sim_context_manager.get(), write=sim_context_manager.write
     )
     prep_cls.prepare(sim_context_manager)  # type: ignore
 
 
-def cli_run_simulation_slurm_prep():
+def cli_run_sim_slurm_prep():
     r"""Command-line interface to prepare files for simulations using slurm."""
     parser = argparse.ArgumentParser(
         description="Prepare files for simulations using slurm."
@@ -198,7 +200,7 @@ def cli_run_simulation_slurm_prep():
         args.yaml = []
     for yaml_path in reversed(args.yaml):
         sim_context_manager.from_yaml(yaml_path)
-    run_simulation_slurm_prep(
+    run_sim_slurm_prep(
         args.name_job,
         args.dir_write,
         args.path_run_write,
