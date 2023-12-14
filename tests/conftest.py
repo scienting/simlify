@@ -20,6 +20,11 @@ def turn_on_logging():
 
 
 @pytest.fixture
+def dir_structures():
+    return os.path.join(TEST_DIR, "files/structures")
+
+
+@pytest.fixture
 def path_1jc0():
     return os.path.join(TEST_DIR, "files/structures/1JC0.pdb")
 
@@ -94,3 +99,8 @@ def amber_simulation_standard_context(amber_protein_standard_context):
         "iwrap": 1,
     }
     return context_manager
+
+
+@pytest.fixture
+def dir_amber_sims():
+    return os.path.join(TEST_DIR, "files/simulations/amber")
