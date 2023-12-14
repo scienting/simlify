@@ -1,5 +1,7 @@
 default:
   image: registry.gitlab.com/oasci/software/simlify:env
+  before_script:
+    - make install
 
 tests:
   stage: test
