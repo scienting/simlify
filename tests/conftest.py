@@ -1,12 +1,16 @@
 import os
+from datetime import timedelta
 
 import pytest
+from pyarrow import fs
 
 from simlify import enable_logging
 from simlify.simulation.amber.contexts import AMBER_PROTEIN_STANDARD_CONTEXT
 from simlify.simulation.contexts import SimContextManager
 
 TEST_DIR = os.path.dirname(__file__)
+
+gcs = fs.GcsFileSystem(anonymous=True, retry_time_limit=timedelta(seconds=5))
 
 
 @pytest.fixture
@@ -104,3 +108,13 @@ def amber_simulation_standard_context(amber_protein_standard_context):
 @pytest.fixture
 def dir_amber_sims():
     return os.path.join(TEST_DIR, "files/simulations/amber")
+
+
+@pytest.fixture
+def gcs_fs():
+    return gcs
+
+
+@pytest.fixture
+def uuid_rogfp2():
+    return "f7498a8c-d021-491c-a343-10151e81434a"
