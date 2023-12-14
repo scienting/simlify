@@ -1,0 +1,12 @@
+name: simlify-dev
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.11
+  - conda-lock
+  - poetry
+  - pre-commit
+  - conda-poetry-liaison
+  - ambertools
+  - nodejs

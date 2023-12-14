@@ -634,6 +634,4 @@ psi.*.clean
 tests/tmp/*
 !tests/tmp/.gitkeep
 
-environment.yml
-
 !simlify/simulation/packages/*

@@ -1,13 +1,18 @@
-FROM continuumio/miniconda3:latest
+FROM ubuntu:latest
 
-LABEL org.opencontainers.image.title="simlify-env"
+LABEL org.opencontainers.image.title="simlify"
 LABEL org.opencontainers.image.description="Environment for testing simlify Python package."
 LABEL org.opencontainers.image.authors="OASCI <us@oasci.org>"
 LABEL org.opencontainers.image.source="https://gitlab.com/oasci/software/simlify"
 
 RUN apt-get update
 RUN apt-get install build-essential -y
-RUN apt-get install curl -y
+RUN apt-get install wget -y
+
+ENV CONDA_DIR /opt/conda
+RUN wget --quiet https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O ~/miniconda.sh && \
+    /bin/bash ~/miniconda.sh -b -p $CONDA_DIR
+ENV PATH=$CONDA_DIR/bin:$PATH
 
 WORKDIR /simlify
 COPY Makefile .
