@@ -6,7 +6,7 @@ LABEL org.opencontainers.image.authors="OASCI <us@oasci.org>"
 LABEL org.opencontainers.image.source="https://gitlab.com/oasci/software/simlify"
 
 RUN apt-get update \
-    && apt-get install --no-install-recommends g++ gcc ca-certificates wget git -y \
+    && apt-get install --no-install-recommends g++ gcc make ca-certificates wget git -y \
     && rm -rf /var/lib/apt/lists/*
 
 ENV CONDA_DIR /opt/conda
