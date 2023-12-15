@@ -21,7 +21,7 @@ RUN conda create -n simlify-dev
 ENV CONDA_RUN conda run -n simlify-dev
 ENV CONDA_INSTALL $CONDA_RUN conda install -y
 RUN $CONDA_INSTALL -y python=3.11 --freeze-installed \
-    && $CONDA_INSTALL -c conda-forge --freeze-installed poetry conda-poetry-liaison ambertools \
+    && $CONDA_INSTALL -c conda-forge --freeze-installed poetry conda-poetry-liaison ambertools ruamel.yaml \
     && conda clean -afy \
     && $CONDA_RUN cpl-clean --env_name simlify-dev
 
