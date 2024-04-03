@@ -9,6 +9,8 @@ from simlify.simulation.amber.contexts import AMBER_PROTEIN_STANDARD_CONTEXT
 from simlify.simulation.contexts import SimContextManager
 
 TEST_DIR = os.path.dirname(__file__)
+GCS_CACHE_DIR = os.path.join(TEST_DIR, "files/gcs-cache/")
+os.makedirs(GCS_CACHE_DIR, exist_ok=True)
 
 gcs = fs.GcsFileSystem(anonymous=True, retry_time_limit=timedelta(seconds=5))
 
@@ -116,5 +118,10 @@ def gcs_fs():
 
 
 @pytest.fixture
-def uuid_rogfp2():
+def gcs_cache_dir():
+    return GCS_CACHE_DIR
+
+
+@pytest.fixture
+def gcs_uuid():
     return "f7498a8c-d021-491c-a343-10151e81434a"

@@ -63,7 +63,7 @@ poetry-lock:
 
 .PHONY: install
 install:
-	$(CONDA) poetry install --no-interaction
+	$(CONDA) poetry install --no-interaction --with analysis
 	- mkdir .mypy_cache
 	- $(CONDA) mypy --install-types --non-interactive --explicit-package-bases $(PACKAGE_NAME)
 
@@ -79,7 +79,7 @@ locks: conda-create conda-setup conda-dependencies nodejs-dependencies conda-loc
 
 .PHONY: validate
 validate:
-	- $(CONDA) markdownlint-cli2-fix docs/*
+	- $(CONDA) markdownlint-cli2 "**.md" --config ./.markdownlint.yaml --fix
 	- $(CONDA) pre-commit run --all-files
 
 .PHONY: formatting
