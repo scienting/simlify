@@ -4,7 +4,7 @@ import argparse
 from abc import ABC, abstractmethod
 
 from ..utils import get_obj_from_string
-from .contexts import SimContextManager
+from .contexts import SimlifyConfig
 
 
 class TopoGen(ABC):
@@ -18,14 +18,14 @@ class TopoGen(ABC):
     def dry_run(  # pylint: disable=too-many-arguments
         cls,
         path_structure: str,
-        sim_context_manager: SimContextManager,
+        simlify_config: SimlifyConfig,
         dir_work: str | None = None,
     ) -> dict[str, Any]:
         """Perform a dry run to obtain any preliminary information needed before `run`.
 
         Args:
             path_structure: Path structure file for topology generation.
-            sim_context_manager: Context manager for simulations.
+            simlify_config: Context manager for simulations.
             dir_work: Working directory to generate topology. Useful for
                 specifying relative paths.
 
@@ -41,7 +41,7 @@ class TopoGen(ABC):
         path_structure: str,
         path_topo_write: str,
         path_coord_write: str,
-        sim_context_manager: SimContextManager,
+        simlify_config: SimlifyConfig,
         dir_work: str | None = None,
         **kwargs: dict[str, Any],
     ) -> dict[str, Any]:
@@ -51,7 +51,7 @@ class TopoGen(ABC):
             path_structure: Path structure file for topology generation.
             path_topo_write: Where to write topology file.
             path_coord_write: Where to write coordinate file.
-            sim_context_manager: Context manager for simulations.
+            simlify_config: Context manager for simulations.
             dir_work: Working directory to generate topology. Useful for
                 specifying relative paths.
         """
@@ -64,7 +64,7 @@ def run_gen_topo(
     path_topo_write: str,
     path_coord_write: str,
     import_string: str,
-    sim_context_manager: SimContextManager,
+    simlify_config: SimlifyConfig,
     dir_work: str | None = None,
 ) -> dict[str, Any]:
     r"""Diver function for generating a topology file.
@@ -76,23 +76,23 @@ def run_gen_topo(
         import_string: Import string to a topology generation class. For example,
             [`"simlify.simulation.amber.topo.AmberTopoGen"`]
             [simulation.amber.topo.AmberTopoGen].
-        sim_context_manager: Context manager for simulations.
+        simlify_config: Context manager for simulations.
         dir_work: Working directory to generate topology. Useful for
             specifying relative paths.
     """
-    sim_context_manager.dir_work = dir_work
+    simlify_config.dir_work = dir_work
     cls_topo = get_obj_from_string(import_string)
 
     topo_info_dry_run: dict[str, Any] = cls_topo.dry_run(  # type: ignore
         path_structure,
-        sim_context_manager,
+        simlify_config,
         dir_work,
     )
     topo_info: dict[str, Any] = cls_topo.run(  # type: ignore
         path_structure,
         path_topo_write,
         path_coord_write,
-        sim_context_manager,
+        simlify_config,
         dir_work,
         **topo_info_dry_run,
     )
@@ -140,16 +140,16 @@ def cli_run_gen_topo():
         default=None,
     )
     args = parser.parse_args()
-    sim_context_manager = SimContextManager()
+    simlify_config = SimlifyConfig()
     if args.yaml is None:
         args.yaml = []
     for yaml_path in reversed(args.yaml):
-        sim_context_manager.from_yaml(yaml_path)
+        simlify_config.from_yaml(yaml_path)
     run_gen_topo(
         args.structure,
         args.topology,
         args.coordinate,
         args.import_string,
-        sim_context_manager,
+        simlify_config,
         args.work,
     )

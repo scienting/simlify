@@ -7,7 +7,7 @@ class TestNumberOfIons:
         amber_protein_standard_context,
     ):
         ion_counts = get_ion_counts(
-            sim_context_manager=amber_protein_standard_context,
+            simlify_config=amber_protein_standard_context,
             charge_net=-7.0,
             n_waters=8761,
         )

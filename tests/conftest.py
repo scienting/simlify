@@ -4,7 +4,7 @@ import pytest
 
 from simlify import enable_logging
 from simlify.simulation.amber.contexts import AMBER_PROTEIN_STANDARD_CONTEXT
-from simlify.simulation.contexts import SimContextManager
+from simlify.simulation.contexts import SimlifyConfig
 
 TEST_DIR = os.path.dirname(__file__)
 
@@ -50,7 +50,7 @@ def path_cro_lib():
 
 @pytest.fixture
 def amber_protein_standard_context():
-    context_manager = SimContextManager(**AMBER_PROTEIN_STANDARD_CONTEXT)
+    context_manager = SimlifyConfig(**AMBER_PROTEIN_STANDARD_CONTEXT)
     return context_manager
 
 

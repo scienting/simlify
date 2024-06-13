@@ -9,7 +9,7 @@ from loguru import logger
 
 from ...structure.solvent import get_ion_counts
 from ...utils import simple_generator
-from ..contexts import SimContextManager
+from ..contexts import SimlifyConfig
 from ..topo import TopoGen
 
 FF_WATER_SOLVENT_BOX_MAP: dict[str, Any] = {
@@ -43,11 +43,11 @@ class AmberTopoGen(TopoGen):
         pass
 
     @classmethod
-    def ff_lines(cls, sim_context_manager: SimContextManager) -> Iterable[str]:
+    def ff_lines(cls, simlify_config: SimlifyConfig) -> Iterable[str]:
         """Prepare to use force fields in the topology file.
 
         Args:
-            sim_context_manager: A simulation context for system preparation.
+            simlify_config: A simulation context for system preparation.
 
         Returns:
             `source leaprc.` commands for tleap.
@@ -57,8 +57,8 @@ class AmberTopoGen(TopoGen):
             amber_context = {
                 "ff_protein": "ff14SB", "ff_water": "tip3p", "ff_small_molecule": "gaff2"
             }
-            sim_context_manager = SimulationContextManager(**amber_context)
-            tleap_lines = get_source_ff_lines(sim_context_manager)
+            simlify_config = SimulationContextManager(**amber_context)
+            tleap_lines = get_source_ff_lines(simlify_config)
             ```
 
             would result in
@@ -68,7 +68,7 @@ class AmberTopoGen(TopoGen):
             ```
         """
         logger.info("Creating tleap commands for loading force fields")
-        context = sim_context_manager.get()
+        context = simlify_config.get()
         tleap_lines = []
         if isinstance(context["ff_protein"], str):
             tleap_lines.append(f"source leaprc.protein.{context['ff_protein']}")
@@ -159,13 +159,13 @@ class AmberTopoGen(TopoGen):
 
     @classmethod
     def _start_tleap_lines(
-        cls, path_structure: str, sim_context_manager: SimContextManager
+        cls, path_structure: str, simlify_config: SimlifyConfig
     ) -> list[str]:
-        context = sim_context_manager.get()
+        context = simlify_config.get()
 
         # Prepare tleap_lines
         tleap_lines: list[str] = []
-        tleap_lines.extend(cls.ff_lines(sim_context_manager))
+        tleap_lines.extend(cls.ff_lines(simlify_config))
 
         extra_lines_topo_gen = context["extra_lines_topo_gen"]
         if extra_lines_topo_gen is None:
@@ -202,7 +202,7 @@ class AmberTopoGen(TopoGen):
     def dry_run(  # pylint: disable=too-many-arguments
         cls,
         path_structure: str,
-        sim_context_manager: SimContextManager,
+        simlify_config: SimlifyConfig,
         dir_work: str | None = None,
     ) -> dict[str, Any]:
         """Perform a dry run to obtain any preliminary information.
@@ -210,7 +210,7 @@ class AmberTopoGen(TopoGen):
         Args:
             path_structure: Path structure file for topology generation. For Amber,
                 this must be a PDB file.
-            sim_context_manager: Context manager for simulations.
+            simlify_config: Context manager for simulations.
             dir_work: Working directory to generate topology. Useful for
                 specifying relative paths.
 
@@ -236,12 +236,12 @@ class AmberTopoGen(TopoGen):
         """
         if dir_work is None:
             dir_work = os.getcwd()
-        context = sim_context_manager.get()
+        context = simlify_config.get()
 
         tmp_pdb = tempfile.NamedTemporaryFile(mode="r", suffix=".pdb", delete=True)
         tmp_input = tempfile.NamedTemporaryFile(mode="w+", suffix=".in", delete=False)
 
-        tleap_lines = cls._start_tleap_lines(path_structure, sim_context_manager)
+        tleap_lines = cls._start_tleap_lines(path_structure, simlify_config)
         solv_box_name = FF_WATER_SOLVENT_BOX_MAP[context["ff_water"]]
         tleap_lines.append(
             f"solvatebox mol {solv_box_name} {str(context['solvent_padding'])}"
@@ -257,7 +257,7 @@ class AmberTopoGen(TopoGen):
         tleap_info = cls._parse_logs(completed_process.stdout.split("\n"))
 
         ion_counts = get_ion_counts(
-            sim_context_manager=sim_context_manager,
+            simlify_config=simlify_config,
             charge_net=tleap_info["charge_net"],
             n_waters=tleap_info["solvent_molecules_num"],
         )
@@ -272,7 +272,7 @@ class AmberTopoGen(TopoGen):
         path_structure: str,
         path_topo_write: str,
         path_coord_write: str,
-        sim_context_manager: SimContextManager,
+        simlify_config: SimlifyConfig,
         dir_work: str | None = None,
         **kwargs: dict[str, Any],
     ) -> dict[str, Any]:
@@ -283,7 +283,7 @@ class AmberTopoGen(TopoGen):
                 this must be a PDB file.
             path_topo_write: Where to write topology file.
             path_coord_write: Where to write coordinate file.
-            sim_context_manager: Context manager for simulations.
+            simlify_config: Context manager for simulations.
             dir_work: Working directory to generate topology. Useful for
                 specifying relative paths.
             kwargs:
@@ -301,7 +301,7 @@ class AmberTopoGen(TopoGen):
         """
         if dir_work is None:
             dir_work = os.getcwd()
-        context = sim_context_manager.get()
+        context = simlify_config.get()
 
         if "path_tleap_pdb" not in kwargs:
             tmp_tleap_pdb = tempfile.NamedTemporaryFile(
@@ -310,7 +310,7 @@ class AmberTopoGen(TopoGen):
             path_tleap_pdb = tmp_tleap_pdb.name
         tmp_input = tempfile.NamedTemporaryFile(mode="w+", suffix=".in", delete=False)
 
-        tleap_lines = cls._start_tleap_lines(path_structure, sim_context_manager)
+        tleap_lines = cls._start_tleap_lines(path_structure, simlify_config)
         n_anions = kwargs["charge_anion_num"]
         n_cations = kwargs["charge_cation_num"]
         tleap_lines.append(

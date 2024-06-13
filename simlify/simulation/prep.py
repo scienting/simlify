@@ -8,7 +8,7 @@ from collections.abc import Collection
 from loguru import logger
 
 from ..utils import get_obj_from_string
-from .contexts import SimContextManager
+from .contexts import SimlifyConfig
 
 
 class SimPrep(ABC):
@@ -20,14 +20,14 @@ class SimPrep(ABC):
     @staticmethod
     @abstractmethod
     def prepare_context(
-        sim_context_manager: SimContextManager,
-    ) -> SimContextManager:
+        simlify_config: SimlifyConfig,
+    ) -> SimlifyConfig:
         r"""Preprocessing and validation of a [simulation context]
         [simulation.prep.SimPrep]. This is unique to each simulation package and can
         be customized based on the context.
 
         Args:
-            sim_context_manager: Specifies options and parameters.
+            simlify_config: Specifies options and parameters.
 
         Returns:
             Bash commands in a list to run one stage of a simulation.
@@ -103,11 +103,11 @@ class SimPrep(ABC):
 
     @classmethod
     @abstractmethod
-    def prepare(cls, sim_context_manager: SimContextManager) -> None:
+    def prepare(cls, simlify_config: SimlifyConfig) -> None:
         """Run all steps to prepare simulations.
 
         Args:
-            sim_context_manager: Context manager for simulations.
+            simlify_config: Context manager for simulations.
         """
         raise NotImplementedError
 
@@ -119,7 +119,7 @@ def run_sim_slurm_prep(
     path_run_write: str,
     path_slurm_write: str,
     prep_class_string: str,
-    sim_context_manager: SimContextManager,
+    simlify_config: SimlifyConfig,
 ) -> None:
     r"""Prepare files for simulations using slurm.
 
@@ -132,24 +132,24 @@ def run_sim_slurm_prep(
         prep_class_string: Import string to a simulation preparation class. For example,
             [`"simlify.simulation.amber.prep.AmberSimPrep"`]
             [simulation.amber.prep.AmberSimPrep].
-        sim_context_manager: Context manager for simulations.
+        simlify_config: Context manager for simulations.
     """
-    sim_context_manager.dir_write = dir_write
-    sim_context_manager.path_slurm_write = os.path.join(dir_write, path_slurm_write)
-    sim_context_manager.path_run_write = os.path.join(dir_write, path_run_write)
+    simlify_config.dir_write = dir_write
+    simlify_config.path_slurm_write = os.path.join(dir_write, path_slurm_write)
+    simlify_config.path_run_write = os.path.join(dir_write, path_run_write)
 
-    sbatch_options = sim_context_manager.sbatch_options
+    sbatch_options = simlify_config.sbatch_options
     if sbatch_options is not None:
         sbatch_options["job-name"] = name_job
-        sim_context_manager.sbatch_options = sbatch_options
+        simlify_config.sbatch_options = sbatch_options
     else:
         raise RuntimeError("sbatch options cannot be None when preparing simulations")
 
     prep_cls = get_obj_from_string(prep_class_string)
     prep_cls.prepare_sbatch_lines(  # type: ignore
-        sim_context_manager.get(), write=sim_context_manager.write
+        simlify_config.get(), write=simlify_config.write
     )
-    prep_cls.prepare(sim_context_manager)  # type: ignore
+    prep_cls.prepare(simlify_config)  # type: ignore
 
 
 def cli_run_sim_slurm_prep():
@@ -195,16 +195,16 @@ def cli_run_sim_slurm_prep():
     )
     args = parser.parse_args()
 
-    sim_context_manager = SimContextManager()
+    simlify_config = SimlifyConfig()
     if args.yaml is None:
         args.yaml = []
     for yaml_path in reversed(args.yaml):
-        sim_context_manager.from_yaml(yaml_path)
+        simlify_config.from_yaml(yaml_path)
     run_sim_slurm_prep(
         args.name_job,
         args.dir_write,
         args.path_run_write,
         args.path_slurm_write,
         args.prep_class_string,
-        sim_context_manager,
+        simlify_config,
     )

@@ -4,7 +4,7 @@ import os
 
 from loguru import logger
 
-from ..contexts import SimContextManager
+from ..contexts import SimlifyConfig
 from ..prep import SimPrep
 from .contexts import AmberContextValidator
 
@@ -14,16 +14,16 @@ class AmberSimPrep(SimPrep):
 
     @staticmethod
     def prepare_context(
-        sim_context_manager: SimContextManager,
-    ) -> SimContextManager:
+        simlify_config: SimlifyConfig,
+    ) -> SimlifyConfig:
         r"""Preprocessing and validating of context for Amber simulations.
 
         Args:
-            sim_context_manager: Context manager for simulations.
+            simlify_config: Context manager for simulations.
 
         """
         logger.info("Preparing context for Amber simulation")
-        context = sim_context_manager.get()
+        context = simlify_config.get()
 
         dir_run = context["dir_output"]
 
@@ -63,12 +63,12 @@ class AmberSimPrep(SimPrep):
                     ntasks_per_node = context["sbatch_options"]["ntasks-per-node"]
                     context["cpu_cores"] = int(n_nodes * ntasks_per_node)
 
-        sim_context_manager.update(context)
+        simlify_config.update(context)
 
-        is_valid = AmberContextValidator.validate(sim_context_manager)
+        is_valid = AmberContextValidator.validate(simlify_config)
         if not is_valid:
             raise RuntimeError("Context is not valid for Amber!")
-        return sim_context_manager
+        return simlify_config
 
     @classmethod
     def get_stage_run_command(cls, context: dict[str, Any]) -> list[str]:
@@ -88,7 +88,7 @@ class AmberSimPrep(SimPrep):
         **Uses:**
 
         The following attributes are possibly used here and should be specified in
-        [`sim_context_manager`][simulation.contexts.SimContextManager].
+        [`simlify_config`][simulation.contexts.SimlifyConfig].
 
         -   `name_stage`: Unique label for this simulation stage. This will be used
             to build file paths.
@@ -230,18 +230,18 @@ class AmberSimPrep(SimPrep):
         return stage_input_lines, run_commands
 
     @classmethod
-    def prepare(cls, sim_context_manager: SimContextManager) -> None:
+    def prepare(cls, simlify_config: SimlifyConfig) -> None:
         """Run all steps to prepare simulations.
 
         Args:
-            sim_context_manager: Context manager for simulations.
+            simlify_config: Context manager for simulations.
         """
         logger.info("Prepare simulations")
-        multiple_stages: bool = bool(sim_context_manager.stages is not None)
+        multiple_stages: bool = bool(simlify_config.stages is not None)
         if multiple_stages:
             logger.debug("There are multiple stages")
-            n_stages: int = len(sim_context_manager.stages)  # type: ignore
-            sim_context_manager.update(sim_context_manager.stages[0])  # type: ignore
+            n_stages: int = len(simlify_config.stages)  # type: ignore
+            simlify_config.update(simlify_config.stages[0])  # type: ignore
         else:
             logger.debug("There is one stage.")
             n_stages = 1
@@ -249,15 +249,15 @@ class AmberSimPrep(SimPrep):
         run_commands: list[str] = []
         for i_stage in range(1, n_stages + 1):
             logger.info("Preparing stage {}", i_stage - 1)
-            sim_context_manager = cls.prepare_context(sim_context_manager)
-            context = sim_context_manager.get()
+            simlify_config = cls.prepare_context(simlify_config)
+            context = simlify_config.get()
             _, run_commands = cls.prepare_stage(context, run_commands, context["write"])
 
-            sim_context_manager.path_restart_prev = sim_context_manager.path_restart
-            sim_context_manager.path_coord_prev = sim_context_manager.path_coord
+            simlify_config.path_restart_prev = simlify_config.path_restart
+            simlify_config.path_coord_prev = simlify_config.path_coord
 
             if multiple_stages and i_stage < n_stages:
-                sim_context_manager.update(sim_context_manager.stages[i_stage])  # type: ignore
+                simlify_config.update(simlify_config.stages[i_stage])  # type: ignore
 
         if context["write"]:
             logger.debug("Writing run script at {}", context["path_run_write"])

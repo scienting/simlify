@@ -1,10 +1,10 @@
 from loguru import logger
 
-from ..simulation.contexts import SimContextManager
+from ..simulation.contexts import SimlifyConfig
 
 
 def get_ion_counts(
-    sim_context_manager: SimContextManager,
+    simlify_config: SimlifyConfig,
     charge_net: int | float,
     n_waters: int,
     water_molecule_volume: float = 28.78277638661025,
@@ -12,9 +12,9 @@ def get_ion_counts(
     r"""Compute the number of cations and anions to achieve desired ionic strength.
 
     Args:
-        sim_context_manager: A simulation context for system preparation.
+        simlify_config: A simulation context for system preparation.
         charge_net: Total system charge. Will add counter ions if `charge_neutralize`
-            is `True` in `sim_context_manager`.
+            is `True` in `simlify_config`.
         n_waters: Total number of water molecules in the system.
         water_molecule_volume: Approximate volume of a water molecule in Å<sup>3</sup>.
 
@@ -23,7 +23,7 @@ def get_ion_counts(
         mean two cations need to be added, but `-2` would mean two anions.
     """
     logger.info("Computing number of extra ions")
-    context = sim_context_manager.get()
+    context = simlify_config.get()
     water_box_volume: float = n_waters * water_molecule_volume  # A^3
     logger.debug("Volume of water: {} A^3", water_box_volume)
     water_box_volume /= 1e27  # L
