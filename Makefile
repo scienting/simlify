@@ -1,6 +1,6 @@
 SHELL := /usr/bin/env bash
-PYTHON_VERSION := 3.11
-PYTHON_VERSION_CONDENSED := 311
+PYTHON_VERSION := 3.12
+PYTHON_VERSION_CONDENSED := 312
 PACKAGE_NAME := simlify
 PACKAGE_PATH := $(PACKAGE_NAME)/
 TESTS_PATH := tests/
@@ -12,7 +12,7 @@ CONDA_LOCK_OPTIONS := -p linux-64 -p osx-64 --channel conda-forge
 ###   ENVIRONMENT   ###
 
 # See https://github.com/pypa/pip/issues/7883#issuecomment-643319919
-export PYTHON_KEYRING_BACKEND := keyring.backends.null.Keyring
+export PYTHON_KEYRING_BACKEND=keyring.backends.null.Keyring
 
 .PHONY: conda-create
 conda-create:
@@ -63,12 +63,12 @@ poetry-lock:
 
 .PHONY: install
 install:
-	$(CONDA) poetry install --no-interaction --with analysis
+	$(CONDA) poetry install --no-interaction
 	- mkdir .mypy_cache
 	- $(CONDA) mypy --install-types --non-interactive --explicit-package-bases $(PACKAGE_NAME)
 
 .PHONY: environment
-environment: conda-create nodejs-dependencies from-conda-lock pre-commit-install install
+environment: conda-create from-conda-lock pre-commit-install install
 
 .PHONY: locks
 locks: conda-create conda-setup conda-dependencies nodejs-dependencies conda-lock pre-commit-install poetry-lock install
@@ -79,11 +79,12 @@ locks: conda-create conda-setup conda-dependencies nodejs-dependencies conda-loc
 
 .PHONY: validate
 validate:
-	- $(CONDA) markdownlint-cli2 "**.md" --config ./.markdownlint.yaml --fix
+	- $(CONDA) markdownlint-cli2 "**/*.{md,markdown}" --config .markdownlint.yaml
 	- $(CONDA) pre-commit run --all-files
 
 .PHONY: formatting
 formatting:
+	- $(CONDA) markdownlint-cli2 "**/*.{md,markdown}" --fix --config .markdownlint.yaml
 	- $(CONDA) isort --settings-path pyproject.toml ./
 	- $(CONDA) black --config pyproject.toml ./
 
@@ -118,11 +119,20 @@ lint: check-codestyle mypy
 
 
 
-###   BUILDING   ###
+###   DEPLOY   ###
 
 .PHONY: build
 build:
+	- rm -r dist
 	$(CONDA) poetry build
+
+.PHONY: publish-test
+publish-test:
+	$(CONDA) python3 -m twine upload --repository testpypi dist/*
+
+.PHONY: publish
+publish:
+	$(CONDA) python3 -m twine upload dist/*
 
 
 
@@ -195,19 +205,16 @@ open-docs:
 
 
 
-###   DATA   ###
+###   DOCKER   ###
 
-.PHONY: identifier
-identifier:
-	$(CONDA) python -c "import uuid; print(uuid.uuid4())"
+.PHONY: docker-auth
+docker-auth:
+	docker login registry.gitlab.com
 
+.PHONY: docker-build-env
+docker-build-env:
+	docker build -t registry.gitlab.com/oasci/software/simlify:env -f ./docker/Dockerfile-env .
 
-###   DEPLOY   ###
-
-.PHONY: docker-build
-docker-build:
-	docker build -t registry.gitlab.com/oasci/software/simlify:env .
-
-.PHONY: docker-push
-docker-push:
+.PHONY: docker-push-env
+docker-push-env:
 	docker push registry.gitlab.com/oasci/software/simlify:env
