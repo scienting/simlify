@@ -25,7 +25,7 @@ class TopoGen(ABC):
 
         Args:
             path_structure: Path structure file for topology generation.
-            simlify_config: Context manager for simulations.
+            simlify_config: Simlify configuration.
             dir_work: Working directory to generate topology. Useful for
                 specifying relative paths.
 
@@ -51,7 +51,7 @@ class TopoGen(ABC):
             path_structure: Path structure file for topology generation.
             path_topo_write: Where to write topology file.
             path_coord_write: Where to write coordinate file.
-            simlify_config: Context manager for simulations.
+            simlify_config: Simlify configuration.
             dir_work: Working directory to generate topology. Useful for
                 specifying relative paths.
         """
@@ -76,11 +76,12 @@ def run_gen_topo(
         import_string: Import string to a topology generation class. For example,
             [`"simlify.simulation.amber.topo.AmberTopoGen"`]
             [simulation.amber.topo.AmberTopoGen].
-        simlify_config: Context manager for simulations.
+        simlify_config: Simlify configuration.
         dir_work: Working directory to generate topology. Useful for
             specifying relative paths.
     """
-    simlify_config.dir_work = dir_work
+    if dir_work is not None:
+        simlify_config.dir_work = dir_work
     cls_topo = get_obj_from_string(import_string)
 
     topo_info_dry_run: dict[str, Any] = cls_topo.dry_run(  # type: ignore

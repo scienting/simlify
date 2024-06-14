@@ -210,7 +210,7 @@ class AmberTopoGen(TopoGen):
         Args:
             path_structure: Path structure file for topology generation. For Amber,
                 this must be a PDB file.
-            simlify_config: Context manager for simulations.
+            simlify_config: Simlify configuration.
             dir_work: Working directory to generate topology. Useful for
                 specifying relative paths.
 
@@ -283,7 +283,7 @@ class AmberTopoGen(TopoGen):
                 this must be a PDB file.
             path_topo_write: Where to write topology file.
             path_coord_write: Where to write coordinate file.
-            simlify_config: Context manager for simulations.
+            simlify_config: Simlify configuration.
             dir_work: Working directory to generate topology. Useful for
                 specifying relative paths.
             kwargs:
