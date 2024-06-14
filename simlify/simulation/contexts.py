@@ -1,3 +1,5 @@
+from typing import Any
+
 from collections.abc import Iterable
 
 from atomea.schemas.io import YamlIO
@@ -5,35 +7,7 @@ from atomea.schemas.workflow.slurm import SlurmSchema
 from pydantic import BaseModel, Field
 
 
-class ForcefieldConfig(BaseModel, YamlIO):
-
-    dna: str | None = None
-    """Molecular mechanics force fields for DNA."""
-
-    glycam: str | None = None
-    """Molecular mechanics force fields for sugars"""
-
-    ions: str | None = None
-    """Molecular mechanics force fields for ions."""
-
-    lipid: str | None = None
-    """Molecular mechanics force fields for lipids."""
-
-    protein: str | None = None
-    """Molecular mechanics force field used to describe polypeptides."""
-
-    rna: str | None = None
-    """Molecular mechanics force fields for RNA."""
-
-    small_molecule: str | None = None
-    """Molecular mechanics force fields for small molecules."""
-
-    water: str | None = None
-    """Molecular mechanics force fields for water."""
-
-
 class SolutionConfig(BaseModel, YamlIO):
-
     charge_anion_extra: int = 0
     """Number of extra anions of type [`charge_anion_identity`]
     [simulation.contexts.SimlifyConfig.charge_anion_identity] to add to
@@ -80,14 +54,23 @@ class SolutionConfig(BaseModel, YamlIO):
     """Padding between solute and box edge to fill with solvent in Angstroms."""
 
 
+class Scratch(BaseModel, YamlIO):
+    """Provides a pydantic model to put temporary information."""
+
+
 class SimlifyConfig(BaseModel, YamlIO):
     """Contexts for setting up molecular simulations."""
-
-    ff: ForcefieldConfig = Field(default_factory=ForcefieldConfig)
 
     slurm: SlurmSchema = Field(default_factory=SlurmSchema)
 
     solution: SolutionConfig = Field(default_factory=SolutionConfig)
+
+    scratch: Scratch = Field(default_factory=Scratch, exclude=True)
+
+    engine: Any = None
+    """Atomea workflow schema for the molecular simulation engine (e.g.,
+    `Amber22Schema`).
+    """
 
     dir_input: str = "."
     """Path to the directory that contains input files when running the simulation.
@@ -109,7 +92,7 @@ class SimlifyConfig(BaseModel, YamlIO):
     extra_lines_topo_gen: Iterable[str] | None = None
     """Extra lines to include when generating a topology."""
 
-    name_stage: str | None = None
+    name: str | None = None
     """Name or label for simulation stage."""
 
     splits: int = 1
