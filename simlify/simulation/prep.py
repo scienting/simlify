@@ -1,5 +1,3 @@
-from typing import Any
-
 import argparse
 import os
 from abc import ABC, abstractmethod
@@ -19,7 +17,7 @@ class SimPrep(ABC):
 
     @staticmethod
     @abstractmethod
-    def prepare_context(
+    def prepare_sim_config(
         simlify_config: SimlifyConfig,
     ) -> SimlifyConfig:
         r"""Preprocessing and validation of a [simulation context]
@@ -36,7 +34,7 @@ class SimPrep(ABC):
 
     @classmethod
     @abstractmethod
-    def get_stage_input_lines(cls, context: dict[str, Any]) -> Collection[str]:
+    def get_stage_input_lines(cls, simlify_config: SimlifyConfig) -> Collection[str]:
         r"""Prepare input file lines for a single stage.
 
         Args:
@@ -48,9 +46,10 @@ class SimPrep(ABC):
         raise NotImplementedError
 
     @classmethod
-    def prepare_sbatch_lines(
+    def prepare_slurm(
         cls,
-        context: dict[str, Any],
+        file_path: str,
+        simlify_config: SimlifyConfig,
         write: bool = True,
     ) -> list[str]:
         r"""Prepare slurm submission script lines.
@@ -60,22 +59,19 @@ class SimPrep(ABC):
 
         """
         logger.info("Preparing slurm submission script")
-        sbatch_lines = ["#!/bin/bash"]
-        for k, v in context["sbatch_options"].items():
-            sbatch_lines.append(f"#SBATCH --{k}={v}")
-        sbatch_lines.extend(context["sbatch_lines"])
+        slurm_lines: list[str] = simlify_config.slurm.render()
 
-        sbatch_lines = [l + "\n" for l in sbatch_lines if isinstance(l, str)]
-        logger.debug("Slurm script:\n{}", "".join(sbatch_lines))
+        slurm_lines = [l + "\n" for l in slurm_lines]
+        logger.debug("Slurm script:\n{}", "".join(slurm_lines))
         if write:
-            logger.info("Writing submissions script at {}", context["path_slurm_write"])
-            with open(context["path_slurm_write"], mode="w", encoding="utf-8") as f:
-                f.writelines(sbatch_lines)
-        return sbatch_lines
+            logger.info(f"Writing submissions script at {file_path}")
+            with open(file_path, mode="w", encoding="utf-8") as f:
+                f.writelines(slurm_lines)
+        return slurm_lines
 
     @classmethod
     @abstractmethod
-    def get_stage_run_command(cls, context: dict[str, Any]) -> Collection[str]:
+    def get_stage_run_command(cls, simlify_config: SimlifyConfig) -> Collection[str]:
         r"""Prepare bash command to run a single simulation.
 
         Args:
@@ -95,7 +91,7 @@ class SimPrep(ABC):
     @abstractmethod
     def prepare_stage(
         cls,
-        context: dict[str, Any],
+        simlify_config: SimlifyConfig,
         run_commands: list[str] | None = None,
         write: bool = True,
     ) -> tuple[list[str], list[str]]:
@@ -107,7 +103,7 @@ class SimPrep(ABC):
         """Run all steps to prepare simulations.
 
         Args:
-            simlify_config: Context manager for simulations.
+            simlify_config: Simlify configuration.
         """
         raise NotImplementedError
 
@@ -132,7 +128,7 @@ def run_sim_slurm_prep(
         prep_class_string: Import string to a simulation preparation class. For example,
             [`"simlify.simulation.amber.prep.AmberSimPrep"`]
             [simulation.amber.prep.AmberSimPrep].
-        simlify_config: Context manager for simulations.
+        simlify_config: Simlify configuration.
     """
     simlify_config.dir_write = dir_write
     simlify_config.path_slurm_write = os.path.join(dir_write, path_slurm_write)
