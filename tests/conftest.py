@@ -3,7 +3,6 @@ import os
 import pytest
 
 from simlify import enable_logging
-from simlify.simulation.amber.contexts import AMBER_PROTEIN_STANDARD_CONTEXT
 from simlify.simulation.contexts import SimlifyConfig
 
 TEST_DIR = os.path.dirname(__file__)
@@ -46,12 +45,6 @@ def path_cro_lib():
     return os.path.join(
         TEST_DIR, "files/ff/amber-ff-chromo-params/xFPchromophores.lib.2022"
     )
-
-
-@pytest.fixture
-def amber_protein_standard_context():
-    context_manager = SimlifyConfig(**AMBER_PROTEIN_STANDARD_CONTEXT)
-    return context_manager
 
 
 @pytest.fixture
