@@ -1,77 +1,65 @@
-from typing import Any
-
 import os
 
+from atomea.schemas.workflow.amber.schema import AmberSchemaBase
 from loguru import logger
 
 from ..contexts import SimlifyConfig
 from ..prep import SimPrep
-from .contexts import AmberContextValidator
 
 
 class AmberSimPrep(SimPrep):
     r"""Prepares files for Amber simulations"""
 
     @staticmethod
-    def prepare_context(
+    def prepare_sim_config(
         simlify_config: SimlifyConfig,
     ) -> SimlifyConfig:
         r"""Preprocessing and validating of context for Amber simulations.
 
         Args:
-            simlify_config: Context manager for simulations.
+            simlify_config: Simlify configuration.
 
         """
         logger.info("Preparing context for Amber simulation")
-        context = simlify_config.get()
 
-        dir_run = context["dir_output"]
-
-        use_scratch = bool(context["dir_scratch"] is not None)
-        if use_scratch:
-            dir_run = context["dir_scratch"]
-        context["dir_run"] = dir_run
+        if not issubclass(simlify_config.engine, AmberSchemaBase):
+            raise TypeError(
+                "SimlifyConfig.engine should be a subclass of AmberSchemaBase."
+            )
 
         # Creates all amber-specific paths we will need.
-        context["path_input"] = os.path.join(
-            context["dir_input"], context["name_stage"] + ".in"
+        if simlify_config.name is None:
+            raise ValueError("simlify_config.name cannot be None")
+        simlify_config.engine.cli.mdin = os.path.join(
+            simlify_config.dir_input, simlify_config.name + ".in"
         )
-        context["path_output"] = os.path.join(dir_run, context["name_stage"] + ".out")
-        context["path_restart"] = os.path.join(dir_run, context["name_stage"] + ".rst")
-        context["path_coord"] = os.path.join(dir_run, context["name_stage"] + ".nc")
-        context["path_mdinfo"] = os.path.join(
-            dir_run, context["name_stage"] + ".mdinfo"
+        simlify_config.engine.cli.mdout = os.path.join(
+            simlify_config.runtime.dir_run, simlify_config.name + ".out"
+        )
+        simlify_config.engine.cli.restrt = os.path.join(
+            simlify_config.runtime.dir_run, simlify_config.name + ".rst"
+        )
+        simlify_config.engine.cli.inpcrd = os.path.join(
+            simlify_config.runtime.dir_run, simlify_config.name + ".nc"
+        )
+        simlify_config.engine.cli.mdinfo = os.path.join(
+            simlify_config.runtime.dir_run, simlify_config.name + ".mdinfo"
         )
 
-        dir_input_write = os.path.join(context["dir_write"], context["dir_input_write"])
-        if not os.path.exists(dir_input_write):
-            os.makedirs(dir_input_write, exist_ok=True)
+        # Checks to see if we will be writing files to a directory later.
+        if simlify_config.dir_write is not None:
+            if not os.path.exists(simlify_config.dir_write):
+                os.makedirs(simlify_config.dir_write, exist_ok=True)
 
-        if use_scratch:
-            # We have to use absolute paths with scratch to ensure nothing gets
-            # overwritten.
-            for k, v in context.items():
-                if k[-5:] in ("_path", "_dir"):
-                    if v is not None:
-                        if "$slurm" not in v.lower():
-                            context[k] = os.path.abspath(v)
+        if simlify_config.cli.compute_platform == "mpi":
+            simlify_config.temp.cpu_cores = int(
+                simlify_config.slurm.nodes * simlify_config.slurm.ntasks_per_node
+            )
 
-        if "sbatch_options" in context.keys():
-            if context["compute_platform"] == "mpi":
-                if context["cpu_cores"] is None:
-                    n_nodes = context["sbatch_options"]["nodes"]
-                    ntasks_per_node = context["sbatch_options"]["ntasks-per-node"]
-                    context["cpu_cores"] = int(n_nodes * ntasks_per_node)
-
-        simlify_config.update(context)
-
-        is_valid = AmberContextValidator.validate(simlify_config)
-        if not is_valid:
-            raise RuntimeError("Context is not valid for Amber!")
         return simlify_config
 
     @classmethod
-    def get_stage_run_command(cls, context: dict[str, Any]) -> list[str]:
+    def get_stage_run_command(cls, simlify_config: SimlifyConfig) -> list[str]:
         r"""Prepare bash command to run a single Amber simulation using pmemd.
 
         Args:
@@ -99,22 +87,22 @@ class AmberSimPrep(SimPrep):
         -   `compute_platform`: Computational platform to run the simulation on.
         -   `cpu_cores`: Number of cores to use for `mpi` simulations if requested.
         """
-        use_scratch = bool(context["dir_scratch"] is not None)
+        use_scratch = bool(simlify_config.dir_scratch is not None)
 
         stage_commands = ["", f"echo 'Starting {context['name_stage']}'", "date"]
 
         if use_scratch:
             # Adds commands to check if split was already ran.
             check_path = os.path.join(
-                context["dir_output"], context["name_stage"] + ".rst"
+                simlify_config.dir_output, simlify_config.name_stage + ".rst"
             )
             stage_commands = ["    " + line for line in stage_commands]
             stage_commands.insert(0, f"FILE={check_path}")
             stage_commands.insert(1, 'if [ ! -f "$FILE" ]; then')
 
-        if context["compute_platform"] == "mpi":
+        if simlify_config.compute_platform == "mpi":
             amber_command = f"mpirun -np {context['cpu_cores']} pmemd.MPI "
-        elif context["compute_platform"] == "cuda":
+        elif simlify_config.compute_platform == "cuda":
             amber_command = "pmemd.cuda "
         amber_command += f"-O -i {context['path_input']} "
         amber_command += (
@@ -145,7 +133,7 @@ class AmberSimPrep(SimPrep):
         return stage_commands
 
     @classmethod
-    def get_stage_input_lines(cls, context: dict[str, Any]) -> list[str]:
+    def get_stage_input_lines(cls, simlify_config: SimlifyConfig) -> list[str]:
         r"""Prepare input file lines for a single stage.
 
         Args:
@@ -154,9 +142,9 @@ class AmberSimPrep(SimPrep):
         Returns:
             Input file lines for a single simulations. The lines do not end in `\n`.
         """
-        logger.info("Preparing input lines for stage {}", context["name_stage"])
-        input_lines = [context["name_stage"], "&cntrl"]
-        for key, value in context["input_kwargs"].items():
+        logger.info("Preparing input lines for stage {}", simlify_config.name_stage)
+        input_lines = [simlify_config.name_stage, "&cntrl"]
+        for key, value in simlify_config.input_kwargs.items():
             if key in ("restraintmask", "timask1", "scmask1", "timask2", "scmask2"):
                 value = f'"{value}"'
             line_to_add = f"    {key}={value},"
@@ -168,7 +156,7 @@ class AmberSimPrep(SimPrep):
     @classmethod
     def prepare_stage(
         cls,
-        context: dict[str, Any],
+        simlify_config: SimlifyConfig,
         run_commands: list[str] | None = None,
         write: bool = True,
     ) -> tuple[list[str], list[str]]:
@@ -195,33 +183,33 @@ class AmberSimPrep(SimPrep):
 
         # We do not want to change source context in prepare_context, so we do this
         # here.
-        if context["splits"] > 1:
-            context["input_kwargs"]["nstlim"] = int(
-                context["input_kwargs"]["nstlim"] / context["splits"]
+        if simlify_config.splits > 1:
+            simlify_config.engine.inputs.nstlim = int(
+                simlify_config.engine.inputs.nstlim / simlify_config.splits
             )
 
-        name_stage = context["name_stage"]
-        for i_split in range(1, context["splits"] + 1):
-            if context["splits"] > 1:
+        name_stage = simlify_config.name_stage
+        for i_split in range(1, simlify_config.splits + 1):
+            if simlify_config.splits > 1:
                 name_stage_suffix = f"_split_{i_split:03d}"  # Why n_splits < 1000
             else:
                 name_stage_suffix = ""
 
-            context["name_stage"] = name_stage + name_stage_suffix
+            simlify_config.name_stage = name_stage + name_stage_suffix
             stage_input_lines = cls.get_stage_input_lines(context)
             if write:
                 stage_path_input = os.path.join(
-                    context["dir_write"],
-                    context["dir_input_write"],
-                    context["name_stage"] + ".in",
+                    simlify_config.dir_write,
+                    simlify_config.dir_input_write,
+                    simlify_config.name_stage + ".in",
                 )
                 logger.info("Writing input file at {}", stage_path_input)
                 with open(stage_path_input, mode="w", encoding="utf-8") as f:
                     f.writelines([i + "\n" for i in stage_input_lines])
 
             # Prepare script to run calculations.
-            context["path_coord"] = os.path.join(
-                context["dir_run"], context["name_stage"] + ".nc"
+            simlify_config.path_coord = os.path.join(
+                simlify_config.dir_run, simlify_config.name_stage + ".nc"
             )
 
             logger.info("Adding stage's amber command to run script")
@@ -234,7 +222,7 @@ class AmberSimPrep(SimPrep):
         """Run all steps to prepare simulations.
 
         Args:
-            simlify_config: Context manager for simulations.
+            simlify_config: Simlify configuration.
         """
         logger.info("Prepare simulations")
         multiple_stages: bool = bool(simlify_config.stages is not None)
@@ -251,7 +239,9 @@ class AmberSimPrep(SimPrep):
             logger.info("Preparing stage {}", i_stage - 1)
             simlify_config = cls.prepare_context(simlify_config)
             context = simlify_config.get()
-            _, run_commands = cls.prepare_stage(context, run_commands, context["write"])
+            _, run_commands = cls.prepare_stage(
+                context, run_commands, simlify_config.write
+            )
 
             simlify_config.path_restart_prev = simlify_config.path_restart
             simlify_config.path_coord_prev = simlify_config.path_coord
@@ -259,7 +249,7 @@ class AmberSimPrep(SimPrep):
             if multiple_stages and i_stage < n_stages:
                 simlify_config.update(simlify_config.stages[i_stage])  # type: ignore
 
-        if context["write"]:
-            logger.debug("Writing run script at {}", context["path_run_write"])
-            with open(context["path_run_write"], "w", encoding="utf-8") as f:
+        if simlify_config.write:
+            logger.debug("Writing run script at {}", simlify_config.path_run_write)
+            with open(simlify_config.path_run_write, "w", encoding="utf-8") as f:
                 f.writelines([l + "\n" for l in run_commands])

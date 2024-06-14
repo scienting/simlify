@@ -54,8 +54,65 @@ class SolutionConfig(BaseModel, YamlIO):
     """Padding between solute and box edge to fill with solvent in Angstroms."""
 
 
-class Scratch(BaseModel, YamlIO):
+class TempSchema(BaseModel, YamlIO):
     """Provides a pydantic model to put temporary information."""
+
+
+class RenderingConfig(BaseModel, YamlIO):
+    """Configuration for rendering files to write."""
+
+    dir_work: str = "."
+    """
+    Working directory to write files.
+    """
+
+    dir_input: str = "."
+    """
+    Path to a directory relative to
+    [`dir_work`][simulation.contexts.RenderingConfig.dir_work] that will contain
+    input files.
+    """
+
+    dir_output: str = "."
+    """
+    Path to a directory relative to
+    [`dir_work`][simulation.contexts.RenderingConfig.dir_work] that the simulation will
+    store output files.
+    """
+
+
+class RuntimeConfig(BaseModel, YamlIO):
+    """Configuration options during the simulation runtime."""
+
+    dir_work: str = "."
+    """
+    Working directory during runtime. This can be the current work directory or
+    a workload manager directory such as `$SLURM_SUBMIT_DIR`.
+    """
+
+    dir_run: str = "."
+    """
+    Directory that calculations are performed in. This can be the same as
+    [`dir_work`][simulation.contexts.RuntimeConfig.dir_work]
+    or some scratch space like `$SLURM_SCRATCH`.
+    """
+
+    dir_input: str = "."
+    """
+    Path to a directory relative to
+    [`dir_work`][simulation.contexts.RuntimeConfig.dir_work] that will contain
+    input files.
+    """
+
+    dir_output: str = "."
+    """
+    Path to a directory relative to
+    [`dir_work`][simulation.contexts.RuntimeConfig.dir_work] that the simulation will
+    store output files.
+    """
+
+    splits: int = 1
+    """Split simulation stage into several chunks."""
 
 
 class SimlifyConfig(BaseModel, YamlIO):
@@ -65,35 +122,20 @@ class SimlifyConfig(BaseModel, YamlIO):
 
     solution: SolutionConfig = Field(default_factory=SolutionConfig)
 
-    scratch: Scratch = Field(default_factory=Scratch, exclude=True)
+    temp: TempSchema = Field(default_factory=TempSchema, exclude=True)
+
+    rendering: RenderingConfig = Field(default_factory=RenderingConfig)
+
+    runtime: RuntimeConfig = Field(default_factory=RuntimeConfig)
 
     engine: Any = None
-    """Atomea workflow schema for the molecular simulation engine (e.g.,
+    """
+    Atomea workflow schema for the molecular simulation engine (e.g.,
     `Amber22Schema`).
     """
-
-    dir_input: str = "."
-    """Path to the directory that contains input files when running the simulation.
-    """
-
-    dir_output: str = "."
-    """Path to the directory that the simulation will store output files."""
-
-    dir_scratch: str | None = None
-    """Specify path for scratch directory if desired. If `None`, we do not use
-    scratch."""
-
-    dir_work: str = "."
-    """Directory to be in when running the simulation."""
-
-    dir_write: str = "."
-    """Local directory to write input files when preparing simulations."""
 
     extra_lines_topo_gen: Iterable[str] | None = None
     """Extra lines to include when generating a topology."""
 
-    name: str | None = None
-    """Name or label for simulation stage."""
-
-    splits: int = 1
-    """Split simulation stage into several chunks."""
+    label: str | None = None
+    """Label for this specific simulation."""
