@@ -114,6 +114,13 @@ class RuntimeConfig(BaseModel, YamlIO):
     splits: int = 1
     """Split simulation stage into several chunks."""
 
+    use_scratch: bool = False
+    """
+    Treat [`dir_run`][simulation.contexts.RuntimeConfig.dir_run] as a scratch directory
+    by copying input files to that location, running the simulation there, and
+    then copying output files back.
+    """
+
 
 class SimlifyConfig(BaseModel, YamlIO):
     """Contexts for setting up molecular simulations."""
