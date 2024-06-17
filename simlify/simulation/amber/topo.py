@@ -68,24 +68,29 @@ class AmberTopoGen(TopoGen):
             ```
         """
         logger.info("Creating tleap commands for loading force fields")
-        context = simlify_config.get()
         tleap_lines = []
-        if isinstance(context["ff_protein"], str):
-            tleap_lines.append(f"source leaprc.protein.{context['ff_protein']}")
-        if isinstance(context["ff_water"], str):
-            tleap_lines.append(f"source leaprc.water.{context['ff_water']}")
-        if isinstance(context["ff_dna"], str):
-            tleap_lines.append(f"source leaprc.DNA.{context['ff_dna']}")
-        if isinstance(context["ff_rna"], str):
-            tleap_lines.append(f"source leaprc.RNA.{context['ff_rna']}")
-        if isinstance(context["ff_glycam"], str):
-            tleap_lines.append(f"source leaprc.{context['ff_glycam']}")
-        if isinstance(context["ff_lipid"], str):
-            tleap_lines.append(f"source leaprc.{context['ff_lipid']}")
-        if isinstance(context["ff_small_molecule"], str):
-            tleap_lines.append(f"source leaprc.{context['ff_small_molecule']}")
-        if isinstance(context["ff_ions"], str):
-            tleap_lines.append(f"loadAmberParams frcmod.{context['ff_ions']}")
+        if isinstance(simlify_config.engine.ff.protein, str):
+            tleap_lines.append(
+                f"source leaprc.protein.{simlify_config.engine.ff.protein}"
+            )
+        if isinstance(simlify_config.engine.ff.water, str):
+            tleap_lines.append(f"source leaprc.water.{simlify_config.engine.ff.water}")
+        if isinstance(simlify_config.engine.ff.dna, str):
+            tleap_lines.append(f"source leaprc.DNA.{simlify_config.engine.ff.dna}")
+        if isinstance(simlify_config.engine.ff.rna, str):
+            tleap_lines.append(f"source leaprc.RNA.{simlify_config.engine.ff.rna}")
+        if isinstance(simlify_config.engine.ff.glycam, str):
+            tleap_lines.append(f"source leaprc.{simlify_config.engine.ff.glycam}")
+        if isinstance(simlify_config.engine.ff.lipid, str):
+            tleap_lines.append(f"source leaprc.{simlify_config.engine.ff.lipid}")
+        if isinstance(simlify_config.engine.ff.small_molecule, str):
+            tleap_lines.append(
+                f"source leaprc.{simlify_config.engine.ff.small_molecule}"
+            )
+        if isinstance(simlify_config.engine.ff.ions, str):
+            tleap_lines.append(
+                f"loadAmberParams frcmod.{simlify_config.engine.ff.ions}"
+            )
         return tleap_lines
 
     @classmethod
@@ -161,16 +166,10 @@ class AmberTopoGen(TopoGen):
     def _start_tleap_lines(
         cls, path_structure: str, simlify_config: SimlifyConfig
     ) -> list[str]:
-        context = simlify_config.get()
-
         # Prepare tleap_lines
         tleap_lines: list[str] = []
         tleap_lines.extend(cls.ff_lines(simlify_config))
-
-        extra_lines_topo_gen = context["extra_lines_topo_gen"]
-        if extra_lines_topo_gen is None:
-            extra_lines_topo_gen = []
-        tleap_lines.extend(extra_lines_topo_gen)
+        tleap_lines.extend(simlify_config.topology.append_lines)
 
         tleap_lines.append(f"mol = loadpdb {path_structure}")
         return tleap_lines
@@ -184,12 +183,16 @@ class AmberTopoGen(TopoGen):
         tmp_input.close()  # Need to close before running the command.
 
     @staticmethod
-    def _run_tleap(tmp_input, dir_work):
+    def _run_tleap(tmp_input, simlify_config):
         logger.info("Running tleap")
         tleap_command = [TLEAP_PATH, "-f", tmp_input.name]
         logger.debug("tleap command: {}", tleap_command)
         completed_process = subprocess.run(
-            tleap_command, capture_output=True, text=True, check=False, cwd=dir_work
+            tleap_command,
+            capture_output=True,
+            text=True,
+            check=False,
+            cwd=simlify_config.rendering.dir_work,
         )
         os.remove(tmp_input.name)  # Remove temporary input file.
         logger.debug("tleap output:\n{}", completed_process.stdout)
@@ -199,11 +202,10 @@ class AmberTopoGen(TopoGen):
         return completed_process
 
     @classmethod
-    def dry_run(  # pylint: disable=too-many-arguments
+    def dry_run(
         cls,
         path_structure: str,
         simlify_config: SimlifyConfig,
-        dir_work: str | None = None,
     ) -> dict[str, Any]:
         """Perform a dry run to obtain any preliminary information.
 
@@ -211,40 +213,33 @@ class AmberTopoGen(TopoGen):
             path_structure: Path structure file for topology generation. For Amber,
                 this must be a PDB file.
             simlify_config: Simlify configuration.
-            dir_work: Working directory to generate topology. Useful for
-                specifying relative paths.
 
         Returns:
             Keyword arguments to be passed into `run`.
 
         Examples:
+            The base `tleap` input file is shown below with
+            [`AMBER_PROTEIN_STANDARD_CONTEXT`]
+            [simulation.amber.contexts.AMBER_PROTEIN_STANDARD_CONTEXT].
 
-        The base `tleap` input file is shown below with
-        [`AMBER_PROTEIN_STANDARD_CONTEXT`]
-        [simulation.amber.contexts.AMBER_PROTEIN_STANDARD_CONTEXT].
-
-        ```bash
-        source leaprc.protein.ff19SB
-        source leaprc.water.opc3
-        <add_lines>
-        mol = loadpdb <path_structure>
-        solvatebox mol OPC3BOX 10.0
-        savepdb mol <temp file>
-        charge mol
-        quit
-        ```
+            ```bash
+            source leaprc.protein.ff19SB
+            source leaprc.water.opc3
+            <add_lines>
+            mol = loadpdb <path_structure>
+            solvatebox mol OPC3BOX 10.0
+            savepdb mol <temp file>
+            charge mol
+            quit
+            ```
         """
-        if dir_work is None:
-            dir_work = os.getcwd()
-        context = simlify_config.get()
-
         tmp_pdb = tempfile.NamedTemporaryFile(mode="r", suffix=".pdb", delete=True)
         tmp_input = tempfile.NamedTemporaryFile(mode="w+", suffix=".in", delete=False)
 
         tleap_lines = cls._start_tleap_lines(path_structure, simlify_config)
-        solv_box_name = FF_WATER_SOLVENT_BOX_MAP[context["ff_water"]]
+        solv_box_name = FF_WATER_SOLVENT_BOX_MAP[simlify_config.engine.ff.water]
         tleap_lines.append(
-            f"solvatebox mol {solv_box_name} {str(context['solvent_padding'])}"
+            f"solvatebox mol {solv_box_name} {str(simlify_config.solution.solvent_padding)}"
         )
         tleap_lines.append(f"savepdb mol {tmp_pdb.name}")
         logger.debug("Setting PDB output to {}", tmp_pdb.name)
@@ -252,7 +247,7 @@ class AmberTopoGen(TopoGen):
 
         cls._write_input(tleap_lines, tmp_input)
 
-        completed_process = cls._run_tleap(tmp_input, dir_work)
+        completed_process = cls._run_tleap(tmp_input, simlify_config)
 
         tleap_info = cls._parse_logs(completed_process.stdout.split("\n"))
 
@@ -270,13 +265,10 @@ class AmberTopoGen(TopoGen):
     def run(  # pylint: disable=too-many-arguments
         cls,
         path_structure: str,
-        path_topo_write: str,
-        path_coord_write: str,
         simlify_config: SimlifyConfig,
-        dir_work: str | None = None,
         **kwargs: dict[str, Any],
     ) -> dict[str, Any]:
-        r"""Run tleap preparation of a system.
+        """Run tleap preparation of a system.
 
         Args:
             path_structure: Path structure file for topology generation. For Amber,
@@ -299,9 +291,6 @@ class AmberTopoGen(TopoGen):
                 -   `path_tleap_pdb`: Specify the prepared system as a PDB file after
                 tleap is finished.
         """
-        if dir_work is None:
-            dir_work = os.getcwd()
-        context = simlify_config.get()
 
         if "path_tleap_pdb" not in kwargs:
             tmp_tleap_pdb = tempfile.NamedTemporaryFile(
@@ -314,24 +303,33 @@ class AmberTopoGen(TopoGen):
         n_anions = kwargs["charge_anion_num"]
         n_cations = kwargs["charge_cation_num"]
         tleap_lines.append(
-            f"addIons2 mol {context['charge_anion_identity']} {n_anions}"
+            f"addIons2 mol {simlify_config.solution.charge_anion_identity} {n_anions}"
         )
         tleap_lines.append(
-            f"addIons2 mol {context['charge_cation_identity']} {n_cations}"
+            f"addIons2 mol {simlify_config.solution.charge_cation_identity} {n_cations}"
         )
-        solv_box_name = FF_WATER_SOLVENT_BOX_MAP[context["ff_water"]]
+        solv_box_name = FF_WATER_SOLVENT_BOX_MAP[simlify_config.engine.ff.water]
         tleap_lines.append(
-            f"solvatebox mol {solv_box_name} {str(context['solvent_padding'])}"
+            f"solvatebox mol {solv_box_name} {str(simlify_config.solution.solvent_padding)}"
         )
         logger.debug("Setting PDB output to {}", path_tleap_pdb)
         tleap_lines.append(f"savepdb mol {path_tleap_pdb}")
+        path_topo_write = os.path.join(
+            simlify_config.rendering.dir_work,
+            simlify_config.rendering.dir_input,
+            simlify_config.engine.cli.prmtop,
+        )
+        path_coord_write = os.path.join(
+            simlify_config.rendering.dir_work,
+            simlify_config.rendering.dir_input,
+            simlify_config.engine.cli.inpcrd,
+        )
         tleap_lines.append(f"saveamberparm mol {path_topo_write} {path_coord_write}")
         tleap_lines.extend(["charge mol", "quit"])
 
         cls._write_input(tleap_lines, tmp_input)
 
-        completed_process = cls._run_tleap(tmp_input, dir_work)
-        # os.remove(tmp_input.name)  # Remove temporary input file.
+        completed_process = cls._run_tleap(tmp_input, simlify_config)
 
         tleap_info = cls._parse_logs(completed_process.stdout.split("\n"))
 

@@ -23,19 +23,18 @@ def get_ion_counts(
         mean two cations need to be added, but `-2` would mean two anions.
     """
     logger.info("Computing number of extra ions")
-    context = simlify_config.get()
     water_box_volume: float = n_waters * water_molecule_volume  # A^3
     logger.debug("Volume of water: {} A^3", water_box_volume)
     water_box_volume /= 1e27  # L
-    n_ions = context["solvent_ionic_strength"] * water_box_volume  # moles
+    n_ions = simlify_config.solution.solvent_ionic_strength * water_box_volume  # moles
     n_ions *= 6.0221409e23  # atoms
     extra_ions = int(round(n_ions, 0))
     ions = {
-        "charge_cation_num": context["charge_cation_extra"],
-        "charge_anion_num": context["charge_anion_extra"],
+        "charge_cation_num": simlify_config.solution.charge_cation_extra,
+        "charge_anion_num": simlify_config.solution.charge_anion_extra,
     }
     ions = {k: v + extra_ions for k, v in ions.items()}
-    if context["charge_neutralize"]:
+    if simlify_config.solution.charge_neutralize:
         if charge_net < 0:
             ions["charge_cation_num"] += abs(int(charge_net))
         elif charge_net > 0:

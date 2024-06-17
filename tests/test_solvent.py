@@ -4,10 +4,10 @@ from simlify.structure.solvent import get_ion_counts
 class TestNumberOfIons:
     def test_1jc0(
         self,
-        amber_protein_standard_context,
+        amber_sim_standard_config,
     ):
         ion_counts = get_ion_counts(
-            simlify_config=amber_protein_standard_context,
+            simlify_config=amber_sim_standard_config,
             charge_net=-7.0,
             n_waters=8761,
         )

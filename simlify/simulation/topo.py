@@ -19,15 +19,12 @@ class TopoGen(ABC):
         cls,
         path_structure: str,
         simlify_config: SimlifyConfig,
-        dir_work: str | None = None,
     ) -> dict[str, Any]:
         """Perform a dry run to obtain any preliminary information needed before `run`.
 
         Args:
             path_structure: Path structure file for topology generation.
             simlify_config: Simlify configuration.
-            dir_work: Working directory to generate topology. Useful for
-                specifying relative paths.
 
         Returns:
             Keyword arguments to be passed into `run`.
@@ -39,62 +36,42 @@ class TopoGen(ABC):
     def run(  # pylint: disable=too-many-arguments
         cls,
         path_structure: str,
-        path_topo_write: str,
-        path_coord_write: str,
         simlify_config: SimlifyConfig,
-        dir_work: str | None = None,
         **kwargs: dict[str, Any],
     ) -> dict[str, Any]:
         """Generate a topology file.
 
         Args:
             path_structure: Path structure file for topology generation.
-            path_topo_write: Where to write topology file.
-            path_coord_write: Where to write coordinate file.
             simlify_config: Simlify configuration.
-            dir_work: Working directory to generate topology. Useful for
-                specifying relative paths.
         """
         raise NotImplementedError
 
 
-# pylint: disable-next=too-many-arguments
 def run_gen_topo(
     path_structure: str,
-    path_topo_write: str,
-    path_coord_write: str,
     import_string: str,
     simlify_config: SimlifyConfig,
-    dir_work: str | None = None,
 ) -> dict[str, Any]:
-    r"""Diver function for generating a topology file.
+    """Diver function for generating a topology file.
 
     Args:
         path_structure: Path structure file for topology generation.
-        path_topo_write: Where to write topology file.
-        path_coord_write: Where to write coordinate file.
         import_string: Import string to a topology generation class. For example,
             [`"simlify.simulation.amber.topo.AmberTopoGen"`]
             [simulation.amber.topo.AmberTopoGen].
         simlify_config: Simlify configuration.
-        dir_work: Working directory to generate topology. Useful for
-            specifying relative paths.
     """
-    if dir_work is not None:
-        simlify_config.dir_work = dir_work
+
     cls_topo = get_obj_from_string(import_string)
 
     topo_info_dry_run: dict[str, Any] = cls_topo.dry_run(  # type: ignore
         path_structure,
         simlify_config,
-        dir_work,
     )
     topo_info: dict[str, Any] = cls_topo.run(  # type: ignore
         path_structure,
-        path_topo_write,
-        path_coord_write,
         simlify_config,
-        dir_work,
         **topo_info_dry_run,
     )
     return topo_info
@@ -108,18 +85,6 @@ def cli_run_gen_topo():
         type=str,
         nargs="?",
         help="Path to a structure file.",
-    )
-    parser.add_argument(
-        "topology",
-        type=str,
-        nargs="?",
-        help="Where to save topology file.",
-    )
-    parser.add_argument(
-        "coordinate",
-        type=str,
-        nargs="?",
-        help="Where to save coordinate file.",
     )
     parser.add_argument(
         "import_string",
@@ -137,7 +102,7 @@ def cli_run_gen_topo():
         "--work",
         type=str,
         nargs="?",
-        help="Work directory for preparing calculations.",
+        help="Work directory for preparing calculations. This overrides the YAML files.",
         default=None,
     )
     args = parser.parse_args()
@@ -146,11 +111,10 @@ def cli_run_gen_topo():
         args.yaml = []
     for yaml_path in reversed(args.yaml):
         simlify_config.from_yaml(yaml_path)
+    if args.work is not None:
+        simlify_config.rendering.dir_work = args.work
     run_gen_topo(
         args.structure,
-        args.topology,
-        args.coordinate,
         args.import_string,
         simlify_config,
-        args.work,
     )

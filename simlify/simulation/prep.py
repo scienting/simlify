@@ -111,7 +111,7 @@ class SimPrep(ABC):
 # pylint: disable-next=too-many-arguments
 def run_sim_slurm_prep(
     name_job: str,
-    dir_write: str,
+    dir_work: str,
     path_run_write: str,
     path_slurm_write: str,
     prep_class_string: str,
@@ -120,8 +120,8 @@ def run_sim_slurm_prep(
     r"""Prepare files for simulations using slurm.
 
     Args:
-        name_job: Unique name for this slurm job..
-        dir_write: Path to local directory where we will write the simulation files.
+        name_job: Unique name for this slurm job.
+        dir_work: Path to local directory where we will write the simulation files.
         path_run_write: Local path to write a run script with respect to `dir_write`.
         path_slurm_write: Local path to write a slurm submission script with respect to
             `dir_write`.
@@ -130,9 +130,9 @@ def run_sim_slurm_prep(
             [simulation.amber.prep.AmberSimPrep].
         simlify_config: Simlify configuration.
     """
-    simlify_config.dir_write = dir_write
-    simlify_config.path_slurm_write = os.path.join(dir_write, path_slurm_write)
-    simlify_config.path_run_write = os.path.join(dir_write, path_run_write)
+    simlify_config.rendering.dir_work = dir_work
+    simlify_config.path_slurm_write = os.path.join(dir_work, path_slurm_write)
+    simlify_config.path_run_write = os.path.join(dir_work, path_run_write)
 
     sbatch_options = simlify_config.sbatch_options
     if sbatch_options is not None:
@@ -143,7 +143,7 @@ def run_sim_slurm_prep(
 
     prep_cls = get_obj_from_string(prep_class_string)
     prep_cls.prepare_sbatch_lines(  # type: ignore
-        simlify_config.get(), write=simlify_config.write
+        simlify_config, write=simlify_config.write
     )
     prep_cls.prepare(simlify_config)  # type: ignore
 
