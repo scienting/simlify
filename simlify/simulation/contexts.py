@@ -48,14 +48,10 @@ class SolutionConfig(BaseModel, YamlIO):
     """
 
     solvent_ionic_strength: float = 0.150
-    """Ionic strength of the solvent in mole/L."""
+    """Ionic strength of the solvent in mol/L."""
 
     solvent_padding: float = 10.0
     """Padding between solute and box edge to fill with solvent in Angstroms."""
-
-
-class TempSchema(BaseModel, YamlIO):
-    """Provides a pydantic model to put temporary information."""
 
 
 class RenderingConfig(BaseModel, YamlIO):
@@ -79,6 +75,13 @@ class RenderingConfig(BaseModel, YamlIO):
     [`dir_work`][simulation.contexts.RenderingConfig.dir_work] that the simulation will
     store output files.
     """
+
+
+class TopologyConfig(BaseModel, YamlIO):
+    """Topology configuration."""
+
+    append_lines: list[str] = []
+    """Extra lines to include when generating a topology."""
 
 
 class RuntimeConfig(BaseModel, YamlIO):
@@ -129,7 +132,9 @@ class SimlifyConfig(BaseModel, YamlIO):
 
     solution: SolutionConfig = Field(default_factory=SolutionConfig)
 
-    temp: TempSchema = Field(default_factory=TempSchema, exclude=True)
+    topology: TopologyConfig = Field(default_factory=TopologyConfig)
+
+    temp: dict[str, Any] = Field(default={}, exclude=True)
 
     rendering: RenderingConfig = Field(default_factory=RenderingConfig)
 
