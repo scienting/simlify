@@ -42,13 +42,13 @@ wrapt = [
 
 [[package]]
 name = "atomea"
-version = "0.0.0.post154"
+version = "0.0.0.post160"
 description = "Extensible schema for atomistic simulations and calculations."
 optional = false
 python-versions = "<4.0,>=3.9"
 files = [
-    {file = "atomea-0.0.0.post154-py3-none-any.whl", hash = "sha256:aa94d9fd4ce0e15c80ccb5c0a59718d38ad434aba4a9fd59811188dbd5ed872b"},
-    {file = "atomea-0.0.0.post154.tar.gz", hash = "sha256:fb28ca77e03165ee3c9c7e775e8a219f5df9ce3fc665c8ae203aa0220461df84"},
+    {file = "atomea-0.0.0.post160-py3-none-any.whl", hash = "sha256:68d743c76452c67148fb138b71096f657e000ab08aa5ae2189e5210b608d2c9a"},
+    {file = "atomea-0.0.0.post160.tar.gz", hash = "sha256:15d409ede7a3d0711cd6327da4f46dc6d0e4b59273a9ae3f829bc491c0049bad"},
 ]
 
 [package.dependencies]
@@ -2453,4 +2453,4 @@ test = ["big-O", "importlib-resources", "jaraco.functools", "jaraco.itertools", 
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.9"
-content-hash = "8b05f82353ca2f3914aa11129bd5631709f6b556bccdefd81f2d55fe92045b89"
+content-hash = "c09acc06f11ddb49e44fd6a479e584723f91710e5af74b95a6bed589436d2af3"
