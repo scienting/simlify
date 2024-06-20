@@ -96,6 +96,7 @@ extra_css:
   - css/base.css
   - css/colors.css
   - css/mkdocstrings.css
+  - css/3dmol.css
 
 extra_javascript:
   - js/mathjax.js
