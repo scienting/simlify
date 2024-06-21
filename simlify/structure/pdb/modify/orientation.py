@@ -1,5 +1,3 @@
-from typing import Any
-
 import argparse
 
 import MDAnalysis as mda
@@ -26,7 +24,7 @@ def volume_objective_f(
 ) -> float:
     r"""Objective function that returns box volume"""
     rotated_positions = rotate_positions(positions, rotation_v)
-    return get_box_volume(rotated_positions)
+    return float(get_box_volume(rotated_positions))
 
 
 def minimize_box(positions: npt.NDArray[np.float64]) -> npt.NDArray[np.float64]:
