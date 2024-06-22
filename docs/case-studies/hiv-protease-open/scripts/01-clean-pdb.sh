@@ -5,13 +5,12 @@
 cd "$(dirname "$0")"
 
 # Set environmental variables
-export PDB_ID="2PC0"
+PDB_ID="2PC0"
 SAVE_DIR="../files/structures"
 
-# Cleanup files from previous run
-rm -rf $SAVE_DIR
-mkdir -p $SAVE_DIR
+cp $SAVE_DIR/$PDB_ID.pdb $SAVE_DIR/cleaned.pdb
 
-# Get PDB file
+simlify-pdb-filter $SAVE_DIR/cleaned.pdb --output $SAVE_DIR/cleaned.pdb
+simlify-pdb-reorder $SAVE_DIR/cleaned.pdb --output $SAVE_DIR/cleaned.pdb
 
 )
