@@ -38,7 +38,7 @@ def parse_resid(line: str) -> str:
     Returns:
         Residue ID.
     """
-    return line[23:30]
+    return line[22:30]
 
 
 def parse_resname(line: str) -> str:
@@ -67,7 +67,7 @@ def parse_atomname(line: str) -> str:
 
 def keep_lines(
     lines: Iterable[str],
-    record_types: tuple[str, ...] = ("ATOM", "HETATM", "TER", "END"),
+    record_types: tuple[str, ...] = ("ATOM", "HETATM", "TER", "END", "MODEL", "ENDMDL"),
 ) -> list[str]:
     r"""Filter PDB lines to keep in file.
 
@@ -103,7 +103,7 @@ def run_filter_pdb(
         pdb_lines: list[str] = f.readlines()
 
     if record_types is None:
-        record_types = ("ATOM", "HETATM", "TER", "END")
+        record_types = ("ATOM", "HETATM", "TER", "END", "MODEL", "ENDMDL")
     out_lines = keep_lines(pdb_lines, record_types)
 
     if output_path is not None:
@@ -130,13 +130,13 @@ def cli_filter_pdb() -> None:
         help="Path to new PDB file",
     )
     parser.add_argument(
-        "--record-types",
+        "--records",
         type=str,
         nargs="*",
         help="Records to keep in the PDB file.",
     )
     args = parser.parse_args()
-    run_filter_pdb(args.pdb_path, args.output, args.record_types)
+    run_filter_pdb(args.pdb_path, args.output, args.records)
 
 
 def run_merge_pdbs(*pdb_paths: str, output_path: str | None = None) -> mda.Universe:

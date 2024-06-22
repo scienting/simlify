@@ -2,7 +2,6 @@
 
 import argparse
 import os
-import re
 from collections.abc import Iterable
 
 from loguru import logger
@@ -32,9 +31,7 @@ def assign_resid(
     # We have our first residue.
     if current_resid is None:
         logger.debug("Current residue ID is None; must be our first atom.")
-        assigned_resid = re.sub("[^0-9]", "", str(next_original_resid))
-        if len(str(assigned_resid)) == 0:
-            assigned_resid = "1"
+        assigned_resid = prev_original_resid
         logger.trace("Assigning residue ID: {}", assign_resid)
     else:
         # If the line's residue id is the same as the current original, then we should
@@ -74,7 +71,9 @@ def unify_resid(
     return new_line, assigned_resid, next_original_resid
 
 
-def run_unify_resids(pdb_path: str, output_path: str | None = None) -> Iterable[str]:
+def run_unify_resids(
+    pdb_path: str, output_path: str | None = None, reset_initial_resid: bool = True
+) -> Iterable[str]:
     r"""Unify residue ID in the PDB lines.
 
     Args:
@@ -88,16 +87,28 @@ def run_unify_resids(pdb_path: str, output_path: str | None = None) -> Iterable[
     with open(pdb_path, "r", encoding="utf-8") as f:
         pdb_lines: list[str] = f.readlines()
 
-    current_resid = None
-    current_chain = None
+    # current_resid keeps track of our residue ID while parsing.
+    # If this becomes None, then we restart our numbering at 1
+    # (determined in assign_resid function).
+    current_resid: str | None = None
+    # current_chain is essentially the same thing as current_resid, but for the chain
+    # ID.
+    current_chain: str | None = None
+    # parse_structure is used to turn parsing on or off depending on if the current
+    # line contains any atomic information.
     parse_structure = False
     for i, line in enumerate(pdb_lines):
         logger.trace("Processing line number: {}", i)
         if line.startswith("TER"):
-            logger.debug("Encountered 'TER'. Setting parse_structure to False.")
+            logger.debug("Encountered `TER`. Setting `parse_structure` to `False`.")
             parse_structure = False
             current_resid = str(parse_resid(pdb_lines[i - 1]))
+            pdb_lines[i] = "TER\n"
             continue
+
+        if line.startswith("ENDMDL"):
+            parse_structure = False
+            current_resid = None
 
         if line.startswith(("ATOM", "HETATM")):
             chain_id = line[21]
@@ -109,7 +120,10 @@ def run_unify_resids(pdb_path: str, output_path: str | None = None) -> Iterable[
             # Activate coordinate parsing on first instance of ATOM or HETATM
             if not parse_structure:
                 parse_structure = True
-                current_original_resid = str(parse_resid(line))
+                if not reset_initial_resid:
+                    current_original_resid = str(parse_resid(line))
+                else:
+                    current_original_resid = "1"
 
             pdb_lines[i], current_resid, current_original_resid = unify_resid(
                 line, current_resid, current_original_resid
@@ -138,5 +152,11 @@ def cli_unify_resids() -> None:
         nargs="?",
         help="Path to new PDB file",
     )
+    parser.add_argument(
+        "--keep_init_resid",
+        action="store_false",
+        help="Do not reset first residue ID to 1.",
+    )
+
     args = parser.parse_args()
-    run_unify_resids(args.pdb_path, args.output)
+    run_unify_resids(args.pdb_path, args.output, args.keep_init_resid)
