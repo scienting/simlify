@@ -46,8 +46,8 @@ mkdocs-gen-files = "^0.5.0"
 mkdocs-awesome-pages-plugin = "^2.9.2"
 
 [tool.poetry.scripts]
-simlify-validate-context = "simlify.simulation.contexts:cli_validate_yaml_context"
-simlify-gen-topo = "simlify.simulation.topo:cli_run_gen_topo"
+simlify-pdb-filter = "simlify.structure.pdb.utils:cli_filter_pdb"
+simlify-pdb-reorder = "simlify.structure.pdb.modify.numbering:cli_unify_resids"
 
 [tool.bumpversion]
 current_version = "0.0.0"
