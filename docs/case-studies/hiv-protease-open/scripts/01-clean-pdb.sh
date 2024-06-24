@@ -43,6 +43,7 @@ sed -i "s/ATHR/ THR/g" "$SAVE_DIR/cleaned.pdb"
 # Turn models into chains
 sed -i "/MODEL   /d" "$SAVE_DIR/cleaned.pdb"
 sed -i "s/ENDMDL/TER/g" "$SAVE_DIR/cleaned.pdb"
-simlify-pdb-renumber $SAVE_DIR/cleaned.pdb --output $SAVE_DIR/cleaned.pdb --keep_init_resid
+
+simlify-pdb-renumber $SAVE_DIR/cleaned.pdb --output $SAVE_DIR/cleaned.pdb
 
 )
