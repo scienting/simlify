@@ -7,6 +7,7 @@ from collections.abc import Iterable
 from loguru import logger
 
 from ..utils import parse_resid
+from .atoms import write_atom_id
 from .residues import unify_resid
 
 
@@ -66,32 +67,53 @@ def run_unify_numbering(
             pdb_lines[i] = "TER\n"
             continue
 
+        # If we hit an ENDMDL statement, we are essentially providing another unique
+        # PDB structure. So we reset everything.
         if line.startswith("ENDMDL"):
             logger.debug("Encountered `ENDMDL`; resetting all ID information")
             parse_structure = False
             current_resid = None
             current_chain = None
+            atom_id = 1
 
         if line.startswith(("ATOM", "HETATM")):
+            # Handle initializing the chain information
             chain_id = line[21]
             if current_chain is None:
                 current_chain = chain_id
-            elif current_chain != chain_id:
+
+            # If the chain ID of this line is different than our tracked chain, we will
+            # reset the current residue ID.
+            if current_chain != chain_id:
                 current_resid = None
+
             # Activate coordinate parsing on first instance of ATOM or HETATM
             if not parse_structure:
                 parse_structure = True
+
+                # When we turn on parsing, this line contains the first atom
+                # information. This is where we can reset our
                 if not reset_initial_resid:
                     current_original_resid = str(parse_resid(line))
                 else:
-                    current_original_resid = "1"
+                    current_original_resid = "   1"
 
-            pdb_lines[i], current_resid, current_original_resid = unify_resid(
+            # Write atom index.
+            line = write_atom_id(line, atom_id)
+            atom_id += 1
+
+            # Write residue index.
+            line, current_resid, current_original_resid = unify_resid(
                 line, current_resid, current_original_resid
             )
-            s_list = list(pdb_lines[i])
+
+            # Write chain.
+            s_list = list(line)
             s_list[21] = current_chain
-            pdb_lines[i] = "".join(s_list)
+            line = "".join(s_list)
+
+            # Update line
+            pdb_lines[i] = line
 
     if output_path is not None:
         logger.info("Writing PDB file to {}", os.path.abspath(output_path))
