@@ -59,7 +59,13 @@ def unify_resid(
     assigned_resid, next_original_resid = assign_resid(
         line, current_resid, prev_original_resid
     )
+    line_start = 22
+    line_stop = 27
     new_line = replace_in_pdb_line(
-        line, next_original_resid, assigned_resid.rjust(4) + " ", 22, 27
+        line,
+        next_original_resid,
+        assigned_resid.rjust(line_stop - line_start - 1) + " ",
+        line_start,
+        line_stop,
     )
     return new_line, assigned_resid, next_original_resid
