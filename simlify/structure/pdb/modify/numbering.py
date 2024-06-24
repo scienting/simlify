@@ -99,16 +99,36 @@ def run_unify_resids(
     parse_structure = False
     for i, line in enumerate(pdb_lines):
         logger.trace("Processing line number: {}", i)
+
+        # When we hit a TER statement, we need to keep track/handle our IDs for the next
+        # section.
         if line.startswith("TER"):
-            logger.debug("Encountered `TER`. Setting `parse_structure` to `False`.")
+            # Catches and fixes duplicate TER statements
+            if pdb_lines[i - 1].strip() == "TER":
+                logger.debug("Fixing duplicate `TER` statements.")
+                pdb_lines[i] = ""
+                continue
+
+            logger.debug("Encountered `TER`, storing ID information.")
+
             parse_structure = False
+            logger.trace("Set parse_structure to False")
+
             current_resid = str(parse_resid(pdb_lines[i - 1]))
+            logger.trace(f"Setting current_resid to {current_resid} (from last one)")
+
+            if reset_initial_resid and current_chain is not None:
+                current_chain = chr(ord(current_chain) + 1)
+                logger.trace(f"Increasing current_chain to {current_chain}")
+
             pdb_lines[i] = "TER\n"
             continue
 
         if line.startswith("ENDMDL"):
+            logger.debug("Encountered `ENDMDL`; resetting all ID information")
             parse_structure = False
             current_resid = None
+            current_chain = None
 
         if line.startswith(("ATOM", "HETATM")):
             chain_id = line[21]
@@ -116,7 +136,6 @@ def run_unify_resids(
                 current_chain = chain_id
             elif current_chain != chain_id:
                 current_resid = None
-                current_chain = chain_id
             # Activate coordinate parsing on first instance of ATOM or HETATM
             if not parse_structure:
                 parse_structure = True
@@ -128,6 +147,9 @@ def run_unify_resids(
             pdb_lines[i], current_resid, current_original_resid = unify_resid(
                 line, current_resid, current_original_resid
             )
+            s_list = list(pdb_lines[i])
+            s_list[21] = current_chain
+            pdb_lines[i] = "".join(s_list)
 
     if output_path is not None:
         logger.info("Writing PDB file to {}", os.path.abspath(output_path))
