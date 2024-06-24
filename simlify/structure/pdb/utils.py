@@ -8,6 +8,21 @@ from loguru import logger
 from MDAnalysis import transformations as trans
 
 
+def write_in_pdb_line(line: str, new: str, start: int | None, stop: int | None) -> str:
+    r"""General function to write parts of a PDB line.
+
+    Args:
+        line: PDB line.
+        new: If ``orig`` is in line, replace it with this value. This must be formatted
+            for all columns, not just the value with no spaces. For example,
+            `"   42"` not `"42"`.
+        start: Slice the line starting here to replace.
+        stop: Slice the line stopping here to replace.
+    """
+    line = line[:start] + new + line[stop:]
+    return line
+
+
 def replace_in_pdb_line(
     line: str, orig: str, new: str, start: int | None, stop: int | None
 ) -> str:
