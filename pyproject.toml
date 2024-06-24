@@ -47,7 +47,7 @@ mkdocs-awesome-pages-plugin = "^2.9.2"
 
 [tool.poetry.scripts]
 simlify-pdb-filter = "simlify.structure.pdb.utils:cli_filter_pdb"
-simlify-pdb-reorder = "simlify.structure.pdb.modify.numbering:cli_unify_resids"
+simlify-pdb-renumber = "simlify.structure.pdb.modify.numbering.main:cli_unify_numbering"
 
 [tool.bumpversion]
 current_version = "0.0.0"

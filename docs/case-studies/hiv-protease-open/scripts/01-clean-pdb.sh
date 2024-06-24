@@ -12,7 +12,7 @@ cp $SAVE_DIR/$PDB_ID.pdb $SAVE_DIR/cleaned.pdb
 
 simlify-pdb-filter $SAVE_DIR/cleaned.pdb --output $SAVE_DIR/cleaned.pdb
 
-# Remove water molecules.
+# Remove water molecules and other ligands.
 sed -i "/HOH/d" "$SAVE_DIR/cleaned.pdb"
 sed -i "/ MG /d" "$SAVE_DIR/cleaned.pdb"
 sed -i "/ PGR /d" "$SAVE_DIR/cleaned.pdb"
@@ -43,7 +43,6 @@ sed -i "s/ATHR/ THR/g" "$SAVE_DIR/cleaned.pdb"
 # Turn models into chains
 sed -i "/MODEL   /d" "$SAVE_DIR/cleaned.pdb"
 sed -i "s/ENDMDL/TER/g" "$SAVE_DIR/cleaned.pdb"
-simlify-pdb-reorder $SAVE_DIR/cleaned.pdb --output $SAVE_DIR/cleaned.pdb
-
+simlify-pdb-renumber $SAVE_DIR/cleaned.pdb --output $SAVE_DIR/cleaned.pdb --keep_init_resid
 
 )

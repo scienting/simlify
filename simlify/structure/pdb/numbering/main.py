@@ -6,75 +6,14 @@ from collections.abc import Iterable
 
 from loguru import logger
 
-from ..utils import parse_resid, replace_in_pdb_line
+from ..utils import parse_resid
+from .residues import unify_resid
 
 
-def assign_resid(
-    line: str, current_resid: str | None, prev_original_resid: str
-) -> tuple[str, str]:
-    r"""Determines residue ID based on a consistent numbering scheme.
-
-    Args:
-        line: Line that we are determining the residue ID to have.
-        current_resid: Current residue ID that we are using.
-        prev_original_resid: Previous residue ID from the PDB file that we are
-            grouping together.
-
-    Returns:
-        Assigned residue ID for this line.
-
-        Next `prev_original_resid`.
-    """
-    next_original_resid = parse_resid(line).strip()
-    logger.trace("Parsed residue ID from line: {}", next_original_resid)
-
-    # We have our first residue.
-    if current_resid is None:
-        logger.debug("Current residue ID is None; must be our first atom.")
-        assigned_resid = prev_original_resid
-        logger.trace("Assigning residue ID: {}", assign_resid)
-    else:
-        # If the line's residue id is the same as the current original, then we should
-        # group this atom with the previous one.
-        assigned_resid = current_resid
-        if next_original_resid != prev_original_resid:
-            logger.trace("Parsed residue ID is not the same as previous.")
-            logger.trace("Previous residue ID: {}", assigned_resid)
-            assigned_resid = str(int(assigned_resid) + 1)
-            logger.trace("Next residue ID: {}", assigned_resid)
-    return assigned_resid, next_original_resid
-
-
-def unify_resid(
-    line: str, current_resid: str | None, prev_original_resid: str
-) -> tuple[str, str, str]:
-    r"""Unify residue ID in the PDB line based on previous ones.
-
-    Args:
-        line: Line that we are modifying.
-        current_resid: Current residue ID that we are using.
-        prev_original_resid: Original residue ID from previous line in the PDB file.
-
-    Returns:
-        PDB line with the new residue ID.
-
-        Residue ID we are assigning this atom.
-
-        The original residue ID from `line` (i.e., the next `prev_original_resid`).
-    """
-    assigned_resid, next_original_resid = assign_resid(
-        line, current_resid, prev_original_resid
-    )
-    new_line = replace_in_pdb_line(
-        line, next_original_resid, assigned_resid.rjust(4) + " ", 22, 27
-    )
-    return new_line, assigned_resid, next_original_resid
-
-
-def run_unify_resids(
+def run_unify_numbering(
     pdb_path: str, output_path: str | None = None, reset_initial_resid: bool = True
 ) -> Iterable[str]:
-    r"""Unify residue ID in the PDB lines.
+    r"""Unify atom and residue numbering in the PDB lines.
 
     Args:
         pdb_path: Path to PDB file.
@@ -97,6 +36,9 @@ def run_unify_resids(
     # parse_structure is used to turn parsing on or off depending on if the current
     # line contains any atomic information.
     parse_structure = False
+
+    # atom_id keeps track of the atom serial number.
+    atom_id: int = 1  # TODO: finish implementing atom idx.
     for i, line in enumerate(pdb_lines):
         logger.trace("Processing line number: {}", i)
 
@@ -159,8 +101,8 @@ def run_unify_resids(
     return pdb_lines
 
 
-def cli_unify_resids() -> None:
-    r"""Command-line interface for unifying residue IDs in PDB files."""
+def cli_unify_numbering() -> None:
+    r"""Command-line interface for unifying atom and residue numbering in PDB files."""
     parser = argparse.ArgumentParser(description="Unify residue IDs in PDB")
     parser.add_argument(
         "pdb_path",
@@ -181,4 +123,4 @@ def cli_unify_resids() -> None:
     )
 
     args = parser.parse_args()
-    run_unify_resids(args.pdb_path, args.output, args.keep_init_resid)
+    run_unify_numbering(args.pdb_path, args.output, args.keep_init_resid)
