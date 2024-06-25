@@ -84,7 +84,7 @@ This leaves [`2PC0`](https://www.rcsb.org/structure/2PC0) as our protein.
 
 <div id="hiv-protease-view" class="mol-container"></div>
 <script>
-var uri = './files/structures/2PC0.pdb';
+var uri = './files/structures/2PC0-cleaned.pdb';
 jQuery.ajax( uri, {
     success: function(data) {
         // https://3dmol.org/doc/GLViewer.html
@@ -94,10 +94,11 @@ jQuery.ajax( uri, {
         );
         viewer.addModelsAsFrames(data, "pdb");
         viewer.setStyle({}, {cartoon: {color: 'spectrum'}});
-        viewer.center({chain: 'A'})
+        viewer.center({})
         viewer.setClickable({}, true, function(atom,viewer,event,container) {
             console.log(viewer.getView());
         });
+        viewer.setView([ -3.7979730263157907, -3.7979730263157774, 5.304528746077458e-15, 0, -0.2635088849664423, -0.6022449322512747, -0.3276873799325654, -0.6785905172888361 ]);
         viewer.render();
     },
     error: function(hdr, status, err) {
