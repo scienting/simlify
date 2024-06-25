@@ -26,7 +26,6 @@ def assign_resid(
     if current_resid is None:
         logger.debug("Current residue ID is None; must be our first atom.")
         assigned_resid = prev_original_resid
-        logger.trace("Assigning residue ID: {}", assign_resid)
     else:
         # If the line's residue id is the same as the current original, then we should
         # group this atom with the previous one.
@@ -35,7 +34,7 @@ def assign_resid(
             logger.trace("Parsed residue ID is not the same as previous.")
             logger.trace("Previous residue ID: {}", assigned_resid)
             assigned_resid = str(int(assigned_resid) + 1)
-            logger.trace("Next residue ID: {}", assigned_resid)
+    logger.trace("Assigning residue ID: {}", assign_resid)
     return assigned_resid, next_original_resid
 
 

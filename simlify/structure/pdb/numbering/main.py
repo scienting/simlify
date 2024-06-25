@@ -39,7 +39,7 @@ def run_unify_numbering(
     parse_structure = False
 
     # atom_id keeps track of the atom serial number.
-    atom_id: int = 1  # TODO: finish implementing atom idx.
+    atom_id: int = 1
     for i, line in enumerate(pdb_lines):
         logger.trace("Processing line number: {}", i)
 
@@ -81,11 +81,6 @@ def run_unify_numbering(
             chain_id = line[21]
             if current_chain is None:
                 current_chain = chain_id
-
-            # If the chain ID of this line is different than our tracked chain, we will
-            # reset the current residue ID.
-            if current_chain != chain_id:
-                current_resid = None
 
             # Activate coordinate parsing on first instance of ATOM or HETATM
             if not parse_structure:
