@@ -96,7 +96,8 @@ extra_css:
   - css/base.css
   - css/colors.css
   - css/mkdocstrings.css
-  - css/3dmol.css
+  - css/mol.css
+  - https://cdn.jsdelivr.net/npm/molstar@latest/build/viewer/molstar.css
 
 extra_javascript:
   - js/mathjax.js
