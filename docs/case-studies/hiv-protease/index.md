@@ -32,7 +32,7 @@ By running Amber simulations on HIV-1 protease, researchers can gain valuable in
 
 Understood. I appreciate the flexibility to reorganize and expand on the information. Here's a revised version of the section, incorporating your notes while adding some additional relevant information:
 
-## System preparation
+## Protein preparation
 
 System preparation is a crucial step in molecular dynamics (MD) simulations that significantly impacts the quality and reliability of results.
 This process involves selecting an appropriate starting structure and setting up the system to accurately represent physiological conditions.
@@ -82,29 +82,78 @@ At the time of writing there were 302 results, but there are only a few that do 
 Both [`1TW7`](https://www.rcsb.org/structure/1TW7) and [`2G69`](https://www.rcsb.org/structure/2G69) have one or more mutations studying drug resistance mechanism, so we will ignore these for now.
 This leaves [`2PC0`](https://www.rcsb.org/structure/2PC0) as our protein.
 
+
 <div id="hiv-protease-view" class="mol-container"></div>
+
 <script>
-var uri = './files/structures/2PC0-cleaned.pdb';
-jQuery.ajax( uri, {
-    success: function(data) {
-        // https://3dmol.org/doc/GLViewer.html
-        let viewer = $3Dmol.createViewer(
-            document.querySelector('#hiv-protease-view'),
-            { backgroundAlpha: '0.0' }
-        );
-        viewer.addModelsAsFrames(data, "pdb");
-        viewer.setStyle({}, {cartoon: {color: 'spectrum'}});
-        viewer.center({})
-        viewer.setClickable({}, true, function(atom,viewer,event,container) {
-            console.log(viewer.getView());
+    document.addEventListener('DOMContentLoaded', (event) => {
+        const viewer = molstar.Viewer.create('hiv-protease-view', {
+            layoutIsExpanded: false,
+            layoutShowControls: false,
+            layoutShowRemoteState: false,
+            layoutShowSequence: false,
+            layoutShowLog: false,
+            layoutShowLeftPanel: false,
+            viewportShowExpand: false,
+            viewportShowSelectionMode: false,
+            viewportShowAnimation: false,
+            pdbProvider: 'rcsb',
+        }).then(viewer => {
+            viewer.loadPdb("2PC0");
         });
-        viewer.setView([ -3.7979730263157907, -3.7979730263157774, 5.304528746077458e-15, 0, -0.2635088849664423, -0.6022449322512747, -0.3276873799325654, -0.6785905172888361 ]);
-        viewer.render();
-    },
-    error: function(hdr, status, err) {
-        console.error( "Failed to load " + uri + ": " + err );
-    },
-});
+    });
+</script>
+
+### Trimming PDB file
+
+???+ note "Prelude"
+
+    ```text
+    --8<-- "docs/case-studies/hiv-protease/files/structures/2PC0.pdb::53"
+    ```
+
+???+ note "Temperature factors"
+
+    ```text
+    --8<-- "docs/case-studies/hiv-protease/files/structures/2PC0.pdb:55:58"
+    ```
+
+### Removing water molecules
+
+```text
+--8<-- "docs/case-studies/hiv-protease/files/structures/2PC0.pdb:1735:1738"
+```
+
+```bash
+--8<-- "docs/case-studies/hiv-protease/scripts/01-clean-pdb.sh:27:27"
+```
+
+### Removing non-protein molecules
+
+```bash
+--8<-- "docs/case-studies/hiv-protease/scripts/01-clean-pdb.sh:27:27"
+```
+
+### Result
+
+<div id="hiv-protease-clean-view" class="mol-container"></div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', (event) => {
+        const viewer = molstar.Viewer.create('hiv-protease-clean-view', {
+            layoutIsExpanded: false,
+            layoutShowControls: false,
+            layoutShowRemoteState: false,
+            layoutShowSequence: false,
+            layoutShowLog: false,
+            layoutShowLeftPanel: false,
+            viewportShowExpand: false,
+            viewportShowSelectionMode: false,
+            viewportShowAnimation: false,
+        }).then(viewer => {
+            viewer.loadStructureFromUrl('./files/structures/2PC0-cleaned.pdb', format='pdb');
+        });
+    });
 </script>
 
 <!-- LINKS -->
