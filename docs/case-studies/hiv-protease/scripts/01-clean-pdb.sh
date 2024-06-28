@@ -10,7 +10,7 @@ export SIMLIFY_STDOUT=False
 export SIMLIFY_LOG_LEVEL=0
 export SIMLIFY_LOG_FILE_PATH="01-clean-pdb.log"
 
-rm 01-clean-pdb.log
+rm $SIMLIFY_LOG_FILE_PATH
 
 # Set environmental variables
 PDB_ID="2PC0"
