@@ -26,10 +26,17 @@ jobs:
           auto-update-conda: true
           python-version: ${{ matrix.python-version }}
 
-      - name: Install package
-        run: |
-          pip install pytest pytest-cov pytest-html coverage colorama
-          pip install .
+      - name: Initialize conda environment
+        run: make conda-create
+
+      - name: Setup conda
+        run: make conda-setup
+
+      - name: Install conda dependencies
+        run: make from-conda-lock
+
+      - name: Poetry install
+        run: make install
 
       - name: Run tests
         run: make test
