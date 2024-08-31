@@ -98,7 +98,7 @@ This leaves [`2PC0`](https://www.rcsb.org/structure/2PC0) as our protein.
             viewportShowAnimation: false,
             pdbProvider: 'rcsb',
         }).then(viewer => {
-            viewer.loadPdb("2PC0");
+            viewer.loadSnapshotFromUrl("/case-studies/hiv-protease/files/molstar/2pc0-initial.molx", "molx");
         });
     });
 </script>
@@ -150,7 +150,8 @@ This leaves [`2PC0`](https://www.rcsb.org/structure/2PC0) as our protein.
             viewportShowSelectionMode: false,
             viewportShowAnimation: false,
         }).then(viewer => {
-            viewer.loadStructureFromUrl('./files/structures/2PC0-cleaned.pdb', format='pdb');
+            // viewer.loadStructureFromUrl('./files/structures/2PC0-cleaned.pdb', format='pdb');
+            viewer.loadSnapshotFromUrl("/case-studies/hiv-protease/files/molstar/2pc0-stripped.molx", "molx");
         });
     });
 </script>
