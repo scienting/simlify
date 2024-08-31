@@ -8,6 +8,16 @@ CONDA_NAME := $(PACKAGE_NAME)-dev
 CONDA := conda run -n $(CONDA_NAME)
 CONDA_LOCK_OPTIONS := -p linux-64 -p osx-64 --channel conda-forge
 
+# Default target
+all:
+	@echo "Available targets:"
+	@echo "  environment : Install conda environment named $(CONDA_NAME) with dependencies"
+	@echo "  locks       : Fresh install conda environment and rewrite lock files"
+	@echo "  serve       : Serve website documentation that watches and rebuilds on file changes"
+	@echo "  docs        : Build static website files in public/"
+	@echo "  help        : Display this help message"
+
+help: all
 
 ###   ENVIRONMENT   ###
 
@@ -195,8 +205,8 @@ mkdocs_port := $(shell \
 
 .PHONY: serve
 serve:
-	echo "Served at http://127.0.0.1:$(mkdocs_port)/"
-	$(CONDA) mkdocs serve -a localhost:$(mkdocs_port)
+	@ echo "Serving documentation at http://127.0.0.1:$(mkdocs_port)/"
+	@ $(CONDA) mkdocs serve -a localhost:$(mkdocs_port)
 
 .PHONY: docs
 docs:
@@ -206,19 +216,3 @@ docs:
 .PHONY: open-docs
 open-docs:
 	xdg-open public/index.html 2>/dev/null
-
-
-
-###   DOCKER   ###
-
-.PHONY: docker-auth
-docker-auth:
-	docker login registry.gitlab.com
-
-.PHONY: docker-build-env
-docker-build-env:
-	docker build -t registry.gitlab.com/oasci/software/simlify:env -f ./docker/Dockerfile-env .
-
-.PHONY: docker-push-env
-docker-push-env:
-	docker push registry.gitlab.com/oasci/software/simlify:env

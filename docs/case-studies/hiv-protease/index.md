@@ -82,7 +82,6 @@ At the time of writing there were 302 results, but there are only a few that do 
 Both [`1TW7`](https://www.rcsb.org/structure/1TW7) and [`2G69`](https://www.rcsb.org/structure/2G69) have one or more mutations studying drug resistance mechanism, so we will ignore these for now.
 This leaves [`2PC0`](https://www.rcsb.org/structure/2PC0) as our protein.
 
-
 <div id="hiv-protease-view" class="mol-container"></div>
 
 <script>
