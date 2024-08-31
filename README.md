@@ -29,23 +29,32 @@
 </p>
 <h4 align="center"><a href="https://simlify.oasci.org">Documentation</a></h4>
 
-Add information about simlify here.
+**Simlify** is a simulation framework built to streamline the development and execution of computational models.
+Whether you're working on scientific research, engineering simulations, or data-driven experiments, simlify provides the tools and flexibility you need to build, run, and analyze simulations with ease.
 
-## Deploying
+This project aims to reduce the complexity of setting up and managing simulation environments while providing powerful features that cater to both novice and experienced developers.
 
-We use [bump-my-version](https://github.com/callowayproject/bump-my-version) to release a new version.
-This will create a git tag that is used by [poetry-dynamic-version](https://github.com/mtkennerly/poetry-dynamic-versioning) to generate version strings and update `CHANGELOG.md`.
+## Features
 
-For example, to bump the `minor` version you would run the following command.
+-   **Modular Architecture**: Easily extend and customize the framework to suit your specific simulation needs.
+-   **Extensive Documentation**: Comprehensive guides, tutorials, and API documentation to help you get started quickly and effectively.
+-   **Cross-Platform Support**: Compatible with major operating systems including Linux and macOS.
+-   **Community-Driven**: Open-source project with a growing community of contributors and users.
+
+## Installation
+
+You can install the latest released version using `pip`:
 
 ```bash
-poetry run bump-my-version bump minor
+pip install simlify
 ```
 
-After releasing a new version, you need to push and include all tags.
+or the latest development version from the GitHub repository:
 
 ```bash
-git push --follow-tags
+git clone git@github.com:oasci/simlify.git && \
+cd simlify && \
+poetry install
 ```
 
 ## License
