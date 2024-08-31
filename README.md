@@ -1,12 +1,12 @@
 <h1 align="center">simlify</h1>
 <h4 align="center">Simplify your molecular simulation workflow.</h4>
 <p align="center">
-    <a href="https://gitlab.com/oasci/software/simlify/-/pipelines">
-        <img src="https://gitlab.com/oasci/software/simlify/badges/main/pipeline.svg" alt="Build Status ">
+    <a href="https://github.com/oasci/simlify/actions/workflows/tests.yml">
+        <img src="https://github.com/oasci/simlify/actions/workflows/tests.yml/badge.svg" alt="Build Status ">
     </a>
     <img alt="PyPI - Python Version" src="https://img.shields.io/pypi/pyversions/simlify">
-    <a href="https://codecov.io/gl/oasci:software/simlify">
-        <img src="https://codecov.io/gl/oasci:software/simlify/graph/badge.svg?token=KVGB7NU117" alt="codecov">
+    <a href="https://codecov.io/gh/oasci/simlify">
+        <img src="https://codecov.io/gh/oasci/simlify/branch/main/graph/badge.svg?token=f682d4l6sv" alt="codecov">
     </a>
     <a href="https://github.com/oasci/simlify/releases">
         <img src="https://img.shields.io/github/v/release/oasci/simlify" alt="GitHub release (latest by date)">

@@ -4,8 +4,8 @@ site_name: simlify
 site_author: OASCI
 
 # Git host
-repo_name: oasci/software/simlify
-repo_url: https://gitlab.com/oasci/software/simlify
+repo_name: oasci/simlify
+repo_url: https://github.com/oasci/simlify
 
 # https://squidfunk.github.io/mkdocs-material/
 theme:
@@ -28,7 +28,7 @@ theme:
     text: Roboto
     code: Roboto Mono
   icon:
-    repo: fontawesome/brands/gitlab
+    repo: fontawesome/brands/github
     annotation: material/star-four-points-circle
   features:
     - content.code.annotate
@@ -101,7 +101,6 @@ extra_css:
 
 extra_javascript:
   - js/mathjax.js
-  - https://polyfill.io/v3/polyfill.min.js?features=es6
   - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
 
 markdown_extensions:
