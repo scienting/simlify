@@ -64,6 +64,7 @@ plugins:
         python:
           inventories:
             - "https://docs.python.org/3/objects.inv"
+            - "https://atomea.oasci.org/objects.inv"
           paths: ["simlify"]
           options:
             show_source: false
@@ -88,7 +89,6 @@ plugins:
   - awesome-nav
   - glightbox
   - macros
-  - print-site
   - git-revision-date-localized:
       type: iso_datetime
       timezone: America/Detroit
