@@ -90,11 +90,11 @@ This leaves [`2PC0`](https://www.rcsb.org/structure/2PC0) as our protein.
             layoutIsExpanded: false,
             layoutShowControls: false,
             layoutShowRemoteState: false,
-            layoutShowSequence: false,
+            layoutShowSequence: true,
             layoutShowLog: false,
             layoutShowLeftPanel: false,
-            viewportShowExpand: false,
-            viewportShowSelectionMode: false,
+            viewportShowExpand: true,
+            viewportShowSelectionMode: true,
             viewportShowAnimation: false,
             pdbProvider: 'rcsb',
         }).then(viewer => {
@@ -143,12 +143,13 @@ This leaves [`2PC0`](https://www.rcsb.org/structure/2PC0) as our protein.
             layoutIsExpanded: false,
             layoutShowControls: false,
             layoutShowRemoteState: false,
-            layoutShowSequence: false,
+            layoutShowSequence: true,
             layoutShowLog: false,
             layoutShowLeftPanel: false,
-            viewportShowExpand: false,
-            viewportShowSelectionMode: false,
+            viewportShowExpand: true,
+            viewportShowSelectionMode: true,
             viewportShowAnimation: false,
+            pdbProvider: 'rcsb',
         }).then(viewer => {
             // viewer.loadStructureFromUrl('./files/structures/2PC0-cleaned.pdb', format='pdb');
             viewer.loadSnapshotFromUrl("/case-studies/hiv-protease/files/molstar/2pc0-stripped.molx", "molx");

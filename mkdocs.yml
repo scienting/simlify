@@ -1,11 +1,11 @@
 docs_dir: docs
 
 site_name: simlify
-site_author: OASCI
+site_author: oasci
 
-# Git host
 repo_name: oasci/simlify
 repo_url: https://github.com/oasci/simlify
+copyright: <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> by OASCI
 
 # https://squidfunk.github.io/mkdocs-material/
 theme:
@@ -34,6 +34,8 @@ theme:
     - content.code.annotate
     - content.code.copy
     - content.code.select
+    - content.tooltips
+    - content.tabs.link
     - navigation.tabs
     - navigation.tabs.sticky
     - navigation.tracking
@@ -60,48 +62,57 @@ plugins:
   - mkdocstrings:
       handlers:
         python:
+          inventories:
+            - "https://docs.python.org/3/objects.inv"
           paths: ["simlify"]
           options:
+            show_source: false
+            show_root_heading: false
             annotations_path: brief
             docstring_style: google
+            merge_init_into_class: true
             docstring_section_style: spacy
             show_if_no_docstring: true
-            show_docstring_yields: true
-            show_docstring_examples: true
-            show_docstring_raises: true
-            show_root_toc_entry: true
-            show_root_full_path: true
-            show_object_full_path: false
+            show_labels: false
+            parameter_headings: false
             show_symbol_type_heading: true
             show_symbol_type_toc: true
-            show_root_members_full_path: true
-            show_source: false
-            merge_init_into_class: true
-            line_length: 88
-            show_root_heading: false
-  - awesome-pages:
-        collapse_single_pages: true
-        strict: false
-        order: asc
-        sort_type: natural
-        order_by: title
+  - mkdocs-jupyter:
+        no_input: False
+        include_requirejs: true
+        include_source: True
+        ignore: ["*.py"]
+        remove_tag_config:
+            remove_input_tags:
+                - hide_code
+  - awesome-nav
+  - glightbox
+  - macros
+  - print-site
+  - git-revision-date-localized:
+      type: iso_datetime
+      timezone: America/Detroit
+      fallback_to_build_date: true
+
+hooks:
+  - hooks/launchy.py
+colab_base_url: https://colab.research.google.com/github/oasci/simlify/blob/main/study
+
 
 extra:
   generator: false
-  analytics:
-    provider: plausible
-    domain: simlify.oasci.org
 
 extra_css:
   - css/base.css
   - css/colors.css
+  - css/jupyter.css
   - css/mkdocstrings.css
+  - css/launchy.css
   - css/mol.css
   - https://cdn.jsdelivr.net/npm/molstar@latest/build/viewer/molstar.css
 
 extra_javascript:
-  - js/mathjax.js
-  - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
+  - js/mathjax-config.js
 
 markdown_extensions:
   - abbr

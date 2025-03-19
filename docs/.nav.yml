@@ -1,0 +1,5 @@
+nav:
+  - Home: index.md
+  - Case studies: case-studies
+  - Developing: develop
+  - API: api
