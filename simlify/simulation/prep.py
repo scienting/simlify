@@ -80,10 +80,9 @@ class SimPrep(ABC):
         Returns:
             Bash commands in a list to run one stage of a simulation.
 
-        **Notes:**
-
-        [`prepare_context`][simulation.amber.prep.AmberSimPrep.prepare_context]
-        should be ran before this.
+        Notes:
+            [`prepare_sim_config`][simulation.amber.prep.SimPrep.prepare_sim_config]
+            should be ran before this.
         """
         raise NotImplementedError
 

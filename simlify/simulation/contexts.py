@@ -10,9 +10,9 @@ from pydantic import BaseModel, Field
 class SolutionConfig(BaseModel, YamlIO):
     charge_anion_extra: int = 0
     """Number of extra anions of type [`charge_anion_identity`]
-    [simulation.contexts.SimlifyConfig.charge_anion_identity] to add to
+    [simulation.contexts.SolutionConfig.charge_anion_identity] to add to
     the system. This does not include any ions added if [`charge_neutralize`]
-    [simulation.contexts.SimlifyConfig.charge_neutralize] is `True`.
+    [simulation.contexts.SolutionConfig.charge_neutralize] is `True`.
     """
 
     charge_anion_identity: str = "Cl-"
@@ -23,9 +23,9 @@ class SolutionConfig(BaseModel, YamlIO):
 
     charge_cation_extra: int = 0
     """Number of extra cations of type [`charge_cation_identity`]
-    [simulation.contexts.SimlifyConfig.charge_cation_identity] to add to the
+    [simulation.contexts.SolutionConfig.charge_cation_identity] to add to the
     system. This does not include any ions added if [`charge_neutralize`]
-    [simulation.contexts.SimlifyConfig.charge_neutralize] is `True`.
+    [simulation.contexts.SolutionConfig.charge_neutralize] is `True`.
     """
 
     charge_cation_identity: str = "Na+"
@@ -40,11 +40,11 @@ class SolutionConfig(BaseModel, YamlIO):
     charge_neutralize: bool = True
     """Flag to determine if system charge should be neutralized by placing
     additional ions of type [`charge_cation_identity`]
-    [simulation.contexts.SimlifyConfig.charge_cation_identity]
+    [simulation.contexts.SolutionConfig.charge_cation_identity]
     or [`charge_anion_identity`]
-    [simulation.contexts.SimlifyConfig.charge_anion_identity] based on
+    [simulation.contexts.SolutionConfig.charge_anion_identity] based on
     the value of [`charge_net`]
-    [simulation.contexts.SimlifyConfig.charge_net].
+    [simulation.contexts.SolutionConfig.charge_net].
     """
 
     solvent_ionic_strength: float = 0.150

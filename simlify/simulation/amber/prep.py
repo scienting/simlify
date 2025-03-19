@@ -61,10 +61,9 @@ class AmberSimPrep(SimPrep):
         Returns:
             Bash commands in a list to run one stage of a simulation.
 
-        **Notes:**
-
-        [`prepare_context`][simulation.amber.prep.AmberSimPrep.prepare_context]
-        should be ran before this.
+        Notes:
+            [`prepare_sim_config`][simulation.amber.prep.AmberSimPrep.prepare_sim_config]
+            should be ran before this.
 
         **Uses:**
 
@@ -157,13 +156,13 @@ class AmberSimPrep(SimPrep):
             Updated `run_commands` including this stage.
 
         Notes:
-            [`prepare_context`][simulation.amber.prep.AmberSimPrep.prepare_context]
+            [`prepare_sim_config`][simulation.amber.prep.AmberSimPrep.prepare_sim_config]
             should be ran before this.
         """
         if run_commands is None or len(run_commands) == 0:
             run_commands = ["#!/usr/bin/env bash"]
 
-        # We do not want to change source context in prepare_context, so we do this
+        # We do not want to change source context in prepare_sim_config, so we do this
         # here.
         if simlify_config.runtime.splits > 1:
             simlify_config.engine.inputs.nstlim = int(
@@ -208,8 +207,8 @@ class AmberSimPrep(SimPrep):
         multiple_stages: bool = bool(simlify_config.stages is not None)
         if multiple_stages:
             logger.debug("There are multiple stages")
-            n_stages: int = len(simlify_config.stages)  # type: ignore
-            simlify_config.update(simlify_config.stages[0])  # type: ignore
+            n_stages: int = len(simlify_config.stages)
+            simlify_config.update(simlify_config.stages[0])
         else:
             logger.debug("There is one stage.")
             n_stages = 1
@@ -226,7 +225,7 @@ class AmberSimPrep(SimPrep):
             simlify_config.path_coord_prev = simlify_config.path_coord
 
             if multiple_stages and i_stage < n_stages:
-                simlify_config.update(simlify_config.stages[i_stage])  # type: ignore
+                simlify_config.update(simlify_config.stages[i_stage])
 
         if simlify_config.write:
             logger.debug("Writing run script at {}", simlify_config.path_run_write)
