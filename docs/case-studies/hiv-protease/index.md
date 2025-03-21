@@ -24,13 +24,9 @@ From a biophysical perspective, HIV-1 protease presents several exciting charact
 3.  **Substrate specificity:** The enzyme recognizes and cleaves specific sequences in viral polyproteins.
     MD simulations can help elucidate the molecular basis of this specificity and how mutations might affect it.
 4.  **Water-Mediated Interactions:** Water molecules play a crucial role in the enzyme's catalytic mechanism and mediating protein-ligand interactions.
- Explicit solvent MD simulations are particularly valuable for studying these effects.
+    Explicit solvent MD simulations are particularly valuable for studying these effects.
 5.  **Allosteric effects:** Recent studies have suggested the presence of allosteric sites in HIV-1 protease, opening new avenues for drug design.
     MD simulations can help identify and characterize these sites.
-
-By running Amber simulations on HIV-1 protease, researchers can gain valuable insights into these biophysical characteristics, contributing to fundamental science and applied research in drug discovery.
-
-Understood. I appreciate the flexibility to reorganize and expand on the information. Here's a revised version of the section, incorporating your notes while adding some additional relevant information:
 
 ## Protein preparation
 
@@ -130,7 +126,25 @@ This leaves [`2PC0`](https://www.rcsb.org/structure/2PC0) as our protein.
 ### Removing non-protein molecules
 
 ```bash
---8<-- "docs/case-studies/hiv-protease/scripts/01-clean-pdb.sh:27:27"
+--8<-- "docs/case-studies/hiv-protease/scripts/01-clean-pdb.sh:28:29"
+```
+
+### Removing duplicate atom lines
+
+```bash
+--8<-- "docs/case-studies/hiv-protease/scripts/01-clean-pdb.sh:32:52"
+```
+
+### Turning models into chains
+
+```bash
+--8<-- "docs/case-studies/hiv-protease/scripts/01-clean-pdb.sh:55:56"
+```
+
+### Renumber
+
+```bash
+--8<-- "docs/case-studies/hiv-protease/scripts/01-clean-pdb.sh:58:58"
 ```
 
 ### Result
