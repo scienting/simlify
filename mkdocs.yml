@@ -65,6 +65,7 @@ plugins:
           inventories:
             - "https://docs.python.org/3/objects.inv"
             - "https://atomea.oasci.org/objects.inv"
+            - "https://docs.mdanalysis.org/stable/objects.inv"
           paths: ["simlify"]
           options:
             show_source: false
