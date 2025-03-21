@@ -44,7 +44,7 @@ colorama = ">=0.4.6"
 ambertools = ">=24.8,<25"
 
 [feature.dev.tasks]
-mdlint = { cmd = ["markdownlint-cli2", '"**/*.{md,markdown}"', "--fix", "--config", ".markdownlint.yaml", "||", "true"] }
+mdlint = { cmd = ["markdownlint-cli2", '"docs/*.{md,markdown}"', "--fix", "--config", ".markdownlint.yaml", "||", "true"] }
 isort = { cmd = ["isort", "--settings-path", ".isort.cfg", "./simlify", "./tests", "||", "true"] }
 black = { cmd = ["black", "--config", ".black.toml", "./simlify", "./tests", "||", "true"] }
 format = { depends-on = ["mdlint", "isort", "black"] }
@@ -68,6 +68,7 @@ publish = { cmd = ["twine", "upload", "dist/*"] }
 build = ">=1.2.2.post1,<2"
 mypy-extensions = ">=1.0.0"
 black = { version = ">=23.10.0", extras = ["jupyter"] }
+types-pyyaml = ">=6.0.12.20241230, <7"
 
 [feature.docs.dependencies]
 mkdocs = ">=1.6.1,<2"
