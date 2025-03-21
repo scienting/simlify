@@ -7763,9 +7763,13 @@ packages:
   name: simlify
   version: 0.0.0
   path: .
-  sha256: ca40cdf35458dca0d867986d8a982487b47d1a96cff5a6ef06eb8bc23b9db5b0
+  sha256: 4b14c1a4c275c12313e27ed7f59265c37fcfd53e10eb002edf8027a9ce8e4a14
   requires_dist:
   - loguru>=0.7.2,<0.8
+  - numpy>=2.2.4,<3
+  - scipy>=1.15.2,<2
+  - pydantic>=2.10.6,<3
+  - mdanalysis>=2.9.0,<3
   requires_python: '>=3.11'
   editable: true
 - kind: conda
