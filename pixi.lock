@@ -1376,8 +1376,8 @@ packages:
   url: https://files.pythonhosted.org/packages/25/8a/c46dcc25341b5bce5472c718902eb3d38600a903b14fa6aeecef3f21a46f/asttokens-3.0.0-py3-none-any.whl
   sha256: e3078351a059199dd5138cb1c706e6430c05eff2ff136af5eb4790f9d28932e2
   requires_dist:
-  - astroid<4,>=2 ; extra == 'astroid'
-  - astroid<4,>=2 ; extra == 'test'
+  - astroid>=2,<4 ; extra == 'astroid'
+  - astroid>=2,<4 ; extra == 'test'
   - pytest ; extra == 'test'
   - pytest-cov ; extra == 'test'
   - pytest-xdist ; extra == 'test'
@@ -3081,7 +3081,7 @@ packages:
   - jedi>=0.16
   - matplotlib-inline
   - pexpect>4.3 ; sys_platform != 'emscripten' and sys_platform != 'win32'
-  - prompt-toolkit<3.1.0,>=3.0.41
+  - prompt-toolkit>=3.0.41,<3.1.0
   - pygments>=2.4.0
   - stack-data
   - traitlets>=5.13.0
@@ -3193,7 +3193,7 @@ packages:
   url: https://files.pythonhosted.org/packages/c0/5a/9cac0c82afec3d09ccd97c8b6502d48f165f9124db81b4bcb90b4af974ee/jedi-0.19.2-py2.py3-none-any.whl
   sha256: a8ef22bde8490f57fe5c7681a3c83cb58874daf72b4784de3cce5b6ef6edb5b9
   requires_dist:
-  - parso<0.9.0,>=0.8.4
+  - parso>=0.8.4,<0.9.0
   - jinja2==2.11.3 ; extra == 'docs'
   - markupsafe==1.1.1 ; extra == 'docs'
   - pygments==2.8.1 ; extra == 'docs'
@@ -7966,7 +7966,7 @@ packages:
   name: simlify
   version: 0.0.0
   path: .
-  sha256: 4b14c1a4c275c12313e27ed7f59265c37fcfd53e10eb002edf8027a9ce8e4a14
+  sha256: 4dfd77d4c666158e13e607ab8bab399ff5cd84176489f141e14b5457dc7a5d62
   requires_dist:
   - loguru>=0.7.2,<0.8
   - numpy>=2.2.4,<3
@@ -8453,7 +8453,7 @@ packages:
   - pre-commit ; extra == 'test'
   - pytest-mock ; extra == 'test'
   - pytest-mypy-testing ; extra == 'test'
-  - pytest<8.2,>=7.0 ; extra == 'test'
+  - pytest>=7.0,<8.2 ; extra == 'test'
   requires_python: '>=3.8'
 - kind: conda
   name: traitlets
