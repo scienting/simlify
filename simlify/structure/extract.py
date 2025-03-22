@@ -1,4 +1,4 @@
-from typing import Any
+from typing import Any, Iterable
 
 import os
 
@@ -6,22 +6,24 @@ import MDAnalysis as mda
 from loguru import logger
 
 
-def run_select_atoms(
-    select: str,
+def extract_atoms(
     path_topo: str,
+    select: str | None = None,
+    frames: Iterable[int] | None = None,
     path_output: str | None = None,
     path_coords: str | list[str] | None = None,
     kwargs_universe: dict[str, Any] = dict(),
     kwargs_writer: dict[str, Any] = dict(),
     overwrite: bool = False,
 ) -> mda.core.groups.AtomGroup:
-    r"""Select atoms from molecular structure using
-    [MDAnalysis](https://docs.mdanalysis.org/stable) and optionally write new
-    coordinates.
+    r"""Extract atoms or frames from molecular structure(s) using
+    [MDAnalysis](https://docs.mdanalysis.org/stable).
 
     Args:
-        select: [MDAnalysis selection string](https://docs.mdanalysis.org/stable/documentation_pages/selections.html).
         path_topo: Path to topology file.
+        select: [MDAnalysis selection string](https://docs.mdanalysis.org/stable/documentation_pages/selections.html).
+        frames: Extract frames from a trajectory. If `None`, the whole trajectory will
+            be included. This is only relevant when `path_output` is specified.
         path_output: Path to save new coordinate file. If `None`, then no file is
             written.
         path_coords: Paths to coordinate file(s) to load.
@@ -40,8 +42,9 @@ def run_select_atoms(
 
         ```python
         run_select_atoms(
-            select="protein",
             path_topo="mol.prmtop",
+            select="protein",
+            frames=[0, -1],
             path_output="protein.nc",
             path_coords="traj.nc",
         )
@@ -51,9 +54,20 @@ def run_select_atoms(
         logger.critical(f"Could not find topology file at {path_topo}")
         raise
 
-    u = mda.Universe(path_topo, path_coords, **kwargs_universe)
+    if (select is None) and (frames is None):
+        logger.warning(
+            "Both selection and frames are None. No changes to the structure(s) will be made."
+        )
 
-    atoms = u.select_atoms(select)
+    if path_coords:
+        u = mda.Universe(path_topo, path_coords, **kwargs_universe)
+    else:
+        u = mda.Universe(path_topo, **kwargs_universe)
+
+    if select:
+        atoms = u.select_atoms(select)
+    else:
+        atoms = u.atoms
 
     if path_output:
         if os.path.exists(path_output):
@@ -63,6 +77,11 @@ def run_select_atoms(
                 )
 
         with mda.Writer(path_output, atoms.n_atoms) as W:
-            for ts in u.trajectory:
-                W.write(atoms, **kwargs_writer)
+            if frames:
+                for frame in frames:
+                    u.trajectory[frame]
+                    W.write(atoms, **kwargs_writer)
+            else:
+                for ts in u.trajectory:
+                    W.write(atoms, **kwargs_writer)
     return atoms

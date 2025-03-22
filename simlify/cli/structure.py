@@ -4,11 +4,11 @@ Structure module command-line interface.
 
 import argparse
 
-from simlify.structure.select import run_select_atoms
+from simlify.structure import extract_atoms
 
 
-def cli_select_atoms() -> None:
-    r"""Command-line interface for selecting atoms in structures."""
+def cli_extract_atoms() -> None:
+    r"""Command-line interface for extracting atoms or frames in structures."""
     parser = argparse.ArgumentParser(description="Select atoms from PDB file")
     parser.add_argument(
         "topo",
@@ -36,4 +36,4 @@ def cli_select_atoms() -> None:
     )
     args = parser.parse_args()
     select = " ".join(args.select)
-    run_select_atoms(select, args.topo, args.output, args.coords)
+    extract_atoms(select, args.topo, args.output, args.coords)
