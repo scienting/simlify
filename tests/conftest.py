@@ -1,4 +1,5 @@
 import os
+import urllib.request
 
 import pytest
 from atomea.schemas.workflow.amber import Amber22Schema
@@ -10,7 +11,7 @@ TEST_DIR = os.path.dirname(__file__)
 
 
 @pytest.fixture
-def test_dir():
+def dir_test():
     return os.path.abspath(TEST_DIR)
 
 
@@ -91,3 +92,17 @@ def amber_sim_standard_config():
         }
     )
     return simlify_config
+
+
+def download_pdb(pdb_id, path_save=None):
+    """Download and cache PDB files."""
+    pdb_id = pdb_id.lower()
+    url = f"https://files.rcsb.org/download/{pdb_id}.pdb"
+    path_save = path_save or os.path.join(TEST_DIR, f"tmp/{pdb_id}.pdb")
+
+    if not os.path.exists(path_save):
+        try:
+            response = urllib.request.urlretrieve(url, path_save)
+            print(response)
+        except Exception as e:
+            print(f"Error downloading PDB file: {e}")
