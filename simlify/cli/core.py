@@ -1,49 +1,43 @@
-from typing import Any
-
-import argparse
+import os
 import sys
 
-import yaml
 from loguru import logger
 
-from simlify import __version__, enable_logging
-
-
-def setup_logging(args):
-    if args.vv:
-        log_level = 0  # TRACE
-    elif args.v:
-        log_level = 10  # DEBUG
-    else:
-        log_level = 20  # INFO
-
-    enable_logging(
-        log_level,
-        True,
-        args.logfile,
-        log_format="<level>{level: <8}</level> | {message}",
-    )
-
-
-def load_yaml_config(file_path: str) -> dict[str, Any]:
-    try:
-        with open(file_path, "r", encoding="utf-8") as f:
-            return dict(yaml.safe_load(f))
-    except Exception as e:
-        logger.error(f"Error loading YAML file: {e}")
-        sys.exit(1)
+from simlify import __version__
+from simlify.cli.config import load_yaml_config, setup_logging
+from simlify.cli.parsers import create_parser, print_help_if_no_subcommand
 
 
 def cli_main():
-    parser = argparse.ArgumentParser(description="Simlify CLI")
-    parser.add_argument("-v", action="store_true", help="More log verbosity.")
-    parser.add_argument("-vv", action="store_true", help="Even more log verbosity.")
-    parser.add_argument("--logfile", help="Specify a file to write logs to.")
-    parser.add_argument("--config", help="Path to YAML configuration file.")
-
-    subparsers = parser.add_subparsers(dest="command", help="Available commands:")
-
+    parser = create_parser()
     args = parser.parse_args()
-    setup_logging(args)
 
+    # Print help if no subcommand provided (top-level or nested)
+    print_help_if_no_subcommand(parser, args)
+
+    setup_logging(args)
     logger.info(f"Simlify v{__version__} by OASCI <us@oasci.org>")
+
+    # Load configuration file if provided
+    if args.config:
+        logger.info(f"User provided YAML config file at: `{args.config}`")
+        if not os.path.exists(args.config):
+            logger.critical("File does not exist. Exiting.")
+            sys.exit(1)
+        logger.info("Loading YAML file")
+        config = load_yaml_config(args.config)
+        # Update args with config, prioritizing command-line arguments
+        for key, value in config.items():
+            if not hasattr(args, key) or getattr(args, key) is None:
+                setattr(args, key, value)
+
+    # Dispatch to the subcommand function if available
+    if hasattr(args, "func"):
+        args.func(args)
+    else:
+        parser.print_help()
+        sys.exit(1)
+
+
+if __name__ == "__main__":
+    cli_main()
