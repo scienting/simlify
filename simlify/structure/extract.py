@@ -1,4 +1,4 @@
-from typing import Any, Iterable
+from typing import Any, Sequence
 
 import os
 
@@ -9,7 +9,7 @@ from loguru import logger
 def extract_atoms(
     path_topo: str,
     select: str | None = None,
-    frames: Iterable[int] | None = None,
+    frames: Sequence[int] | None = None,
     path_output: str | None = None,
     path_coords: str | list[str] | None = None,
     kwargs_universe: dict[str, Any] = dict(),
@@ -60,28 +60,38 @@ def extract_atoms(
         )
 
     if path_coords:
+        logger.debug("Loading all coordinate files")
         u = mda.Universe(path_topo, path_coords, **kwargs_universe)
     else:
+        logger.debug("No coordinate file specified.")
         u = mda.Universe(path_topo, **kwargs_universe)
 
     if select:
+        logger.debug(f"Making selection: {select}")
         atoms = u.select_atoms(select)
     else:
+        logger.debug("Keeping all atoms")
         atoms = u.atoms
 
     if path_output:
         if os.path.exists(path_output):
+            logger.info(f"File at {path_output} already exists")
             if not overwrite:
                 logger.critical(
                     f"Overwrite is False and file already exists at {path_output}"
                 )
+            else:
+                logger.info(f"Will overwrite {path_output}")
 
         with mda.Writer(path_output, atoms.n_atoms) as W:
+            logger.info(f"Writing coordinates to {path_output}")
             if frames:
+                logger.info(f"Writing {len(frames)} frames")
                 for frame in frames:
                     u.trajectory[frame]
                     W.write(atoms, **kwargs_writer)
             else:
+                logger.info("Writing all frames")
                 for ts in u.trajectory:
                     W.write(atoms, **kwargs_writer)
     return atoms
