@@ -12,7 +12,7 @@ readme = "README.md"
 
 [pypi-dependencies]
 simlify = { path = ".", editable = true }
-atomea = { git = "https://github.com/oasci/atomea", rev = "a6a514d1fac4782a2c6484c044fff52fad8521bf" }
+atomea = { git = "https://github.com/oasci/atomea", rev = "3439992b4d54d5b044e67dae69eb37dbadde1fc0" }
 pyyaml = ">=6.0.2, <7"
 
 [system-requirements]
