@@ -6,6 +6,7 @@ from atomea.schemas.workflow.amber import Amber22Schema
 
 from simlify import enable_logging
 from simlify.simulation.contexts import SimlifyConfig
+from simlify.structure.io import load_mda
 
 TEST_DIR = os.path.dirname(__file__)
 
@@ -106,3 +107,12 @@ def download_pdb(pdb_id, path_save=None):
             print(response)
         except Exception as e:
             print(f"Error downloading PDB file: {e}")
+
+
+@pytest.fixture
+def u_1haj(dir_test):
+    """Fixture to download and load the 1HAJ structure once per test module."""
+    pdb_id = "1haj"
+    path_pdb = os.path.join(dir_test, "tmp", f"{pdb_id}.pdb")
+    download_pdb(pdb_id, path_save=path_pdb)
+    return load_mda(path_pdb)
