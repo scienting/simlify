@@ -22,7 +22,7 @@ def add_extract_subparser(subparsers):
         The configured `argparse` parser object for the `extract` subcommand.
     """
     parser = subparsers.add_parser(
-        "extract", help="Extract atoms or frames from molecular structures"
+        "extract", description="Extract atoms or frames from molecular structures"
     )
     parser.add_argument(
         "topo",
