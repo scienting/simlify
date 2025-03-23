@@ -1,6 +1,7 @@
 import argparse
 import sys
 
+from simlify.cli.structure.center import add_center_subparser
 from simlify.cli.structure.extract import add_extract_subparser
 
 
@@ -18,10 +19,12 @@ def create_parser() -> argparse.ArgumentParser:
     structure_parser = subparsers.add_parser(
         "structure", help="Commands for molecular structure operations"
     )
+    parser._structure_parser = structure_parser  # type: ignore
     structure_subparsers = structure_parser.add_subparsers(
         dest="structure_command", help="Structure commands"
     )
     add_extract_subparser(structure_subparsers)
+    add_center_subparser(structure_subparsers)
 
     return parser
 
