@@ -14,8 +14,9 @@ from loguru import logger
 def get_box_lengths(positions: npt.NDArray[np.float64]) -> npt.NDArray[np.float64]:
     r"""Compute lengths of box edges.
 
-    Calculates the lengths of the smallest axis-aligned box that contains
-    all atoms in the given set of Cartesian coordinates.
+    This function calculates the lengths of the edges of a box that
+    encompasses a set of atomic positions by finding the difference
+    between the maximum and minimum coordinates in each dimension.
 
     Args:
         positions: A 2D NumPy array of shape (N, 3), where N is the
@@ -46,8 +47,10 @@ def get_box_lengths(positions: npt.NDArray[np.float64]) -> npt.NDArray[np.float6
 def get_box_vectors(positions: npt.NDArray[np.float64]) -> npt.NDArray[np.float64]:
     r"""Construct orthogonal box vectors.
 
-    Builds a 3x3 matrix with the computed box lengths as the diagonal elements,
-    representing orthogonal box vectors along the x, y, and z axes.
+    This function calculates the vectors of the edges of a box that
+    encompasses a set of atomic positions. The vectors are represented
+    as a diagonal matrix where the diagonal elements correspond to the
+    lengths of the box edges.
 
     Args:
         positions: A 2D NumPy array of shape (N, 3), where N is the
