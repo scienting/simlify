@@ -8,6 +8,10 @@ from ast import literal_eval
 
 from loguru import logger
 
+from .config import SimlifyConfig
+
+__all__ = ["SimlifyConfig"]
+
 __version__ = "0.0.0"
 
 logger.disable("simlify")

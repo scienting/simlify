@@ -2,7 +2,8 @@ import os
 
 from loguru import logger
 
-from ..contexts import SimlifyConfig
+from simlify import SimlifyConfig
+
 from ..prep import SimPrep
 
 
@@ -25,23 +26,23 @@ class AmberSimPrep(SimPrep):
         if simlify_config.label is None:
             raise ValueError("simlify_config.label cannot be None")
         simlify_config.engine.cli.mdin = os.path.join(
-            simlify_config.runtime.dir_input, simlify_config.label + ".in"
+            simlify_config.run.dir_input, simlify_config.label + ".in"
         )
         simlify_config.engine.cli.mdout = os.path.join(
-            simlify_config.runtime.dir_run, simlify_config.label + ".out"
+            simlify_config.run.dir_run, simlify_config.label + ".out"
         )
         simlify_config.engine.cli.restrt = os.path.join(
-            simlify_config.runtime.dir_run, simlify_config.label + ".rst"
+            simlify_config.run.dir_run, simlify_config.label + ".rst"
         )
         simlify_config.engine.cli.mdcrd = os.path.join(
-            simlify_config.runtime.dir_run, simlify_config.label + ".nc"
+            simlify_config.run.dir_run, simlify_config.label + ".nc"
         )
         simlify_config.engine.cli.mdinfo = os.path.join(
-            simlify_config.runtime.dir_run, simlify_config.label + ".mdinfo"
+            simlify_config.run.dir_run, simlify_config.label + ".mdinfo"
         )
 
         # Checks to see if we will be writing files to a directory later.
-        if not os.path.exists(simlify_config.rendering.dir_work):
+        if not os.path.exists(simlify_config.run.dir_work):
             os.makedirs(simlify_config.dir_work, exist_ok=True)
 
         if "mpi" in simlify_config.engine.cli.compute_platform.lower():
@@ -68,7 +69,7 @@ class AmberSimPrep(SimPrep):
         **Uses:**
 
         The following attributes are possibly used here and should be specified in
-        [`simlify_config`][simulation.contexts.SimlifyConfig].
+        [`simlify_config`][SimlifyConfig].
 
         -   `label_stage`: Unique label for this simulation stage. This will be used
             to build file paths.
@@ -84,11 +85,11 @@ class AmberSimPrep(SimPrep):
 
         stage_commands = ["", f"echo 'Starting {simlify_config.label}'", "date"]
 
-        if simlify_config.runtime.use_scratch:
+        if simlify_config.run.use_scratch:
             # Adds commands to check if split was already ran.
             check_path = os.path.join(
-                simlify_config.runtime.dir_work,
-                simlify_config.runtime.dir_output,
+                simlify_config.run.dir_work,
+                simlify_config.run.dir_output,
                 simlify_config.label + ".rst",
             )
             stage_commands = ["    " + line for line in stage_commands]
@@ -105,16 +106,16 @@ class AmberSimPrep(SimPrep):
         logger.debug("Amber command: %s", amber_command[:-2])
         stage_commands.append(amber_command)
 
-        if simlify_config.runtime.use_scratch:
+        if simlify_config.run.use_scratch:
             # Add indentation to amber command
             stage_commands[-1] = "    " + stage_commands[-1]
 
             # Adds commands to move scratch files to dir_output.
             stage_commands.extend(
                 [
-                    f"    mv {simlify_config.engine.cli.mdout} {simlify_config.runtime.dir_output}",
-                    f"    mv {simlify_config.engine.cli.restrt} {simlify_config.runtime.dir_output}",
-                    f"    mv {simlify_config.engine.cli.mdcrd} {simlify_config.runtime.dir_output}",
+                    f"    mv {simlify_config.engine.cli.mdout} {simlify_config.run.dir_output}",
+                    f"    mv {simlify_config.engine.cli.restrt} {simlify_config.run.dir_output}",
+                    f"    mv {simlify_config.engine.cli.mdcrd} {simlify_config.run.dir_output}",
                     "fi",
                 ]
             )
@@ -164,16 +165,16 @@ class AmberSimPrep(SimPrep):
 
         # We do not want to change source context in prepare_sim_config, so we do this
         # here.
-        if simlify_config.runtime.splits > 1:
+        if simlify_config.run.splits > 1:
             simlify_config.engine.inputs.nstlim = int(
-                simlify_config.engine.inputs.nstlim / simlify_config.runtime.splits
+                simlify_config.engine.inputs.nstlim / simlify_config.run.splits
             )
 
         label_original = simlify_config.label
         if label_original is None:
             raise ValueError("label cannot be None")
-        for i_split in range(1, simlify_config.runtime.splits + 1):
-            if simlify_config.runtime.splits > 1:
+        for i_split in range(1, simlify_config.run.splits + 1):
+            if simlify_config.run.splits > 1:
                 label_stage_suffix = f"_split_{i_split:03d}"  # Why n_splits < 1000
             else:
                 label_stage_suffix = ""
@@ -182,8 +183,8 @@ class AmberSimPrep(SimPrep):
             stage_input_lines = cls.get_stage_input_lines(simlify_config)
             if write:
                 stage_path_input = os.path.join(
-                    simlify_config.rendering.dir_work,
-                    simlify_config.rendering.dir_input,
+                    simlify_config.run.dir_work,
+                    simlify_config.run.dir_input,
                     simlify_config.label + ".in",
                 )
                 logger.info("Writing input file at {}", stage_path_input)

@@ -3,8 +3,9 @@ from typing import Any
 import argparse
 from abc import ABC, abstractmethod
 
+from simlify import SimlifyConfig
+
 from ..utils import get_obj_from_string
-from .contexts import SimlifyConfig
 
 
 class TopoGen(ABC):
@@ -112,7 +113,7 @@ def cli_run_gen_topo():
     for yaml_path in reversed(args.yaml):
         simlify_config.from_yaml(yaml_path)
     if args.work is not None:
-        simlify_config.rendering.dir_work = args.work
+        simlify_config.run.dir_work = args.work
     run_gen_topo(
         args.structure,
         args.import_string,

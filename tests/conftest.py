@@ -4,8 +4,7 @@ import urllib.request
 import pytest
 from atomea.schemas.workflow.amber import Amber22Schema
 
-from simlify import enable_logging
-from simlify.simulation.contexts import SimlifyConfig
+from simlify import SimlifyConfig, enable_logging
 from simlify.structure.io import load_mda
 
 TEST_DIR = os.path.dirname(__file__)
@@ -55,7 +54,7 @@ def amber_sim_standard_config():
     simlify_config = SimlifyConfig()
     simlify_config.engine = Amber22Schema()
     simlify_config.label = "01_min"
-    simlify_config.rendering.dir_work = os.path.join(TEST_DIR, "tmp")
+    simlify_config.run.dir_work = os.path.join(TEST_DIR, "tmp")
     simlify_config.engine.cli.compute_platform = "pmemd.MPI"
     simlify_config.engine.ff.protein = "ff19SB"
     simlify_config.engine.ff.water = "opc3"

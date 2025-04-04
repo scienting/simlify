@@ -1,5 +1,4 @@
 import os
-import tempfile
 
 from simlify.simulation.amber.topo import AmberTopoGen
 from simlify.simulation.topo import run_gen_topo
@@ -57,8 +56,8 @@ class TestPrep:
         )
 
         path_topo = os.path.join(
-            amber_sim_standard_config.rendering.dir_work,
-            amber_sim_standard_config.rendering.dir_input,
+            amber_sim_standard_config.run.dir_work,
+            amber_sim_standard_config.run.dir_input,
             amber_sim_standard_config.engine.cli.prmtop,
         )
         with open(path_topo, "r", encoding="utf-8") as f:
@@ -73,8 +72,8 @@ class TestPrep:
                     break
 
         path_coord = os.path.join(
-            amber_sim_standard_config.rendering.dir_work,
-            amber_sim_standard_config.rendering.dir_input,
+            amber_sim_standard_config.run.dir_work,
+            amber_sim_standard_config.run.dir_input,
             amber_sim_standard_config.engine.cli.inpcrd,
         )
         with open(path_coord, "r", encoding="utf-8") as f:

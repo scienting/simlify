@@ -7,9 +7,10 @@ from collections.abc import Iterable
 
 from loguru import logger
 
+from simlify import SimlifyConfig
+
 from ...structure.solvent import get_ion_counts
 from ...utils import simple_generator
-from ..contexts import SimlifyConfig
 from ..topo import TopoGen
 
 FF_WATER_SOLVENT_BOX_MAP: dict[str, Any] = {
@@ -192,7 +193,7 @@ class AmberTopoGen(TopoGen):
             capture_output=True,
             text=True,
             check=False,
-            cwd=simlify_config.rendering.dir_work,
+            cwd=simlify_config.run.dir_work,
         )
         os.remove(tmp_input.name)  # Remove temporary input file.
         logger.debug("tleap output:\n{}", completed_process.stdout)
@@ -220,7 +221,7 @@ class AmberTopoGen(TopoGen):
         Examples:
             The base `tleap` input file is shown below with
             [`AMBER_PROTEIN_STANDARD_CONTEXT`]
-            [simulation.amber.contexts.AMBER_PROTEIN_STANDARD_CONTEXT].
+            [atomea.simulation.amber.contexts.AMBER_PROTEIN_STANDARD_CONTEXT].
 
             ```bash
             source leaprc.protein.ff19SB
@@ -315,13 +316,13 @@ class AmberTopoGen(TopoGen):
         logger.debug("Setting PDB output to {}", path_tleap_pdb)
         tleap_lines.append(f"savepdb mol {path_tleap_pdb}")
         path_topo_write = os.path.join(
-            simlify_config.rendering.dir_work,
-            simlify_config.rendering.dir_input,
+            simlify_config.run.dir_work,
+            simlify_config.run.dir_input,
             simlify_config.engine.cli.prmtop,
         )
         path_coord_write = os.path.join(
-            simlify_config.rendering.dir_work,
-            simlify_config.rendering.dir_input,
+            simlify_config.run.dir_work,
+            simlify_config.run.dir_input,
             simlify_config.engine.cli.inpcrd,
         )
         tleap_lines.append(f"saveamberparm mol {path_topo_write} {path_coord_write}")

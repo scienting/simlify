@@ -1,6 +1,6 @@
 from loguru import logger
 
-from ..simulation.contexts import SimlifyConfig
+from simlify import SimlifyConfig
 
 
 def get_ion_counts(

@@ -5,8 +5,9 @@ from collections.abc import Collection
 
 from loguru import logger
 
+from simlify import SimlifyConfig
+
 from ..utils import get_obj_from_string
-from .contexts import SimlifyConfig
 
 
 class SimPrep(ABC):
@@ -129,7 +130,7 @@ def run_sim_slurm_prep(
             [simulation.amber.prep.AmberSimPrep].
         simlify_config: Simlify configuration.
     """
-    simlify_config.rendering.dir_work = dir_work
+    simlify_config.run.dir_work = dir_work
     simlify_config.path_slurm_write = os.path.join(dir_work, path_slurm_write)
     simlify_config.path_run_write = os.path.join(dir_work, path_run_write)
 
