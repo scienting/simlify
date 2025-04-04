@@ -1,6 +1,6 @@
 from loguru import logger
 
-from ..utils import parse_resid, replace_in_pdb_line
+from simlify.utils import parse_resid, replace_in_pdb_line
 
 
 def assign_resid(

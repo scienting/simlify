@@ -4,8 +4,7 @@ import argparse
 from abc import ABC, abstractmethod
 
 from simlify import SimlifyConfig
-
-from ..utils import get_obj_from_string
+from simlify.utils import get_obj_from_string
 
 
 class TopoGen(ABC):

@@ -3,8 +3,7 @@ import os
 from loguru import logger
 
 from simlify import SimlifyConfig
-
-from ..prep import SimPrep
+from simlify.simulation.prep import SimPrep
 
 
 class AmberSimPrep(SimPrep):

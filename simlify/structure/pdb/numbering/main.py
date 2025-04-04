@@ -6,9 +6,9 @@ from collections.abc import Iterable
 
 from loguru import logger
 
-from ..utils import parse_resid
-from .atoms import write_atom_id
-from .residues import unify_resid
+from simlify.structure.pdb.numbering.atoms import write_atom_id
+from simlify.structure.pdb.numbering.residues import unify_resid
+from simlify.structure.utils import parse_resid
 
 
 def run_unify_numbering(

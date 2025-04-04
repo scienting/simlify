@@ -7,7 +7,7 @@ from loguru import logger
 from scipy.optimize import minimize
 from scipy.spatial.transform import Rotation
 
-from ..structure import get_box_volume
+from simlify.structure.dims import get_box_volume
 
 
 def rotate_positions(

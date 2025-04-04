@@ -8,10 +8,9 @@ from collections.abc import Iterable
 from loguru import logger
 
 from simlify import SimlifyConfig
-
-from ...structure.solvent import get_ion_counts
-from ...utils import simple_generator
-from ..topo import TopoGen
+from simlify.simulation.topo import TopoGen
+from simlify.structure.solvent import get_ion_counts
+from simlify.utils import simple_generator
 
 FF_WATER_SOLVENT_BOX_MAP: dict[str, Any] = {
     "tip3p": "TIP3PBOX",

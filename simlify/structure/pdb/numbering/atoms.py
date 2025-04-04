@@ -1,4 +1,4 @@
-from ..utils import write_in_pdb_line
+from simlify.utils import write_in_pdb_line
 
 
 def write_atom_id(line: str, atom_id: int) -> str:

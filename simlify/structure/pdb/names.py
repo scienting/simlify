@@ -6,7 +6,12 @@ from collections.abc import Callable, Iterable
 
 from loguru import logger
 
-from ..utils import parse_atomname, parse_resid, parse_resname, replace_in_pdb_line
+from simlify.utils import (
+    parse_atomname,
+    parse_resid,
+    parse_resname,
+    replace_in_pdb_line,
+)
 
 
 def modify_lines(
