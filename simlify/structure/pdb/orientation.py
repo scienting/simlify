@@ -1,5 +1,3 @@
-import argparse
-
 import MDAnalysis as mda
 import numpy as np
 import numpy.typing as npt
@@ -69,24 +67,3 @@ def run_minimize_box(
         u.atoms.positions = optimized_positions
         u.atoms.write(output_path)
     return optimized_positions
-
-
-def cli_minimize_box() -> None:
-    r"""Command-line interface for rotating protein to minimize box volume."""
-    parser = argparse.ArgumentParser(
-        description="Minimize box size by rotating protein"
-    )
-    parser.add_argument(
-        "pdb_path",
-        type=str,
-        nargs="?",
-        help="Path to PDB file",
-    )
-    parser.add_argument(
-        "--output",
-        type=str,
-        nargs="?",
-        help="Path to new PDB file",
-    )
-    args = parser.parse_args()
-    run_minimize_box(args.pdb_path, args.output)

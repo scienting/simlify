@@ -129,31 +129,6 @@ def run_filter_pdb(
     return out_lines
 
 
-def cli_filter_pdb() -> None:
-    r"""Command-line interface for filtering PDB file lines"""
-    parser = argparse.ArgumentParser(description="Filter PDB lines")
-    parser.add_argument(
-        "pdb_path",
-        type=str,
-        nargs="?",
-        help="Path to PDB file",
-    )
-    parser.add_argument(
-        "--output",
-        type=str,
-        nargs="?",
-        help="Path to new PDB file",
-    )
-    parser.add_argument(
-        "--records",
-        type=str,
-        nargs="*",
-        help="Records to keep in the PDB file.",
-    )
-    args = parser.parse_args()
-    run_filter_pdb(args.pdb_path, args.output, args.records)
-
-
 def run_merge_pdbs(*pdb_paths: str, output_path: str | None = None) -> mda.Universe:
     r"""Merge PDB files. No atoms are removed, only added.
 
@@ -203,27 +178,6 @@ def run_merge_pdbs(*pdb_paths: str, output_path: str | None = None) -> mda.Unive
         logger.info("Writing merged PDB at {}", output_path)
         u.atoms.write(output_path)
     return u.atoms
-
-
-def cli_merge_pdbs() -> None:
-    r"""Command-line interface for merging PDB files"""
-    parser = argparse.ArgumentParser(description="Merge PDB files")
-    parser.add_argument(
-        "pdb_paths",
-        type=str,
-        nargs="+",
-        help="PDB files to merge",
-    )
-    parser.add_argument(
-        "--output",
-        type=str,
-        nargs="?",
-        help="Path to new PDB file",
-    )
-    args = parser.parse_args()
-    if args.output is None:
-        raise RuntimeError("--output must be specified")
-    run_merge_pdbs(*args.pdb_paths, output_path=args.output)
 
 
 def run_write_pdb(

@@ -1,12 +1,11 @@
 from typing import Any
 
-import argparse
 import os
 from collections.abc import Callable, Iterable
 
 from loguru import logger
 
-from simlify.utils import (
+from simlify.structure.pdb.utils import (
     parse_atomname,
     parse_resid,
     parse_resname,
@@ -137,56 +136,6 @@ def run_replace_resnames(
     return pdb_lines
 
 
-def cli_replace_resnames() -> None:
-    r"""Command-line interface for renaming residues."""
-    parser = argparse.ArgumentParser(description="Rename residues")
-    parser.add_argument(
-        "pdb_path",
-        type=str,
-        nargs="?",
-        help="Path to PDB file",
-    )
-    parser.add_argument(
-        "current_resname",
-        type=str,
-        nargs="?",
-        help="Current residue name to replace",
-    )
-    parser.add_argument(
-        "new_resname",
-        type=str,
-        nargs="?",
-        help="New residue name",
-    )
-    parser.add_argument(
-        "--output",
-        type=str,
-        nargs="?",
-        help="Path to new PDB file",
-    )
-    parser.add_argument(
-        "--include",
-        type=str,
-        nargs="*",
-        help="Only include these residue indices.",
-    )
-    parser.add_argument(
-        "--exclude",
-        type=str,
-        nargs="*",
-        help="Include all residues except ones with these indices.",
-    )
-    args = parser.parse_args()
-    resname_map = {args.current_resname: args.new_resname}
-    if (args.include is not None) or (args.exclude is not None):
-        fn_filter = parse_resid
-    else:
-        fn_filter = None
-    run_replace_resnames(
-        args.pdb_path, resname_map, args.output, fn_filter, args.include, args.exclude
-    )
-
-
 def run_unify_water_labels(
     pdb_path: str,
     atom_map: dict[str, str] | None = None,
@@ -265,22 +214,3 @@ def run_unify_water_labels(
             f.writelines(pdb_lines)
 
     return pdb_lines
-
-
-def cli_unify_water_labels() -> None:
-    r"""Command-line interface for unifying water residue and atom names."""
-    parser = argparse.ArgumentParser(description="Unify water residue and atom names")
-    parser.add_argument(
-        "pdb_path",
-        type=str,
-        nargs="?",
-        help="Path to PDB file",
-    )
-    parser.add_argument(
-        "--output",
-        type=str,
-        nargs="?",
-        help="Path to new PDB file",
-    )
-    args = parser.parse_args()
-    run_unify_water_labels(args.pdb_path, output_path=args.output)

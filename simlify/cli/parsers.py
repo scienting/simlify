@@ -3,6 +3,11 @@ import sys
 
 from simlify.cli.structure.center import add_center_subparser
 from simlify.cli.structure.extract import add_extract_subparser
+from simlify.cli.structure.min_box import add_min_box_subparser
+from simlify.cli.structure.pdb.filter import add_pdb_filter_subparser
+from simlify.cli.structure.pdb.merge import add_pdb_merge_subparser
+from simlify.cli.structure.pdb.resname import add_pdb_resname_subparser
+from simlify.cli.structure.pdb.water import add_pdb_water_subparser
 
 
 def create_parser() -> argparse.ArgumentParser:
@@ -25,6 +30,18 @@ def create_parser() -> argparse.ArgumentParser:
     )
     add_extract_subparser(structure_subparsers)
     add_center_subparser(structure_subparsers)
+    add_min_box_subparser(structure_subparsers)
+
+    # PDB subcommand and its nested commands
+    pdb_parser = subparsers.add_parser("pdb", help="Commands for PDB file operations")
+    parser._pdb_parser = pdb_parser  # type: ignore
+    pdb_subparsers = pdb_parser.add_subparsers(
+        dest="structure_command", help="PDB commands"
+    )
+    add_pdb_filter_subparser(pdb_subparsers)
+    add_pdb_merge_subparser(pdb_subparsers)
+    add_pdb_resname_subparser(pdb_subparsers)
+    add_pdb_water_subparser(pdb_subparsers)
 
     return parser
 
