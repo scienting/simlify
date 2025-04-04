@@ -1,6 +1,8 @@
 import argparse
 import sys
 
+from simlify.cli.prep.slurm import add_slurm_subparser
+from simlify.cli.prep.topo import add_topo_subparser
 from simlify.cli.structure.center import add_center_subparser
 from simlify.cli.structure.extract import add_extract_subparser
 from simlify.cli.structure.min_box import add_min_box_subparser
@@ -42,6 +44,17 @@ def create_parser() -> argparse.ArgumentParser:
     add_pdb_merge_subparser(pdb_subparsers)
     add_pdb_resname_subparser(pdb_subparsers)
     add_pdb_water_subparser(pdb_subparsers)
+
+    # Prep subcommand and its nested commands
+    prep_parser = subparsers.add_parser(
+        "prep", help="Commands for preparing simulations"
+    )
+    parser._prep_parser = prep_parser  # type: ignore
+    prep_subparsers = prep_parser.add_subparsers(
+        dest="prep_command", help="PDB commands"
+    )
+    add_slurm_subparser(prep_subparsers)
+    add_topo_subparser(prep_subparsers)
 
     return parser
 

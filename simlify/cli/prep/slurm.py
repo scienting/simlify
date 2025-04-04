@@ -2,7 +2,7 @@ from simlify import SimlifyConfig
 from simlify.simulation.slurm import run_slurm_prep
 
 
-def add_extract_subparser(subparsers):
+def add_slurm_subparser(subparsers):
     parser = subparsers.add_parser("slurm", description="Render and write slurm files.")
     parser.add_argument(
         "dir_write",

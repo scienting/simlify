@@ -262,7 +262,7 @@ class AmberTopoGen(TopoGen):
         return tleap_info
 
     @classmethod
-    def run(  # pylint: disable=too-many-arguments
+    def run(
         cls,
         path_structure: str,
         simlify_config: SimlifyConfig,
