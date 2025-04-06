@@ -1,5 +1,5 @@
 """
-Structure module command-line interface.
+Command-line interface for extracting atoms or frames from molecular structure files.
 """
 
 from simlify.structure import extract_atoms
@@ -7,19 +7,53 @@ from simlify.structure import extract_atoms
 
 def add_extract_subparser(subparsers):
     r"""
-    Add the `extract` subcommand to the CLI for extracting atoms or frames
+    Adds the `extract` subcommand to the Simlify CLI for extracting atoms or frames
     from molecular structure files.
 
-    This subcommand wraps the `extract_atoms` function and provides arguments
-    for specifying topology files, coordinate files, atom selections, frames,
-    and output options.
+    This function configures an `argparse` subparser named 'extract' which allows
+    users to specify the topology and coordinate files, define atom selections using
+    MDAnalysis selection syntax, specify trajectory frames to extract, and set the
+    output file path and overwrite options.
 
     Args:
-        subparsers: The `argparse` subparsers object to which the `extract`
-            subcommand will be added.
+        subparsers: An `argparse._SubParsersAction` object where the `extract`
+            subcommand will be added. This is typically obtained by calling
+            `add_subparsers()` on an `ArgumentParser` object.
 
     Returns:
-        The configured `argparse` parser object for the `extract` subcommand.
+        argparse.ArgumentParser: The configured `argparse` parser object for the
+        `extract` subcommand.
+
+    The `extract` subcommand accepts the following arguments:
+
+    positional arguments:
+        topo        Path to the topology file (e.g., PDB, PRMTOP). This argument
+                    is optional, but at least one of `topo` or `--coords` must be
+                    provided.
+        output      Path to the coordinate file where the extracted atoms or
+                    frames will be saved (e.g., output.pdb, output.nc).
+
+    optional arguments:
+        --select    One or more strings specifying the atom selection using the
+                    MDAnalysis selection language. Multiple strings will be joined
+                    by spaces. This option allows you to select specific atoms
+                    based on various criteria (e.g., "protein", "resid 1-10",
+                    "name CA").
+        --frames    One or more integers specifying the indices of the trajectory
+                    frames to extract. If this option is not provided, all frames
+                    will be processed.
+        --coords    One or more paths to coordinate files (e.g., trajectory files
+                    like TRR, DCD, XTC, NetCDF). If multiple coordinate files are
+                    provided, they will be concatenated and treated as a single
+                    trajectory. At least one coordinate file must be provided if
+                    no topology file is given.
+        --overwrite If this flag is present, the output coordinate file will be
+                    overwritten if it already exists. By default, the program will
+                    prevent overwriting existing files.
+
+    The function sets the default action for this subparser to be the
+    `cli_extract_atoms` function, which will be called when the user invokes
+    the 'extract' subcommand.
     """
     parser = subparsers.add_parser(
         "extract", description="Extract atoms or frames from molecular structures"
@@ -63,23 +97,53 @@ def add_extract_subparser(subparsers):
     return parser
 
 
-def cli_extract_atoms(args, parser):
+def cli_extract_atoms(args: argparse.Namespace, parser: argparse.ArgumentParser):
     r"""
-    CLI entry point for extracting atoms or frames using parsed command-line arguments.
+    Command-line interface function to extract atoms or frames from molecular structures.
 
-    This function is invoked by the `extract-atoms` subcommand and acts as a
-    bridge between the CLI interface and the `extract_atoms` function.
+    This function serves as the entry point when the user invokes the `extract`
+    subcommand of the Simlify CLI. It receives the parsed command-line arguments
+    and the argument parser object. It performs a basic validation to ensure that
+    either a topology file (`topo`) or at least one coordinate file (`coords`) is
+    provided. If neither is present, it prints the help message for the `extract`
+    subcommand and exits. Otherwise, it prepares the arguments and calls the
+    `extract_atoms` function from the `simlify.structure` module to perform the
+    actual extraction.
 
     Args:
-        args: The parsed arguments from the command-line, typically from `argparse`.
-        parser: The CLI parser object used to show help messages.
+        args: An `argparse.Namespace` object containing the parsed command-line
+            arguments for the `extract` subcommand.
+        parser: The `argparse.ArgumentParser` object for the `extract` subcommand,
+            used to display help messages if necessary.
 
-    Example:
-        From the command-line:
+    Returns:
+        None
 
+    The function retrieves the following arguments from the `args` object:
+        - `topo`: Path to the topology file.
+        - `output`: Path to the output coordinate file.
+        - `select`: A list of strings representing the MDAnalysis atom selection.
+        - `frames`: A list of integers representing the trajectory frames to extract.
+        - `coords`: A list of paths to coordinate files.
+        - `overwrite`: A boolean indicating whether to overwrite the output file.
+
+    It then processes the `select` argument by joining the list of strings into a
+    single selection string. Finally, it calls the `extract_atoms` function with
+    the extracted and processed arguments to perform the atom or frame extraction.
+
+    Example Usage:
+        To extract protein atoms from frames 0, 10, and 20 of a trajectory:
+
+        ```bash
+        simlify structure extract topology.prmtop output.pdb \
+            --select protein --frames 0 10 20 --coords trajectory.nc
         ```
-        simlify structure extract mol.prmtop protein.nc \
-            --select protein --frames 0 10 20 --coords traj1.nc traj2.nc --overwrite
+
+        To extract all atoms from a specific residue range and overwrite the output file:
+
+        ```bash
+        simlify structure extract input.pdb extracted.pdb \
+            --select 'resid 1 to 50' --overwrite
         ```
     """
     if not any([args.topo]):

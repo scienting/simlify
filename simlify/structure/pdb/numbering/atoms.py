@@ -1,14 +1,29 @@
-from simlify.utils import write_in_pdb_line
+"""Module for writing or modifying atom identifiers within PDB file lines."""
+
+from simlify.structure.pdb.utils import write_in_pdb_line
 
 
 def write_atom_id(line: str, atom_id: int) -> str:
-    r"""Unify residue ID in the PDB line based on previous ones.
+    r"""Writes a new atom ID into a specific PDB line.
+
+    This function takes a PDB line and an integer representing the new atom ID.
+    It formats the atom ID to fit within the standard atom serial number columns
+    (columns 7-11, inclusive) of a PDB file line and then uses the `write_in_pdb_line`
+    utility function to insert this new ID into the line.
 
     Args:
-        line: Line that we are modifying.
+        line: The PDB line to be modified. This should be a standard PDB
+            format line, typically starting with "ATOM" or "HETATM".
+        atom_id: The new atom ID (serial number) to be written into the PDB line.
 
     Returns:
-        PDB line with the new atom ID.
+        The modified PDB line with the new atom ID written into the appropriate columns.
+
+    Examples:
+        >>> line = "ATOM      1  N   MET A   1      10.000  20.000  30.000  1.00 20.00           N"
+        >>> new_line = write_atom_id(line, 100)
+        >>> print(new_line)
+        ATOM    100  N   MET A   1      10.000  20.000  30.000  1.00 20.00           N
     """
     line_start = 6
     line_stop = 12
