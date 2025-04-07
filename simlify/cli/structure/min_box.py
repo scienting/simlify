@@ -2,6 +2,8 @@
 Command-line interface for minimizing the simulation box size of a PDB file.
 """
 
+import argparse
+
 from simlify.structure.pdb.orientation import run_minimize_box
 
 
@@ -58,7 +60,7 @@ def add_min_box_subparser(subparsers):
     return parser
 
 
-def cli_minimize_box(args: argparse.Namespace, parser: argparse.ArgumentParser):
+def cli_minimize_box(args: argparse.Namespace, parser: argparse.ArgumentParser) -> None:
     r"""Command-line interface function to rotate a protein to minimize its box volume.
 
     This function serves as the entry point when the user executes the 'min-box'

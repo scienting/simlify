@@ -1,5 +1,7 @@
 """Defines the command-line interface for centering molecular structures."""
 
+import argparse
+
 from simlify.structure.center import run_center_structure
 
 
@@ -66,7 +68,7 @@ def add_center_subparser(subparsers):
     return parser
 
 
-def cli_center_atoms(args: argparse.Namespace, parser: argparse.ArgumentParser):
+def cli_center_atoms(args: argparse.Namespace, parser: argparse.ArgumentParser) -> None:
     """Handles the command-line invocation of the structure centering functionality.
 
     This function serves as the entry point when the user executes the 'center'

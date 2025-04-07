@@ -2,6 +2,8 @@
 Command-line interface for extracting atoms or frames from molecular structure files.
 """
 
+import argparse
+
 from simlify.structure import extract_atoms
 
 
@@ -97,7 +99,9 @@ def add_extract_subparser(subparsers):
     return parser
 
 
-def cli_extract_atoms(args: argparse.Namespace, parser: argparse.ArgumentParser):
+def cli_extract_atoms(
+    args: argparse.Namespace, parser: argparse.ArgumentParser
+) -> None:
     r"""
     Command-line interface function to extract atoms or frames from molecular structures.
 
