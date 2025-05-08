@@ -27,7 +27,7 @@ docs = ["docs"]
 
 [dependencies]
 python = "=3.12"
-numpy = ">=2.2.4,<3"
+numpy = ">=1.2.6,<3"
 scipy = ">=1.15.2,<2"
 pydantic = ">=2.10.6,<3"
 mdanalysis = ">=2.9.0,<3"
@@ -42,6 +42,8 @@ coverage = ">=7.3.1"
 pytest-html = ">=4.0.1"
 colorama = ">=0.4.6"
 ambertools = ">=24.8,<25"
+basedpyright = ">=1.29.1,<2"
+ruff = ">=0.11.8,<0.12"
 
 [feature.dev.tasks]
 mdlint = { cmd = ["markdownlint-cli2", '"docs/*.{md,markdown}"', "--fix", "--config", ".markdownlint.yaml", "||", "true"] }

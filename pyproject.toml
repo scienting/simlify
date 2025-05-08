@@ -11,7 +11,7 @@ requires-python = ">=3.11"
 # TODO: Keep this here until pixi releases building capabilities
 dependencies = [
     "loguru>=0.7.2,<0.8",
-    "numpy>=2.2.4,<3",
+    "numpy>=1.2.6,<3",
     "scipy>=1.15.2,<2",
     "pydantic>=2.10.6,<3",
     "mdanalysis>=2.9.0,<3",
