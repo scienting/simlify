@@ -68,12 +68,20 @@ class AmberTopoGen(TopoGen):
                 context and force field settings.
 
         Returns:
-            Iterable[str]: A list of strings, where each string is a `tleap`
+             list of strings, where each string is a `tleap`
             command to load a specific force field.
 
         Examples:
             >>> from simlify import SimlifyConfig
-            >>> config = SimlifyConfig(engine={'ff': {'protein': 'ff14SB', 'water': 'tip3p', 'small_molecule': 'gaff2'}})
+            >>> config = SimlifyConfig(
+            ...     engine={
+            ...         "ff": {
+            ...             "protein": "ff14SB",
+            ...             "water": "tip3p",
+            ...             "small_molecule": "gaff2",
+            ...         }
+            ...     }
+            ... )
             >>> list(AmberTopoGen.ff_lines(config))
             ['source leaprc.protein.ff14SB', 'source leaprc.water.tip3p', 'source leaprc.gaff2']
         """
@@ -175,6 +183,7 @@ class AmberTopoGen(TopoGen):
             if "Total unperturbed charge:" in line:
                 tleap_info["charge_net"] = float(line.strip().split()[-1])
 
+        logger.debug("Parsed tleap information: {}", tleap_info)
         return tleap_info
 
     @classmethod
@@ -307,6 +316,15 @@ class AmberTopoGen(TopoGen):
 
         tleap_info = cls._parse_logs(completed_process.stdout.split("\n"))
 
+        if (
+            "charge_net"
+            not in tleap_info.keys() | "solvent_molecules_num"
+            not in tleap_info.keys()
+        ):
+            logger.error("tleap could not determine relevant system information")
+            logger.error(
+                "Please check the tleap output for more information: {}", tmp_input.name
+            )
         ion_counts = get_ion_counts(
             simlify_config=simlify_config,
             charge_net=tleap_info["charge_net"],
