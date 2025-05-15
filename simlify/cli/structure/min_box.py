@@ -8,23 +8,23 @@ from simlify.structure.pdb.orientation import run_minimize_box
 
 
 def add_min_box_subparser(subparsers):
-    r"""Adds the 'min-box' subcommand to the Simlify CLI for minimizing the box size.
+    r"""Adds the 'min_box' subcommand to the Simlify CLI for minimizing the box size.
 
-    This function configures an `argparse` subparser named 'min-box' which allows
-    users to specify a PDB file and an optional output path. The 'min-box'
+    This function configures an `argparse` subparser named 'min_box' which allows
+    users to specify a PDB file and an optional output path. The 'min_box'
     command will attempt to rotate the system within the PDB file to achieve a
     smaller bounding box volume.
 
     Args:
-        subparsers: An `argparse._SubParsersAction` object where the 'min-box'
+        subparsers: An `argparse._SubParsersAction` object where the 'min_box'
             subparser will be added. This is typically obtained by calling
             `add_subparsers()` on an `ArgumentParser` object.
 
     Returns:
         argparse.ArgumentParser: The configured `argparse` parser object for the
-        'min-box' subcommand.
+        'min_box' subcommand.
 
-    The 'min-box' subcommand accepts the following arguments:
+    The 'min_box' subcommand accepts the following arguments:
 
     positional arguments:
         pdb_path    Path to the input PDB file whose box size will be minimized.
@@ -39,10 +39,10 @@ def add_min_box_subparser(subparsers):
 
     The function sets the default action for this subparser to be the
     `cli_minimize_box` function, which will be called when the user invokes
-    the 'min-box' subcommand.
+    the 'min_box' subcommand.
     """
     parser = subparsers.add_parser(
-        "min-box", description="Minimize box size by rotating system."
+        "min_box", description="Minimize box size by rotating system."
     )
     parser.add_argument(
         "pdb_path",
@@ -63,7 +63,7 @@ def add_min_box_subparser(subparsers):
 def cli_minimize_box(args: argparse.Namespace, parser: argparse.ArgumentParser) -> None:
     r"""Command-line interface function to rotate a protein to minimize its box volume.
 
-    This function serves as the entry point when the user executes the 'min-box'
+    This function serves as the entry point when the user executes the 'min_box'
     subcommand of the Simlify CLI. It receives the parsed command-line arguments
     and the argument parser object. It extracts the paths to the input PDB file
     and the desired output PDB file and then calls the `run_minimize_box` function
@@ -72,9 +72,9 @@ def cli_minimize_box(args: argparse.Namespace, parser: argparse.ArgumentParser) 
 
     Args:
         args: An `argparse.Namespace` object containing the parsed command-line
-            arguments for the 'min-box' subcommand.
+            arguments for the 'min_box' subcommand.
         parser (argparse.ArgumentParser): The argument parser object for the
-            'min-box' subcommand, used to display help messages if necessary (though
+            'min_box' subcommand, used to display help messages if necessary (though
             not explicitly used in this function).
 
     Returns:

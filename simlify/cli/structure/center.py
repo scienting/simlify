@@ -101,9 +101,6 @@ def cli_center_atoms(args: argparse.Namespace, parser: argparse.ArgumentParser) 
         parser.print_help()
         return
 
-    select = args.select
-    if select:
-        select = " ".join(args.select)
     run_center_structure(
         path_topo=args.topo,
         path_output=args.output,
