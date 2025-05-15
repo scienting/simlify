@@ -16,10 +16,11 @@ from simlify.cli.prep.topo import add_topo_subparser
 from simlify.cli.structure.center import add_center_subparser
 from simlify.cli.structure.extract import add_extract_subparser
 from simlify.cli.structure.min_box import add_min_box_subparser
-from simlify.cli.structure.pdb.filter import add_pdb_filter_subparser
-from simlify.cli.structure.pdb.merge import add_pdb_merge_subparser
-from simlify.cli.structure.pdb.resname import add_pdb_resname_subparser
-from simlify.cli.structure.pdb.water import add_pdb_water_subparser
+from simlify.cli.pdb.filter import add_pdb_filter_subparser
+from simlify.cli.pdb.merge import add_pdb_merge_subparser
+from simlify.cli.pdb.resname import add_pdb_resname_subparser
+from simlify.cli.pdb.water import add_pdb_water_subparser
+from simlify.cli.pdb.numbering import add_pdb_unify_numbering_subparser
 
 
 def create_parser() -> argparse.ArgumentParser:
@@ -57,6 +58,7 @@ def create_parser() -> argparse.ArgumentParser:
             - `merge`: Subcommand for merging multiple PDB files.
             - `resname`: Subcommand for modifying residue names in a PDB file.
             - `water`: Subcommand for manipulating water molecules in a PDB file.
+            - `unify_numbering` : Subcommand for changing residue and atomic numbers.
         -   `prep`: Contains commands for preparing simulation files, including:
             - `slurm`: Subcommand for preparing SLURM submission scripts.
             - `topo`: Subcommand for generating topology files.
@@ -94,6 +96,7 @@ def create_parser() -> argparse.ArgumentParser:
     add_pdb_merge_subparser(pdb_subparsers)
     add_pdb_resname_subparser(pdb_subparsers)
     add_pdb_water_subparser(pdb_subparsers)
+    add_pdb_unify_numbering_subparser(pdb_subparsers)
 
     # Prep subcommand and its nested commands
     prep_parser = subparsers.add_parser(

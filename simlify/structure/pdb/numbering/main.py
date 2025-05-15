@@ -1,6 +1,4 @@
 """Standardizes residue ID numbering in PDB files."""
-
-import argparse
 import os
 from collections.abc import Iterable
 
@@ -8,7 +6,7 @@ from loguru import logger
 
 from simlify.structure.pdb.numbering.atoms import write_atom_id
 from simlify.structure.pdb.numbering.residues import unify_resid
-from simlify.structure.utils import parse_resid
+from simlify.structure.pdb.utils import parse_resid
 
 
 def run_unify_numbering(
@@ -161,55 +159,3 @@ def run_unify_numbering(
             f.writelines(pdb_lines)
 
     return pdb_lines
-
-
-def cli_unify_numbering() -> None:
-    r"""Command-line interface for unifying atom and residue numbering in PDB files.
-
-    This function provides a command-line tool to execute the `run_unify_numbering`
-    functionality. It uses `argparse` to define the necessary command-line arguments
-    for specifying the input PDB file, the output path for the modified PDB file,
-    and an option to control whether the initial residue ID should be reset to 1.
-
-    The command-line usage is as follows:
-
-    ```bash
-    python your_script_name.py input.pdb --output unified.pdb --keep_init_resid
-    ```
-
-    Where:
-
-    -   `input.pdb` is the path to the PDB file to be processed.
-    -   `--output unified.pdb` specifies the path for the output
-        PDB file (optional).
-    -   `--keep_init_resid` is an optional flag. If present, the initial residue
-        ID will not be reset to 1.
-
-    Raises:
-        SystemExit: If the command-line arguments are invalid or if help is requested.
-
-    See Also:
-        `run_unify_numbering`: The underlying function that performs the PDB numbering
-        unification.
-    """
-    parser = argparse.ArgumentParser(description="Unify residue IDs in PDB")
-    parser.add_argument(
-        "pdb_path",
-        type=str,
-        nargs="?",
-        help="Path to PDB file",
-    )
-    parser.add_argument(
-        "--output",
-        type=str,
-        nargs="?",
-        help="Path to new PDB file",
-    )
-    parser.add_argument(
-        "--keep_init_resid",
-        action="store_false",
-        help="Do not reset first residue ID to 1.",
-    )
-
-    args = parser.parse_args()
-    run_unify_numbering(args.pdb_path, args.output, args.keep_init_resid)
