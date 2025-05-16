@@ -47,7 +47,7 @@ def enable_logging(
         )
     if isinstance(file_path, str):
         config["handlers"].append(
-            {"sink": file_path, "level": level_set, "format": log_format, "False": True}
+            {"sink": file_path, "level": level_set, "format": log_format}
         )
     # https://loguru.readthedocs.io/en/stable/api/logger.html#loguru._logger.Logger.configure
     logger.configure(**config)
