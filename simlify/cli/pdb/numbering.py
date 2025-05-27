@@ -3,13 +3,15 @@ Command-line interface for unifying numbering within a Protein Data Bank (PDB) f
 """
 
 import argparse
+
 from simlify.structure.pdb.numbering.main import run_unify_numbering
+
 
 def add_pdb_unify_numbering_subparser(subparsers):
     r"""Adds the `unify_numbering` subcommand to the Simlify CLI for unifying atom
     and residue numbering in PDB files.
-    
-    This function configures an `argparse` subsparser named `unify_numbering` which 
+
+    This function configures an `argparse` subsparser named `unify_numbering` which
     allows users to specify a PDB file and option to control whether the initial
     residue ID should be reset to 1.
 
@@ -30,20 +32,20 @@ def add_pdb_unify_numbering_subparser(subparsers):
 
     optional arguments:
         --output            Path to the new PDB file where the output will be saved.
-                            If not provided, the output might overwrite the input file 
+                            If not provided, the output might overwrite the input file
                             or be handled in another way by the underlying function.
-        --reset_init_resid   reset original first residue ID; do not reset to 1. This 
-                            Not modify the numbering in the initial amino acid in the 
+        --reset_init_resid   reset original first residue ID; do not reset to 1. This
+                            Not modify the numbering in the initial amino acid in the
                             chain.
 
     The function sets the default action for this subparser to be the
     `cli_unify_numbering` function, which will be called when the user invokes
     the `unify_numbering` subcommand.
     """
-    
+
     parser = subparsers.add_parser(
         "unify_numbering", description="Unify atom and residue IDs in PDB"
-        )
+    )
     parser.add_argument(
         "pdb_path",
         type=str,
@@ -63,10 +65,12 @@ def add_pdb_unify_numbering_subparser(subparsers):
     )
     parser.set_defaults(func=lambda args: cli_unify_numbering(args, parser))
     return parser
-    
 
-def cli_unify_numbering(args: argparse.Namespace, parser: argparse.ArgumentParser) -> None:
-    r"""Command-line interface function to for unifying atom and residue numbering in 
+
+def cli_unify_numbering(
+    args: argparse.Namespace, parser: argparse.ArgumentParser
+) -> None:
+    r"""Command-line interface function to for unifying atom and residue numbering in
     PDB files.
 
     This function serves as the entry point when the user executes the `unify_numbering`
@@ -75,7 +79,7 @@ def cli_unify_numbering(args: argparse.Namespace, parser: argparse.ArgumentParse
     and the desired output PDB file and then calls the `run_unify_numbering` function
     from the `simlify.structure.pdb.numbering.main` to renumber resIDs and atom numbers.
     Args:
-        args: An `argparse.Namespace` object containing the parsed command-line arguments for 
+        args: An `argparse.Namespace` object containing the parsed command-line arguments for
             the 'unify_numbering' subcommand.
         parser (argparse.ArgumentParser): The argument parser object for the
             `unify_numbering` subcommand, used to display help messages if necessary (though

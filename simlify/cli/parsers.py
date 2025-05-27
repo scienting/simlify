@@ -11,16 +11,16 @@ and user-friendly command-line interface for Simlify.
 import argparse
 import sys
 
+from simlify.cli.pdb.filter import add_pdb_filter_subparser
+from simlify.cli.pdb.merge import add_pdb_merge_subparser
+from simlify.cli.pdb.numbering import add_pdb_unify_numbering_subparser
+from simlify.cli.pdb.resname import add_pdb_resname_subparser
+from simlify.cli.pdb.water import add_pdb_water_subparser
 from simlify.cli.prep.slurm import add_slurm_subparser
 from simlify.cli.prep.topo import add_topo_subparser
 from simlify.cli.structure.center import add_center_subparser
 from simlify.cli.structure.extract import add_extract_subparser
 from simlify.cli.structure.min_box import add_min_box_subparser
-from simlify.cli.pdb.filter import add_pdb_filter_subparser
-from simlify.cli.pdb.merge import add_pdb_merge_subparser
-from simlify.cli.pdb.resname import add_pdb_resname_subparser
-from simlify.cli.pdb.water import add_pdb_water_subparser
-from simlify.cli.pdb.numbering import add_pdb_unify_numbering_subparser
 
 
 def create_parser() -> argparse.ArgumentParser:

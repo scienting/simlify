@@ -1,4 +1,5 @@
 """Standardizes residue ID numbering in PDB files."""
+
 import os
 from collections.abc import Iterable
 

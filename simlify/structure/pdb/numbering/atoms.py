@@ -27,6 +27,8 @@ def write_atom_id(line: str, atom_id: int) -> str:
     """
     line_start = 6
     line_stop = 12
-    atom_line = str(atom_id).rjust(line_stop - line_start - 1) + " "
+    field_width = line_stop - line_start  # 6 characters total
+    # Format as right-justified in field_width, which includes the trailing space
+    atom_line = str(atom_id).rjust(field_width)
     new_line = write_in_pdb_line(line, atom_line, line_start, line_stop)
     return new_line
