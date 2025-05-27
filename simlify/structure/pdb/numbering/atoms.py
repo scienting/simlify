@@ -25,8 +25,8 @@ def write_atom_id(line: str, atom_id: int) -> str:
         >>> print(new_line)
         ATOM    100  N   MET A   1      10.000  20.000  30.000  1.00 20.00           N
     """
-    line_start = 6
-    line_stop = 12
+    line_start = 6  # zero-based index
+    line_stop = 11
     field_width = line_stop - line_start  # 6 characters total
     # Format as right-justified in field_width, which includes the trailing space
     atom_line = str(atom_id).rjust(field_width)

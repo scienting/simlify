@@ -100,22 +100,26 @@ def unify_resid(
         >>> unified_line1, assigned_id1, next_orig1 = unify_resid(line1, None, "   1")
         >>> print(unified_line1.strip())
         ATOM      1  N   MET A   1      10.000  20.000  30.000  1.00 20.00           N
-        >>> unified_line2, assigned_id2, next_orig2 = unify_resid(line2, assigned_id1, next_orig1)
+        >>> unified_line2, assigned_id2, next_orig2 = unify_resid(
+        ...     line2, assigned_id1, next_orig1
+        ... )
         >>> print(unified_line2.strip())
         ATOM      2  CA  MET A   1      11.000  21.000  31.000  1.00 20.00           C
-        >>> unified_line3, assigned_id3, next_orig3 = unify_resid(line3, assigned_id2, next_orig2)
+        >>> unified_line3, assigned_id3, next_orig3 = unify_resid(
+        ...     line3, assigned_id2, next_orig2
+        ... )
         >>> print(unified_line3.strip())
         ATOM      3  C   ALA A   2      12.000  22.000  32.000  1.00 20.00           C
     """
     assigned_resid, next_original_resid = assign_resid(
         line, current_resid, prev_original_resid
     )
-    line_start = 22
-    line_stop = 27
+    line_start = 21
+    line_stop = 26
     new_line = replace_in_pdb_line(
         line,
         next_original_resid,
-        assigned_resid.rjust(line_stop - line_start - 1) + " ",
+        assigned_resid.rjust(line_stop - line_start),
         line_start,
         line_stop,
     )

@@ -58,14 +58,15 @@ def run_unify_numbering(
 
         To unify the numbering but keep the initial residue ID of the first chain:
 
-        >>> unified_lines = run_unify_numbering("input.pdb", output_path="output.pdb", reset_initial_resid=False)
+        >>> unified_lines = run_unify_numbering(
+        ...     "input.pdb", output_path="output.pdb", reset_initial_resid=False
+        ... )
 
         To unify the numbering and only get the lines without saving to a file:
 
         >>> unified_lines = run_unify_numbering("input.pdb")
         >>> for line in unified_lines:
         ...     print(line.strip())
-        ...
     """
     logger.info("Unify residue IDs from {}", os.path.abspath(pdb_path))
     with open(pdb_path, "r", encoding="utf-8") as f:
@@ -133,9 +134,9 @@ def run_unify_numbering(
                 # When we turn on parsing, this line contains the first atom
                 # information. This is where we can reset our
                 if not reset_initial_resid:
-                    current_original_resid = str(parse_resid(line))
+                    current_original_resid = str(parse_resid(line)).strip()
                 else:
-                    current_original_resid = "   1"
+                    current_original_resid = "1"
 
             # Write atom index.
             line = write_atom_id(line, atom_id)
