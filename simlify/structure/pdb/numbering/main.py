@@ -1,27 +1,72 @@
-"""Standardizes residue ID numbering"""
+"""Standardizes residue ID numbering in PDB files."""
 
-import argparse
 import os
 from collections.abc import Iterable
 
 from loguru import logger
 
-from ..utils import parse_resid
-from .atoms import write_atom_id
-from .residues import unify_resid
+from simlify.structure.pdb.numbering.atoms import write_atom_id
+from simlify.structure.pdb.numbering.residues import unify_resid
+from simlify.structure.pdb.utils import parse_resid
 
 
 def run_unify_numbering(
     pdb_path: str, output_path: str | None = None, reset_initial_resid: bool = True
 ) -> Iterable[str]:
-    r"""Unify atom and residue numbering in the PDB lines.
+    r"""Unifies the atom and residue numbering within a PDB file, ensuring sequential
+    and consistent IDs.
+
+    This function reads a PDB file and renumbers the atom serial numbers and residue IDs
+    to be sequential, starting from 1 for the first atom and the first residue encountered.
+    It also handles chain identifiers, incrementing them upon encountering a "TER" record
+    if `reset_initial_resid` is True. Duplicate "TER" statements are removed, and "ENDMDL"
+    records trigger a reset of atom and residue numbering, as well as the chain identifier.
 
     Args:
-        pdb_path: Path to PDB file.
-        output_path: Path to save new PDB file. If `None`, then no file is written.
+        pdb_path: The path to the input PDB file.
+        output_path: The path to save the new PDB file with unified
+            numbering. If `None`, no file is written, and the modified PDB lines are returned.
+            Defaults to `None`.
+        reset_initial_resid: If `True` (default), the residue numbering will
+            start from 1 for the first residue in each chain. If `False`, the initial
+            residue ID will be based on the original numbering in the PDB file for the
+            first chain, and subsequent chains will continue sequentially.
 
     Returns:
-        PDB file lines.
+        An iterable of strings, where each string is a line from the PDB file
+            with the unified atom and residue numbering.
+
+    Raises:
+        FileNotFoundError: If the specified `pdb_path` does not exist.
+        IOError: If there is an error reading the PDB file or writing to the output file.
+
+    Notes:
+        -   The function iterates through the PDB lines, tracking the current residue
+            and chain IDs.
+        -   When a "TER" record is encountered, it signifies the end of a chain, and
+            the chain ID is incremented if `reset_initial_resid` is True.
+        -   "ENDMDL" records indicate the start of a new model, and all numbering is
+            reset.
+        -   Atom serial numbers are simply incremented sequentially.
+        -   Residue IDs are unified within each chain, potentially resetting to 1 at
+            the start of a new chain.
+
+    Examples:
+        To unify the numbering in "input.pdb" and save it to "output.pdb":
+
+        >>> unified_lines = run_unify_numbering("input.pdb", output_path="output.pdb")
+
+        To unify the numbering but keep the initial residue ID of the first chain:
+
+        >>> unified_lines = run_unify_numbering(
+        ...     "input.pdb", output_path="output.pdb", reset_initial_resid=False
+        ... )
+
+        To unify the numbering and only get the lines without saving to a file:
+
+        >>> unified_lines = run_unify_numbering("input.pdb")
+        >>> for line in unified_lines:
+        ...     print(line.strip())
     """
     logger.info("Unify residue IDs from {}", os.path.abspath(pdb_path))
     with open(pdb_path, "r", encoding="utf-8") as f:
@@ -89,9 +134,9 @@ def run_unify_numbering(
                 # When we turn on parsing, this line contains the first atom
                 # information. This is where we can reset our
                 if not reset_initial_resid:
-                    current_original_resid = str(parse_resid(line))
+                    current_original_resid = str(parse_resid(line)).strip()
                 else:
-                    current_original_resid = "   1"
+                    current_original_resid = "1"
 
             # Write atom index.
             line = write_atom_id(line, atom_id)
@@ -116,28 +161,3 @@ def run_unify_numbering(
             f.writelines(pdb_lines)
 
     return pdb_lines
-
-
-def cli_unify_numbering() -> None:
-    r"""Command-line interface for unifying atom and residue numbering in PDB files."""
-    parser = argparse.ArgumentParser(description="Unify residue IDs in PDB")
-    parser.add_argument(
-        "pdb_path",
-        type=str,
-        nargs="?",
-        help="Path to PDB file",
-    )
-    parser.add_argument(
-        "--output",
-        type=str,
-        nargs="?",
-        help="Path to new PDB file",
-    )
-    parser.add_argument(
-        "--keep_init_resid",
-        action="store_false",
-        help="Do not reset first residue ID to 1.",
-    )
-
-    args = parser.parse_args()
-    run_unify_numbering(args.pdb_path, args.output, args.keep_init_resid)

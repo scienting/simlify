@@ -1,16 +1,19 @@
 import os
+import urllib.request
 
 import pytest
-from atomea.schemas.workflow.amber import Amber22Schema
 
-from simlify import enable_logging
-from simlify.simulation.contexts import SimlifyConfig
+from simlify import SimlifyConfig, enable_logging
+from simlify.schemas.amber import Amber22Schema
+from simlify.structure.io import load_mda
 
 TEST_DIR = os.path.dirname(__file__)
+TMP_DIR = os.path.join(TEST_DIR, "tmp")
+FILE_DIR = os.path.join(TEST_DIR, "files")
 
 
 @pytest.fixture
-def test_dir():
+def dir_test():
     return os.path.abspath(TEST_DIR)
 
 
@@ -53,7 +56,7 @@ def amber_sim_standard_config():
     simlify_config = SimlifyConfig()
     simlify_config.engine = Amber22Schema()
     simlify_config.label = "01_min"
-    simlify_config.rendering.dir_work = os.path.join(TEST_DIR, "tmp")
+    simlify_config.run.dir_work = os.path.join(TEST_DIR, "tmp")
     simlify_config.engine.cli.compute_platform = "pmemd.MPI"
     simlify_config.engine.ff.protein = "ff19SB"
     simlify_config.engine.ff.water = "opc3"
@@ -91,3 +94,26 @@ def amber_sim_standard_config():
         }
     )
     return simlify_config
+
+
+def download_pdb(pdb_id, path_save=None):
+    """Download and cache PDB files."""
+    pdb_id = pdb_id.lower()
+    url = f"https://files.rcsb.org/download/{pdb_id}.pdb"
+    path_save = path_save or os.path.join(TEST_DIR, f"tmp/{pdb_id}.pdb")
+
+    if not os.path.exists(path_save):
+        try:
+            response = urllib.request.urlretrieve(url, path_save)
+            print(response)
+        except Exception as e:
+            print(f"Error downloading PDB file: {e}")
+
+
+@pytest.fixture
+def u_1haj(dir_test):
+    """Fixture to download and load the 1HAJ structure once per test module."""
+    pdb_id = "1haj"
+    path_pdb = os.path.join(dir_test, "tmp", f"{pdb_id}.pdb")
+    download_pdb(pdb_id, path_save=path_pdb)
+    return load_mda(path_pdb)

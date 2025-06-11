@@ -8,6 +8,10 @@ from ast import literal_eval
 
 from loguru import logger
 
+from .config import SimlifyConfig
+
+__all__ = ["SimlifyConfig"]
+
 __version__ = "0.0.0"
 
 logger.disable("simlify")
@@ -43,7 +47,7 @@ def enable_logging(
         )
     if isinstance(file_path, str):
         config["handlers"].append(
-            {"sink": file_path, "level": level_set, "format": log_format, "False": True}
+            {"sink": file_path, "level": level_set, "format": log_format}
         )
     # https://loguru.readthedocs.io/en/stable/api/logger.html#loguru._logger.Logger.configure
     logger.configure(**config)

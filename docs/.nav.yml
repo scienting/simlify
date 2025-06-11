@@ -1,5 +1,6 @@
 nav:
   - Home: index.md
+  - Concepts: concepts
   - Case studies: case-studies
   - API: api
 

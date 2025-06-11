@@ -2,22 +2,47 @@ import os
 
 from loguru import logger
 
-from ..contexts import SimlifyConfig
-from ..prep import SimPrep
+from simlify import SimlifyConfig
+from simlify.simulation.prep import SimPrep
 
 
 class AmberSimPrep(SimPrep):
-    r"""Prepares files for Amber simulations"""
+    r"""Prepares files for Amber molecular dynamics simulations.
+
+    This class implements the `SimPrep` abstract base class to provide a concrete
+    workflow for preparing input files, run scripts, and other necessary files
+    specifically for running molecular dynamics simulations using the Amber simulation
+    package. It handles tasks such as setting up Amber-specific file paths, generating
+    input files in the Amber format, constructing the command to execute Amber's
+    `pmemd` engine, and managing multi-stage simulations.
+    """
 
     @staticmethod
     def prepare_sim_config(
         simlify_config: SimlifyConfig,
     ) -> SimlifyConfig:
-        r"""Preprocessing and validating of context for Amber simulations.
+        r"""Preprocesses and validates the simulation configuration specifically for
+        Amber simulations.
+
+        This static method performs Amber-specific preprocessing and validation of the
+        `SimlifyConfig` object. It sets up various Amber-specific file paths based on
+        the configuration, such as the paths for the input file (`.in`), output file
+        (`.out`), restart file (`.rst`), trajectory file (`.nc`), and MD info file
+        (`.mdinfo`). It also checks for the existence of the working directory and
+        creates it if necessary. For MPI-based simulations, it calculates the total
+        number of CPU cores based on the SLURM configuration.
 
         Args:
-            simlify_config: Simlify configuration.
+            simlify_config: The Simlify configuration object containing options and
+            parameters for the Amber simulation. This object is modified in-place.
 
+        Returns:
+            The modified Simlify configuration object with Amber-specific
+                settings and paths.
+
+        Raises:
+            ValueError: If `simlify_config.label` is `None`, as it is used to construct
+                file paths.
         """
         logger.info("Preparing context for Amber simulation")
 
@@ -25,23 +50,23 @@ class AmberSimPrep(SimPrep):
         if simlify_config.label is None:
             raise ValueError("simlify_config.label cannot be None")
         simlify_config.engine.cli.mdin = os.path.join(
-            simlify_config.runtime.dir_input, simlify_config.label + ".in"
+            simlify_config.run.dir_input, simlify_config.label + ".in"
         )
         simlify_config.engine.cli.mdout = os.path.join(
-            simlify_config.runtime.dir_run, simlify_config.label + ".out"
+            simlify_config.run.dir_run, simlify_config.label + ".out"
         )
         simlify_config.engine.cli.restrt = os.path.join(
-            simlify_config.runtime.dir_run, simlify_config.label + ".rst"
+            simlify_config.run.dir_run, simlify_config.label + ".rst"
         )
         simlify_config.engine.cli.mdcrd = os.path.join(
-            simlify_config.runtime.dir_run, simlify_config.label + ".nc"
+            simlify_config.run.dir_run, simlify_config.label + ".nc"
         )
         simlify_config.engine.cli.mdinfo = os.path.join(
-            simlify_config.runtime.dir_run, simlify_config.label + ".mdinfo"
+            simlify_config.run.dir_run, simlify_config.label + ".mdinfo"
         )
 
         # Checks to see if we will be writing files to a directory later.
-        if not os.path.exists(simlify_config.rendering.dir_work):
+        if not os.path.exists(simlify_config.run.dir_work):
             os.makedirs(simlify_config.dir_work, exist_ok=True)
 
         if "mpi" in simlify_config.engine.cli.compute_platform.lower():
@@ -53,42 +78,54 @@ class AmberSimPrep(SimPrep):
 
     @classmethod
     def get_stage_run_command(cls, simlify_config: SimlifyConfig) -> list[str]:
-        r"""Prepare bash command to run a single Amber simulation using pmemd.
+        r"""Prepares the bash command to run a single Amber simulation stage using the
+        `pmemd` engine.
+
+        This class method constructs the command-line invocation of Amber's `pmemd` engine
+        based on the provided `SimlifyConfig`. It handles different computational platforms,
+        including serial and MPI execution. If the `use_scratch` option is enabled in the
+        configuration, it also adds commands to check if the simulation has already been
+        completed and to move the output files from the scratch directory to the designated
+        output directory.
 
         Args:
-            context: Specifies options and parameters.
+            simlify_config: The Simlify configuration object containing options and
+                parameters for the current Amber simulation stage, such as the
+                input file paths, output directory, and computational platform.
 
         Returns:
-            Bash commands in a list to run one stage of a simulation.
+            A list of strings, where each string represents a line in the bash
+                script that constitutes the command to run the Amber simulation stage.
+
+        Raises:
+            ValueError: If `simlify_config.label` is `None`, as it is used to construct
+                file paths.
 
         Notes:
-            [`prepare_sim_config`][simulation.amber.prep.AmberSimPrep.prepare_sim_config]
-            should be ran before this.
+            This method relies on the `simlify_config` object having been preprocessed by
+            the [`prepare_sim_config`][simulation.amber.prep.AmberSimPrep.prepare_sim_config]
+            method.
 
-        **Uses:**
+            **Uses the following attributes from `simlify_config`:**
 
-        The following attributes are possibly used here and should be specified in
-        [`simlify_config`][simulation.contexts.SimlifyConfig].
-
-        -   `label_stage`: Unique label for this simulation stage. This will be used
-            to build file paths.
-        -   `path_input`: Path to input file for this Amber simulations.
-        -   `dir_output`: Path to final output directory.
-        -   `dir_scratch`: Path to scratch directory if desired. Will run the
-            calculations here and then copy to `dir_output`.
-        -   `compute_platform`: Computational platform to run the simulation on.
-        -   `cpu_cores`: Number of cores to use for `mpi` simulations if requested.
+            - `label`: Unique label for this simulation stage.
+            - `run.use_scratch`: Boolean indicating whether to use a scratch directory.
+            - `run.dir_work`: Path to the main working directory.
+            - `run.dir_output`: Path to the final output directory.
+            - `engine.cli`: An object representing the Amber command-line interface, with
+              attributes like `compute_platform`, `mdin`, `mdout`, `restrt`, and `mdcrd`.
+            - `temp['cpu_cores']`: The number of CPU cores to use for MPI simulations.
         """
         if simlify_config.label is None:
             raise ValueError("label cannot be None")
 
         stage_commands = ["", f"echo 'Starting {simlify_config.label}'", "date"]
 
-        if simlify_config.runtime.use_scratch:
+        if simlify_config.run.use_scratch:
             # Adds commands to check if split was already ran.
             check_path = os.path.join(
-                simlify_config.runtime.dir_work,
-                simlify_config.runtime.dir_output,
+                simlify_config.run.dir_work,
+                simlify_config.run.dir_output,
                 simlify_config.label + ".rst",
             )
             stage_commands = ["    " + line for line in stage_commands]
@@ -105,16 +142,16 @@ class AmberSimPrep(SimPrep):
         logger.debug("Amber command: %s", amber_command[:-2])
         stage_commands.append(amber_command)
 
-        if simlify_config.runtime.use_scratch:
+        if simlify_config.run.use_scratch:
             # Add indentation to amber command
             stage_commands[-1] = "    " + stage_commands[-1]
 
             # Adds commands to move scratch files to dir_output.
             stage_commands.extend(
                 [
-                    f"    mv {simlify_config.engine.cli.mdout} {simlify_config.runtime.dir_output}",
-                    f"    mv {simlify_config.engine.cli.restrt} {simlify_config.runtime.dir_output}",
-                    f"    mv {simlify_config.engine.cli.mdcrd} {simlify_config.runtime.dir_output}",
+                    f"    mv {simlify_config.engine.cli.mdout} {simlify_config.run.dir_output}",
+                    f"    mv {simlify_config.engine.cli.restrt} {simlify_config.run.dir_output}",
+                    f"    mv {simlify_config.engine.cli.mdcrd} {simlify_config.run.dir_output}",
                     "fi",
                 ]
             )
@@ -123,13 +160,23 @@ class AmberSimPrep(SimPrep):
 
     @classmethod
     def get_stage_input_lines(cls, simlify_config: SimlifyConfig) -> list[str]:
-        r"""Prepare input file lines for a single stage.
+        r"""Prepares the lines for a single Amber simulation stage's input file
+        (`.in` file).
+
+        This class method renders the content of the Amber input file based on the
+        `engine.inputs` attribute of the provided `SimlifyConfig` object. The
+        `engine.inputs` is expected to be an object with a `render` method that
+        generates the input file content as a list of strings.
 
         Args:
-            context: Specifies options and parameters.
+            simlify_config (SimlifyConfig): The Simlify configuration object containing
+                the input parameters for the current Amber simulation stage, typically
+                defined within the `engine.inputs` attribute.
 
         Returns:
-            Input file lines for a single simulations. The lines do not end in `\n`.
+            list[str]: A list of strings, where each string represents a line in the
+                Amber input file (`.in` file). The lines do not include the newline
+                character (`\n`) at the end.
         """
         logger.info("Preparing input lines for stage {}", simlify_config.label)
         input_lines: list[str] = simlify_config.engine.inputs.render()
@@ -142,38 +189,57 @@ class AmberSimPrep(SimPrep):
         run_commands: list[str] | None = None,
         write: bool = True,
     ) -> tuple[list[str], list[str]]:
-        r"""Write input files for a simulation stage and builds bash commands to
-        run all splits.
+        r"""Writes the input file for a single Amber simulation stage and builds the
+        bash commands to run it.
+
+        This class method orchestrates the preparation of a single stage in the Amber
+        simulation workflow. It first retrieves the input file lines using
+        `get_stage_input_lines`. If the `write` flag is True, it writes these lines to
+        an Amber input file (`.in`) in the designated input directory. It then retrieves
+        the bash commands to run this stage using `get_stage_run_command` and appends
+        them to the cumulative list of `run_commands`. This method also handles the
+        splitting of long simulations into multiple shorter segments if specified in
+        the configuration.
 
         Args:
-            context: Specifies options and parameters.
-            run_commands: Cumulative run commands for all desired stages.
-            write: Write input file to disk.
+            simlify_config: The Simlify configuration object containing
+                options and parameters for the current Amber simulation stage.
+            run_commands: A list of bash commands accumulated from previous stages.
+                The commands for the current stage will be appended to this list.
+                Defaults to `None`, in which case a new list is initialized.
+            write: A boolean flag indicating whether to write the Amber
+                input file (`.in`) to disk. Defaults to `True`.
 
         Returns:
-            Input file lines for this stage.
+            A tuple containing two lists:
+                -   The lines of the Amber input file generated for this stage.
+                -   The updated list of bash commands, including the command(s) for this
+                    stage.
 
-            Updated `run_commands` including this stage.
+        Raises:
+            ValueError: If `simlify_config.label` is `None`, as it is used to construct
+                file paths.
 
         Notes:
-            [`prepare_sim_config`][simulation.amber.prep.AmberSimPrep.prepare_sim_config]
-            should be ran before this.
+            This method relies on the `simlify_config` object having been preprocessed by
+            the [`prepare_sim_config`][simulation.amber.prep.AmberSimPrep.prepare_sim_config]
+            method.
         """
         if run_commands is None or len(run_commands) == 0:
             run_commands = ["#!/usr/bin/env bash"]
 
         # We do not want to change source context in prepare_sim_config, so we do this
         # here.
-        if simlify_config.runtime.splits > 1:
+        if simlify_config.run.splits > 1:
             simlify_config.engine.inputs.nstlim = int(
-                simlify_config.engine.inputs.nstlim / simlify_config.runtime.splits
+                simlify_config.engine.inputs.nstlim / simlify_config.run.splits
             )
 
         label_original = simlify_config.label
         if label_original is None:
             raise ValueError("label cannot be None")
-        for i_split in range(1, simlify_config.runtime.splits + 1):
-            if simlify_config.runtime.splits > 1:
+        for i_split in range(1, simlify_config.run.splits + 1):
+            if simlify_config.run.splits > 1:
                 label_stage_suffix = f"_split_{i_split:03d}"  # Why n_splits < 1000
             else:
                 label_stage_suffix = ""
@@ -182,8 +248,8 @@ class AmberSimPrep(SimPrep):
             stage_input_lines = cls.get_stage_input_lines(simlify_config)
             if write:
                 stage_path_input = os.path.join(
-                    simlify_config.rendering.dir_work,
-                    simlify_config.rendering.dir_input,
+                    simlify_config.run.dir_work,
+                    simlify_config.run.dir_input,
                     simlify_config.label + ".in",
                 )
                 logger.info("Writing input file at {}", stage_path_input)
@@ -198,10 +264,27 @@ class AmberSimPrep(SimPrep):
 
     @classmethod
     def prepare(cls, simlify_config: SimlifyConfig) -> None:
-        """Run all steps to prepare simulations.
+        """Runs all necessary steps to prepare the Amber simulations based on the
+        provided configuration.
+
+        This class method orchestrates the complete preparation process for Amber
+        simulations. It handles both single-stage and multi-stage simulations as
+        defined in the `simlify_config`. For multi-stage simulations, it iterates
+        through the configured stages, updating the `simlify_config` with the
+        parameters for each stage. For each stage, it calls `prepare_sim_config`
+        to preprocess the configuration and then `prepare_stage` to generate the
+        input files and run commands. Finally, if the `write` flag in the
+        configuration is True, it writes the accumulated bash commands to the run
+        script file specified in the configuration.
 
         Args:
-            simlify_config: Simlify configuration.
+            simlify_config: The Simlify configuration object containing
+                all the necessary options and parameters for the Amber simulation workflow,
+                including settings for single or multiple stages.
+
+        Notes:
+            This method assumes that the `simlify_config` object is properly initialized
+            with all the required parameters for the Amber simulation.
         """
         logger.info("Prepare simulations")
         multiple_stages: bool = bool(simlify_config.stages is not None)

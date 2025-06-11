@@ -7,14 +7,33 @@ from loguru import logger
 
 
 def get_obj_from_string(import_string: str) -> object:
-    """Retrieves an object based on an import string and object name.
+    """Retrieves an object based on an import string.
+
+    The import string should specify the full path to the desired object,
+    starting from the root module. This function dynamically imports the
+    module and retrieves the specified object (which can be a class,
+    function, or any other Python object).
 
     Args:
-        import_string: The import string, starting from the root module, containing
-            the desired object.
+        import_string: The import string, which is a dot-separated string
+            representing the module path and the object name. For example:
+            `"os.path.join"` or `"my_module.MyClass"`.
 
     Returns:
         The object identified by the import string.
+
+    Raises:
+        ImportError: If the module specified in the import string cannot be found.
+        AttributeError: If the object specified in the import string does not
+            exist within the imported module.
+
+    Examples:
+        ```python
+        import os
+
+        join_func = get_obj_from_string("os.path.join")
+        assert join_func is os.path.join
+        ```
     """
     logger.debug("Importing {}", import_string)
     module_name, obj_name = import_string.rsplit(".", 1)
@@ -24,10 +43,24 @@ def get_obj_from_string(import_string: str) -> object:
 
 
 def simple_generator(iterable: Iterable[Any]) -> Any:
-    """Simple generator.
+    """Iterates through an iterable and yields each item.
+
+    Args:
+        iterable: The iterable to yield elements from.
 
     Yields:
-        Elements of `iterable`.
+        An element from the input `iterable`.
+
+    Examples:
+        ```python
+        list(simple_generator([1, 2, 3]))
+        # Expected output: [1, 2, 3]
+        ```
+
+        ```python
+        list(simple_generator("abc"))
+        # Expected output: ['a', 'b', 'c']
+        ```
     """
     for i in iterable:
         yield i
