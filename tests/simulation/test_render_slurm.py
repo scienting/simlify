@@ -1,8 +1,8 @@
 import os
 
-from simlify.schemas.slurm import SlurmSchema
-
 from conftest import TMP_DIR
+
+from simlify.schemas.slurm import SlurmSchema
 
 
 def test_render_slurm():

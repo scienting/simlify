@@ -1,8 +1,7 @@
 from typing import Any
 
-from pydantic import BaseModel
-
 from atomea.schemas.io import YamlIO
+from pydantic import BaseModel
 
 
 class AmberSchemaBase(BaseModel, YamlIO):

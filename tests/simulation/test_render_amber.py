@@ -1,8 +1,8 @@
 import os
 
-from simlify.schemas.amber import Amber22CLI, Amber22Schema
-
 from conftest import TMP_DIR
+
+from simlify.schemas.amber import Amber22CLI, Amber22Schema
 
 
 def test_render_amber_to_yaml():

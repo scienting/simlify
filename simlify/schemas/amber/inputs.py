@@ -1,10 +1,9 @@
 from typing import Literal
 
-from loguru import logger
-from pydantic import BaseModel, Field
-
 from atomea.schemas.io import YamlIO
 from atomea.schemas.render import Render
+from loguru import logger
+from pydantic import BaseModel, Field
 
 
 class AmberInputsBase(BaseModel, YamlIO, Render):
