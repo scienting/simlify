@@ -94,7 +94,9 @@ def load_mda(
 
         try:
             universe = load_mda("topol.tpr", ["traj1.trr", "traj2.trr"])
-            print(f"Loaded trajectory with a total of {len(universe.trajectory)} frames.")
+            print(
+                f"Loaded trajectory with a total of {len(universe.trajectory)} frames."
+            )
         except FileNotFoundError as e:
             print(f"Error: {e}")
         ```
@@ -195,7 +197,13 @@ def write_mda(
         # Assume 'universe' is an MDAnalysis Universe object with a trajectory
         universe = load_mda("topol.tpr", "traj.trr")
         frames_to_write = [0, 5, 10, 20]
-        write_mda(universe, universe.atoms, "selected_frames.gro", frames=frames_to_write, overwrite=True)
+        write_mda(
+            universe,
+            universe.atoms,
+            "selected_frames.gro",
+            frames=frames_to_write,
+            overwrite=True,
+        )
         print(f"Wrote frames {frames_to_write} to selected_frames.gro")
         ```
 
@@ -209,7 +217,9 @@ def write_mda(
         universe = load_mda("system.pdb")
         protein_atoms = universe.select_atoms("protein")
         write_mda(universe, protein_atoms, "protein_only.pdb", overwrite=True)
-        print(f"Wrote coordinates of {protein_atoms.n_atoms} protein atoms to protein_only.pdb")
+        print(
+            f"Wrote coordinates of {protein_atoms.n_atoms} protein atoms to protein_only.pdb"
+        )
         ```
 
         Passing additional keyword arguments to the MDAnalysis Writer:
@@ -220,7 +230,7 @@ def write_mda(
 
         # Assume 'universe' is an MDAnalysis Universe object
         universe = load_mda("input.pdb")
-        write_mda(universe, universe.atoms, "output.pdb", overwrite=True, format='pdb')
+        write_mda(universe, universe.atoms, "output.pdb", overwrite=True, format="pdb")
         print("Wrote coordinates to output.pdb with explicit format specification.")
         ```
     """

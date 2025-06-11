@@ -138,7 +138,7 @@ def run_gen_topo(
         >>> topo_info = run_gen_topo(
         ...     path_structure="input.pdb",
         ...     import_string="simlify.simulation.amber.topo.AmberTopoGen",
-        ...     simlify_config=config
+        ...     simlify_config=config,
         ... )
         >>> print(topo_info)
         {'topology_file': '/path/to/input.prmtop', 'coordinate_file': '/path/to/input.inpcrd'}

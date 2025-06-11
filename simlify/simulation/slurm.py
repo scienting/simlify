@@ -44,7 +44,7 @@ def run_slurm_prep(
         >>> run_slurm_prep(
         ...     dir_work="my_simulation",
         ...     path_slurm_write="submit.sh",
-        ...     simlify_config=config
+        ...     simlify_config=config,
         ... )
     """
     os.makedirs(dir_work, exist_ok=True)

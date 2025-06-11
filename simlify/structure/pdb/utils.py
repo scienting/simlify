@@ -186,13 +186,17 @@ def keep_lines(
             list will be the same as in the input.
 
     Examples:
-        >>> pdb_lines = ["HEADER    TITLE                                                   04-APR-25   NONE",
-        ...              "ATOM      1  N   MET A   1      10.000  20.000  30.000  1.00 20.00           N",
-        ...              "HELIX    1   1 MET A    1  THR A   4  1                                    4",
-        ...              "HETATM  999  O   HOH     1      15.000  25.000  35.000  1.00 20.00           O",
-        ...              "TER     1     MET A   1",
-        ...              "END"]
-        >>> kept_lines = keep_lines(pdb_lines, record_types=("ATOM", "HETATM", "TER", "END"))
+        >>> pdb_lines = [
+        ...     "HEADER    TITLE                                                   04-APR-25   NONE",
+        ...     "ATOM      1  N   MET A   1      10.000  20.000  30.000  1.00 20.00           N",
+        ...     "HELIX    1   1 MET A    1  THR A   4  1                                    4",
+        ...     "HETATM  999  O   HOH     1      15.000  25.000  35.000  1.00 20.00           O",
+        ...     "TER     1     MET A   1",
+        ...     "END",
+        ... ]
+        >>> kept_lines = keep_lines(
+        ...     pdb_lines, record_types=("ATOM", "HETATM", "TER", "END")
+        ... )
         >>> for line in kept_lines:
         ...     print(line.strip())
         ATOM      1  N   MET A   1      10.000  20.000  30.000  1.00 20.00           N
@@ -240,10 +244,11 @@ def run_filter_pdb(
 
         To filter a PDB file and only get the lines without writing to a new file:
 
-        >>> filtered_lines = run_filter_pdb("input.pdb", record_types=("ATOM", "HETATM"))
+        >>> filtered_lines = run_filter_pdb(
+        ...     "input.pdb", record_types=("ATOM", "HETATM")
+        ... )
         >>> for line in filtered_lines:
         ...     print(line.strip())
-        ...
     """
     logger.info("Filtering PDB lines of {}", os.path.abspath(pdb_path))
     with open(pdb_path, "r", encoding="utf-8") as f:
@@ -299,7 +304,9 @@ def run_merge_pdbs(*pdb_paths: str, output_path: str | None = None) -> mda.Unive
         To merge two PDB files, "file1.pdb" and "file2.pdb", and save the result to
         "merged.pdb":
 
-        >>> merged_universe = run_merge_pdbs("file1.pdb", "file2.pdb", output_path="merged.pdb")
+        >>> merged_universe = run_merge_pdbs(
+        ...     "file1.pdb", "file2.pdb", output_path="merged.pdb"
+        ... )
 
         To merge multiple PDB files without saving to a new file:
 
@@ -391,7 +398,12 @@ def run_write_pdb(
 
         To write only the protein atoms with a stride of 10:
 
-        >>> run_write_pdb(["top.pdb", "traj.dcd"], "protein.pdb", selection_str="protein", stride=10)
+        >>> run_write_pdb(
+        ...     ["top.pdb", "traj.dcd"],
+        ...     "protein.pdb",
+        ...     selection_str="protein",
+        ...     stride=10,
+        ... )
 
         To write all atoms from a single PDB file to another PDB file (effectively copying it):
 
@@ -509,7 +521,11 @@ def run_align_pdb(
 
         To align only the backbone atoms (N, CA, C) of the protein:
 
-        >>> run_align_pdb("input.pdb", "aligned_backbone.pdb", selection_str="protein and backbone")
+        >>> run_align_pdb(
+        ...     "input.pdb",
+        ...     "aligned_backbone.pdb",
+        ...     selection_str="protein and backbone",
+        ... )
     """
     u = mda.Universe(pdb_path)
     ag = u.select_atoms(selection_str)

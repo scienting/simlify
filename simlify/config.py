@@ -1,13 +1,14 @@
 from typing import Any
 
 from atomea.schemas import Render, YamlIO
-from atomea.schemas.workflow import (
+from pydantic import BaseModel, Field
+
+from simlify.schemas import (
     RunConfig,
     SlurmSchema,
     SolutionConfig,
     TopologyConfig,
 )
-from pydantic import BaseModel, Field
 
 
 class SimlifyConfig(BaseModel, YamlIO, Render):
@@ -55,8 +56,8 @@ class SimlifyConfig(BaseModel, YamlIO, Render):
 
     engine: Any = None
     """
-    Atomea workflow schema for the molecular simulation engine (e.g.,
-    [`Amber22Schema`][atomea.schemas.workflow.amber.v22.Amber22Schema]).
+    Workflow schema for the molecular simulation engine (e.g.,
+    [`Amber22Schema`][simlify.schemas.amber.v22.Amber22Schema]).
     This attribute holds the specific engine configuration, allowing Simlify
     to interact with different simulation packages.
     """

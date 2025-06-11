@@ -101,7 +101,9 @@ def run_center_structure(
             path_topo="topol.gro",
             path_coords="traj.xtc",
         )
-        print(f"Center of mass of the centered universe: {centered_universe.atoms.center_of_mass()}")
+        print(
+            f"Center of mass of the centered universe: {centered_universe.atoms.center_of_mass()}"
+        )
         ```
 
         Passing additional arguments to the MDAnalysis Universe constructor:

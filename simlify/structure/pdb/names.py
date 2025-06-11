@@ -71,7 +71,10 @@ def modify_lines(
     Examples:
         To replace "CA" atom names with "CB" only in residues named "GLY":
 
-        >>> pdb_lines = ["ATOM      1  CA  GLY A   1       ...", "ATOM      2  CB  ALA A   2       ..."]
+        >>> pdb_lines = [
+        ...     "ATOM      1  CA  GLY A   1       ...",
+        ...     "ATOM      2  CB  ALA A   2       ...",
+        ... ]
         >>> def get_resname(line):
         ...     return parse_resname(line).strip()
         >>> modified = modify_lines(
@@ -79,7 +82,7 @@ def modify_lines(
         ...     replace_in_pdb_line,
         ...     ("CA ", "CB ", 13, 17),
         ...     fn_filter=get_resname,
-        ...     include=["GLY"]
+        ...     include=["GLY"],
         ... )
         >>> for line in modified:
         ...     print(line)
@@ -129,7 +132,10 @@ def replace_atom_names(
         list[str]: A list of PDB lines with the specified atom names replaced.
 
     Examples:
-        >>> pdb_lines = ["ATOM      1  CA  ALA A   1       ...", "ATOM      2  CB  ALA A   1       ..."]
+        >>> pdb_lines = [
+        ...     "ATOM      1  CA  ALA A   1       ...",
+        ...     "ATOM      2  CB  ALA A   1       ...",
+        ... ]
         >>> modified_lines = replace_atom_names(pdb_lines, "CA", "CB")
         >>> for line in modified_lines:
         ...     print(line)
@@ -181,7 +187,10 @@ def replace_residue_names(
     Examples:
         To replace all "MET" residues with "ALA":
 
-        >>> pdb_lines = ["ATOM      1  N   MET A   1       ...", "ATOM      2  CA  MET A   1       ..."]
+        >>> pdb_lines = [
+        ...     "ATOM      1  N   MET A   1       ...",
+        ...     "ATOM      2  CA  MET A   1       ...",
+        ... ]
         >>> modified_lines = replace_residue_names(pdb_lines, "MET", "ALA")
         >>> for line in modified_lines:
         ...     print(line)
@@ -190,10 +199,16 @@ def replace_residue_names(
 
         To replace "MET" with "ALA" only in residue ID "1":
 
-        >>> pdb_lines = ["ATOM      1  N   MET A   1       ...", "ATOM      2  CA  MET A   1       ...", "ATOM      3  C   MET A   2       ..."]
+        >>> pdb_lines = [
+        ...     "ATOM      1  N   MET A   1       ...",
+        ...     "ATOM      2  CA  MET A   1       ...",
+        ...     "ATOM      3  C   MET A   2       ...",
+        ... ]
         >>> def get_resid(line):
         ...     return parse_resid(line).strip()
-        >>> modified_lines = replace_residue_names(pdb_lines, "MET", "ALA", fn_filter=get_resid, include=["1"])
+        >>> modified_lines = replace_residue_names(
+        ...     pdb_lines, "MET", "ALA", fn_filter=get_resid, include=["1"]
+        ... )
         >>> for line in modified_lines:
         ...     print(line)
         ATOM      1  N   ALA A   1       ...
@@ -259,7 +274,9 @@ def run_replace_resnames(
         "input.pdb" and save the result to "output.pdb":
 
         >>> resname_mapping = {"MET": "ALA", "GLU": "ASP"}
-        >>> modified_lines = run_replace_resnames("input.pdb", resname_mapping, output_path="output.pdb")
+        >>> modified_lines = run_replace_resnames(
+        ...     "input.pdb", resname_mapping, output_path="output.pdb"
+        ... )
 
         To perform the same replacement but only for residues with ID "1":
 
@@ -267,7 +284,11 @@ def run_replace_resnames(
         ...     return parse_resid(line).strip()
         >>> resname_mapping = {"MET": "ALA", "GLU": "ASP"}
         >>> modified_lines = run_replace_resnames(
-        ...     "input.pdb", resname_mapping, output_path="filtered_output.pdb", fn_filter=get_resid, include=["1"]
+        ...     "input.pdb",
+        ...     resname_mapping,
+        ...     output_path="filtered_output.pdb",
+        ...     fn_filter=get_resid,
+        ...     include=["1"],
         ... )
     """
     logger.info("Renaming residue names {}", os.path.abspath(pdb_path))
@@ -335,14 +356,20 @@ def run_unify_water_labels(
         To unify water atom labels in "input.pdb" using the default settings and save
         to "unified_water.pdb":
 
-        >>> modified_lines = run_unify_water_labels("input.pdb", output_path="unified_water.pdb")
+        >>> modified_lines = run_unify_water_labels(
+        ...     "input.pdb", output_path="unified_water.pdb"
+        ... )
 
         To specify a different water residue name and atom name mapping:
 
         >>> atom_mapping = {"O": "OXT", "H1": "HT1", "H2": "HT2"}
         >>> original_water_names = {"O": ["SOL"], "H": ["HY"]}
         >>> modified_lines = run_unify_water_labels(
-        ...     "input.pdb", atom_map=atom_mapping, water_resname="SOL", water_atomnames=original_water_names, output_path="custom_water.pdb"
+        ...     "input.pdb",
+        ...     atom_map=atom_mapping,
+        ...     water_resname="SOL",
+        ...     water_atomnames=original_water_names,
+        ...     output_path="custom_water.pdb",
         ... )
     """
     logger.info("Renaming water atom names in {}", os.path.abspath(pdb_path))

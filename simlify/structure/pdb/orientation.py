@@ -51,7 +51,9 @@ def rotate_positions(
     Examples:
         >>> import numpy as np
         >>> positions = np.array([[1.0, 0.0, 0.0], [0.0, 1.0, 0.0]])
-        >>> rotation_angles = np.array([90.0, 0.0, 0.0])  # Rotate 90 degrees around the x-axis
+        >>> rotation_angles = np.array(
+        ...     [90.0, 0.0, 0.0]
+        ... )  # Rotate 90 degrees around the x-axis
         >>> rotated_positions = rotate_positions(positions, rotation_angles)
         >>> print(rotated_positions)
         [[ 1.00000000e+00  0.00000000e+00  0.00000000e+00]
@@ -164,7 +166,9 @@ def run_minimize_box(
     Examples:
         To load a PDB file named "input.pdb", minimize its bounding box volume, and save the result to "optimized.pdb":
 
-        >>> optimized_positions = run_minimize_box("input.pdb", output_path="optimized.pdb")
+        >>> optimized_positions = run_minimize_box(
+        ...     "input.pdb", output_path="optimized.pdb"
+        ... )
 
         To perform the minimization and get the optimized positions without saving to a file:
 

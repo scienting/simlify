@@ -30,6 +30,7 @@ def get_obj_from_string(import_string: str) -> object:
     Examples:
         ```python
         import os
+
         join_func = get_obj_from_string("os.path.join")
         assert join_func is os.path.join
         ```
