@@ -117,3 +117,122 @@ def u_1haj(dir_test):
     path_pdb = os.path.join(dir_test, "tmp", f"{pdb_id}.pdb")
     download_pdb(pdb_id, path_save=path_pdb)
     return load_mda(path_pdb)
+
+
+@pytest.fixture
+def multichain_toy_pdb(dir_test):
+    """Fixture to write a toy multichain PDB structure per test module"""
+    pdb_contents = """HEADER    TEST MULTI-CHAIN PDB
+ATOM      1  N   MET A   1      11.104  13.207  10.123  1.00 20.00           N  
+ATOM      2  CA  MET A   1      12.560  13.500  10.123  1.00 20.00           C  
+ATOM      3  C   MET A   1      13.104  12.750  11.333  1.00 20.00           C  
+ATOM      4  O   MET A   1      12.500  11.780  11.678  1.00 20.00           O  
+ATOM      5  N   GLY A   2      14.333  13.050  11.922  1.00 20.00           N  
+ATOM      6  CA  GLY A   2      14.891  12.350  13.080  1.00 20.00           C  
+ATOM      7  C   GLY A   2      14.011  12.700  14.317  1.00 20.00           C  
+ATOM      8  O   GLY A   2      13.933  13.867  14.649  1.00 20.00           O  
+TER
+ATOM      9  N   ALA B   1      15.104  12.207  15.123  1.00 20.00           N  
+ATOM     10  CA  ALA B   1      16.560  12.500  15.123  1.00 20.00           C  
+ATOM     11  C   ALA B   1      17.104  11.750  16.333  1.00 20.00           C  
+ATOM     12  O   ALA B   1      16.500  10.780  16.678  1.00 20.00           O  
+ATOM     13  N   SER B   2      18.333  12.050  16.922  1.00 20.00           N  
+ATOM     14  CA  SER B   2      18.891  11.350  18.080  1.00 20.00           C  
+ATOM     15  C   SER B   2      18.011  11.700  19.317  1.00 20.00           C  
+ATOM     16  O   SER B   2      17.933  12.867  19.649  1.00 20.00           O  
+TER
+END
+"""
+    path_pdb = os.path.join(dir_test, "tmp", "multichain_toy.pdb")
+    with open(path_pdb, "w+") as f:
+        f.write(pdb_contents)
+    return path_pdb
+
+
+@pytest.fixture
+def multichain_hetatm_toy_pdb(dir_test):
+    """Fixture to write a toy multichain PDB structure with 'HETATM' records per test module"""
+    pdb_contents = """HEADER    TEST MULTI-CHAIN PDB
+HETATM    1  N   MET A   1      11.104  13.207  10.123  1.00 20.00           N  
+HETATM    2  CA  MET A   1      12.560  13.500  10.123  1.00 20.00           C  
+ATOM      3  C   MET A   1      13.104  12.750  11.333  1.00 20.00           C  
+ATOM      4  O   MET A   1      12.500  11.780  11.678  1.00 20.00           O  
+ATOM      5  N   GLY A   2      14.333  13.050  11.922  1.00 20.00           N  
+ATOM      6  CA  GLY A   2      14.891  12.350  13.080  1.00 20.00           C  
+ATOM      7  C   GLY A   2      14.011  12.700  14.317  1.00 20.00           C  
+ATOM      8  O   GLY A   2      13.933  13.867  14.649  1.00 20.00           O  
+TER
+HETATM    9  N   ALA B   1      15.104  12.207  15.123  1.00 20.00           N  
+HETATM   10  CA  ALA B   1      16.560  12.500  15.123  1.00 20.00           C  
+ATOM     11  C   ALA B   1      17.104  11.750  16.333  1.00 20.00           C  
+ATOM     12  O   ALA B   1      16.500  10.780  16.678  1.00 20.00           O  
+ATOM     13  N   SER B   2      18.333  12.050  16.922  1.00 20.00           N  
+ATOM     14  CA  SER B   2      18.891  11.350  18.080  1.00 20.00           C  
+ATOM     15  C   SER B   2      18.011  11.700  19.317  1.00 20.00           C  
+ATOM     16  O   SER B   2      17.933  12.867  19.649  1.00 20.00           O  
+TER
+END
+"""
+    path_pdb = os.path.join(dir_test, "tmp", "multichain_hetatm_toy.pdb")
+    with open(path_pdb, "w+") as f:
+        f.write(pdb_contents)
+    return path_pdb
+
+
+@pytest.fixture
+def multichain_seq_hetatm_toy_pdb(dir_test):
+    """Fixture to write a toy multichain with sequential resid nunbering in the chains PDB structure per test module"""
+    pdb_contents = """HEADER    TEST MULTI-CHAIN PDB
+HETATM    1  N   MET A   1      11.104  13.207  10.123  1.00 20.00           N  
+HETATM    2  CA  MET A   1      12.560  13.500  10.123  1.00 20.00           C  
+ATOM      3  C   MET A   1      13.104  12.750  11.333  1.00 20.00           C  
+ATOM      4  O   MET A   1      12.500  11.780  11.678  1.00 20.00           O  
+ATOM      5  N   GLY A   2      14.333  13.050  11.922  1.00 20.00           N  
+ATOM      6  CA  GLY A   2      14.891  12.350  13.080  1.00 20.00           C  
+ATOM      7  C   GLY A   2      14.011  12.700  14.317  1.00 20.00           C  
+ATOM      8  O   GLY A   2      13.933  13.867  14.649  1.00 20.00           O  
+TER
+HETATM    9  N   ALA B   3      15.104  12.207  15.123  1.00 20.00           N  
+HETATM   10  CA  ALA B   3      16.560  12.500  15.123  1.00 20.00           C  
+ATOM     11  C   ALA B   3      17.104  11.750  16.333  1.00 20.00           C  
+ATOM     12  O   ALA B   3      16.500  10.780  16.678  1.00 20.00           O  
+ATOM     13  N   SER B   4      18.333  12.050  16.922  1.00 20.00           N  
+ATOM     14  CA  SER B   4      18.891  11.350  18.080  1.00 20.00           C  
+ATOM     15  C   SER B   4      18.011  11.700  19.317  1.00 20.00           C  
+ATOM     16  O   SER B   4      17.933  12.867  19.649  1.00 20.00           O  
+TER
+END
+"""
+    path_pdb = os.path.join(dir_test, "tmp", "multichain_seq_hetatm_toy.pdb")
+    with open(path_pdb, "w+") as f:
+        f.write(pdb_contents)
+    return path_pdb
+
+
+@pytest.fixture
+def broken_multichain_toy_pdb(dir_test):
+    """Fixture to write a toy multichain PDB structure where there is no 'TER' record and the numbering is nonsequential"""
+    pdb_contents = """HEADER    TEST MULTI-CHAIN PDB
+HETATM    1  N   MET A   1      11.104  13.207  10.123  1.00 20.00           N  
+HETATM    2  CA  MET A   1      12.560  13.500  10.123  1.00 20.00           C  
+ATOM      3  C   MET A   1      13.104  12.750  11.333  1.00 20.00           C  
+ATOM      4  O   MET A   1      12.500  11.780  11.678  1.00 20.00           O  
+ATOM      5  N   GLY A   2      14.333  13.050  11.922  1.00 20.00           N  
+ATOM      6  CA  GLY A   2      14.891  12.350  13.080  1.00 20.00           C  
+ATOM      7  C   GLY A   2      14.011  12.700  14.317  1.00 20.00           C  
+ATOM      8  O   GLY A   2      13.933  13.867  14.649  1.00 20.00           O  
+HETATM    9  N   ALA B   5      15.104  12.207  15.123  1.00 20.00           N  
+HETATM   10  CA  ALA B   5      16.560  12.500  15.123  1.00 20.00           C  
+ATOM     11  C   ALA B   5      17.104  11.750  16.333  1.00 20.00           C  
+ATOM     12  O   ALA B   5      16.500  10.780  16.678  1.00 20.00           O  
+ATOM     13  N   SER B   6      18.333  12.050  16.922  1.00 20.00           N  
+ATOM     14  CA  SER B   6      18.891  11.350  18.080  1.00 20.00           C  
+ATOM     15  C   SER B   6      18.011  11.700  19.317  1.00 20.00           C  
+ATOM     16  O   SER B   6      17.933  12.867  19.649  1.00 20.00           O  
+TER
+END
+"""
+    path_pdb = os.path.join(dir_test, "tmp", "broken_multichain_hetatm_toy.pdb")
+    with open(path_pdb, "w+") as f:
+        f.write(pdb_contents)
+    return path_pdb

@@ -85,6 +85,10 @@ def run_unify_numbering(
 
     # atom_id keeps track of the atom serial number.
     atom_id: int = 1
+
+    # keeps track of lines that need a TER record added
+    ter_list: list = []
+
     for i, line in enumerate(pdb_lines):
         logger.trace("Processing line number: {}", i)
 
@@ -102,11 +106,13 @@ def run_unify_numbering(
             parse_structure = False
             logger.trace("Set parse_structure to False")
 
-            current_resid = str(parse_resid(pdb_lines[i - 1]))
+            current_resid = str(parse_resid(pdb_lines[i + 1])).strip()
             logger.trace(f"Setting current_resid to {current_resid} (from last one)")
 
             if reset_initial_resid and current_chain is not None:
                 current_chain = chr(ord(current_chain) + 1)
+                # Reset the initial resid to one if it encounters a termination record
+                current_resid = "1"
                 logger.trace(f"Increasing current_chain to {current_chain}")
 
             pdb_lines[i] = "TER\n"
@@ -122,10 +128,21 @@ def run_unify_numbering(
             atom_id = 1
 
         if line.startswith(("ATOM", "HETATM")):
+            logger.debug(
+                "Currently on atom {} and resid {} and chain {}",
+                atom_id,
+                current_resid,
+                current_chain,
+            )
             # Handle initializing the chain information
             chain_id = line[21]
             if current_chain is None:
                 current_chain = chain_id
+            # keeps track of the chains if there is no termination record
+            elif current_chain != chain_id:
+                current_chain = chain_id
+                if pdb_lines[i - 1].strip() != "TER":
+                    ter_list.append(i)
 
             # Activate coordinate parsing on first instance of ATOM or HETATM
             if not parse_structure:
@@ -154,7 +171,9 @@ def run_unify_numbering(
 
             # Update line
             pdb_lines[i] = line
-
+    if ter_list:
+        for i in ter_list:
+            pdb_lines.insert(i, "TER\n")
     if output_path is not None:
         logger.info("Writing PDB file to {}", os.path.abspath(output_path))
         with open(output_path, "w+", encoding="utf-8") as f:
