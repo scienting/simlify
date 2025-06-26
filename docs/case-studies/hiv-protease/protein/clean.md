@@ -1,14 +1,23 @@
 # PDB cleaning
 
-## Trimming
+## Filtering lines
 
-???+ note "Prelude"
+PDB files often contain structure metadata about how the structure was prepared, processed, published, etc. in the header of the file.
+You should be familiar with what the header contains about your structure.
+Once you decide to use a structure, however, you can safely ignore these lines.
+
+??? note "Header"
 
     ```text
     --8<-- "docs/case-studies/hiv-protease/files/structures/2PC0.pdb::53"
     ```
 
+`ATOM` and `HETATM` records contain the structural information we are most interested in.
+However, there are sometimes `ANISOU` records that specify temperature factors of atoms.
+Structure quality can be inferred from these values but ultimately should be removed before further processing.
+
 ???+ note "Temperature factors"
+    Example atom records and temperature factors for atoms `1` and `2` in a proline.
 
     ```text
     --8<-- "docs/case-studies/hiv-protease/files/structures/2PC0.pdb:55:58"

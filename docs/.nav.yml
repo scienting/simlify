@@ -16,6 +16,11 @@ nav:
         - PDB cleaning: ./case-studies/hiv-protease/protein/clean.md
       - System preparation:
         - ./case-studies/hiv-protease/system/index.md
+  - CLI:
+    - ./cli/index.md
+    - PDB:
+      - ./cli/pdb/index.md
+      - "filter": ./cli/pdb/filter/index.md
   - API: api
 
 sort:

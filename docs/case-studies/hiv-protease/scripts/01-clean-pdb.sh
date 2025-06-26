@@ -21,7 +21,7 @@ OUTPUT_PATH=$SAVE_DIR/$PDB_ID-cleaned.pdb
 
 cp $INPUT_PATH $OUTPUT_PATH
 
-simlify-pdb-filter $OUTPUT_PATH --output $OUTPUT_PATH
+simlify pdb filter $OUTPUT_PATH --output $OUTPUT_PATH
 
 # Remove water molecules and other ligands.
 sed -i "/HOH/d" "$OUTPUT_PATH"
