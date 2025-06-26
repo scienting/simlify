@@ -1,5 +1,6 @@
-from atomea.schemas import Render, YamlIO
 from pydantic import BaseModel
+
+from simlify.schemas.utils import Render, YamlIO
 
 
 class SlurmSchema(BaseModel, YamlIO, Render):

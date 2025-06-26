@@ -1,7 +1,26 @@
+# More information:
+# https://lukasgeiter.github.io/mkdocs-awesome-nav/
+
 nav:
   - Home: index.md
-  - Concepts: concepts
-  - Case studies: case-studies
+  - Concepts:
+    - concepts/index.md
+  - Case studies:
+    - ./case-studies/index.md
+    - HIV protease:
+      - ./case-studies/hiv-protease/index.md
+      - Background: ./case-studies/hiv-protease/background.md
+      - Protein preparation:
+        - ./case-studies/hiv-protease/protein/index.md
+        - Structure selection: ./case-studies/hiv-protease/protein/selection.md
+        - PDB cleaning: ./case-studies/hiv-protease/protein/clean.md
+      - System preparation:
+        - ./case-studies/hiv-protease/system/index.md
+  - CLI:
+    - ./cli/index.md
+    - PDB:
+      - ./cli/pdb/index.md
+      - "filter": ./cli/pdb/filter/index.md
   - API: api
 
 sort:
@@ -10,3 +29,4 @@ sort:
   by: title
   direction: asc
 flatten_single_child_sections: true
+preserve_directory_name: false

@@ -1,6 +1,6 @@
-from atomea.schemas.io import YamlIO
 from pydantic import BaseModel, Field
 
+from simlify.schemas.utils import YamlIO
 from simlify.schemas.westpa import WestpaEnv
 from simlify.schemas.westpa.cfg.core import WestpaConfigConfig
 
