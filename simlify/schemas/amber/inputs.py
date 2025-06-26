@@ -1,9 +1,9 @@
 from typing import Literal
 
-from atomea.schemas.io import YamlIO
-from atomea.schemas.render import Render
 from loguru import logger
 from pydantic import BaseModel, Field
+
+from simlify.schemas.utils import Render, YamlIO
 
 
 class AmberInputsBase(BaseModel, YamlIO, Render):

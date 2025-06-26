@@ -1,6 +1,5 @@
 from typing import Any
 
-from atomea.schemas import Render, YamlIO
 from pydantic import BaseModel, Field
 
 from simlify.schemas import (
@@ -9,6 +8,7 @@ from simlify.schemas import (
     SolutionConfig,
     TopologyConfig,
 )
+from simlify.schemas.utils import Render, YamlIO
 
 
 class SimlifyConfig(BaseModel, YamlIO, Render):

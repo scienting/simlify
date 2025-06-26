@@ -1,5 +1,6 @@
-from atomea.schemas.io import YamlIO
 from pydantic import BaseModel
+
+from simlify.schemas.utils import YamlIO
 
 
 class SolutionConfig(BaseModel, YamlIO):

@@ -1,8 +1,9 @@
 from typing import Literal
 
-from atomea.schemas import Render, YamlIO
 from loguru import logger
 from pydantic import BaseModel
+
+from simlify.schemas.utils import Render, YamlIO
 
 AMBER_CLI_MAPPING = {
     "mdin": "i",

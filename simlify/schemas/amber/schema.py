@@ -1,7 +1,8 @@
 from typing import Any
 
-from atomea.schemas.io import YamlIO
 from pydantic import BaseModel
+
+from simlify.schemas.utils import YamlIO
 
 
 class AmberSchemaBase(BaseModel, YamlIO):

@@ -1,6 +1,6 @@
-from atomea.schemas import Render
 from pydantic import BaseModel, Field
 
+from simlify.schemas.utils import Render
 from simlify.schemas.westpa.cfg import (
     DataConfig,
     ExecutableConfig,
