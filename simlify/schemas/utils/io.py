@@ -4,6 +4,8 @@ from abc import ABC
 
 import yaml
 
+from simlify.utils import get_obj_from_string
+
 
 class YamlIO(ABC):
     """Handles YAML inputs and outputs."""
@@ -13,15 +15,38 @@ class YamlIO(ABC):
 
         Args:
             data: Key-value mapping to update attributes with.
+
+        Notes:
+            Many of our pydantic models have fields that need to specified by
+            instantiating other objects or models. In order to instantiate these
+            objects, you can use the `import` root key to specify which class to use.
+            For example, if you need to specify the
+            [`AmberTopoGen`][simulation.amber.topo.AmberTopoGen] as the
+            simlify configuration `engine`, you can add this to your YAML file.
+
+            ```yaml
+            import:
+                engine: simlify.simulation.amber.topo.AmberTopoGen
+            ```
+
+            This will call [`get_obj_from_string`][utils.get_obj_from_string] and
+            set the [`engine`][config.SimlifyConfig.engine] attribute to
+            [`AmberTopoGen`][simulation.amber.topo.AmberTopoGen].
+            We handle these imports before any other field is handled.
         """
+        # Handle the imports first
+        if "import" in data.keys():
+            import_info = data.pop("import")
+            for key, import_str in import_info.items():
+                obj = get_obj_from_string(import_str)
+                setattr(self, key, obj)
+
         for key, value in data.items():
             if key in self.model_fields:  # type: ignore # pylint: disable=no-member
                 setattr(self, key, value)
 
     def from_yaml(self, yaml_paths: str | list[str]) -> None:
         """Update the instance's attributes from one or more YAML files.
-
-        TODO: Need to fix with new Pydantic framework.
 
         Args:
             yaml_paths: A sequence of YAML file paths or a single YAML file path.
