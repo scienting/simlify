@@ -55,7 +55,7 @@ def extract_atoms(
             "Both selection and frames are None. No changes to the structure(s) will be made."
         )
 
-    u = load_mda(path_topo, path_coords, **kwargs_universe)
+    u: mda.Universe = load_mda(path_topo, path_coords, **kwargs_universe)
 
     if select:
         logger.info(f"Making selection: {select}")

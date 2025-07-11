@@ -226,7 +226,7 @@ class AmberSimPrep(SimPrep):
             method.
         """
         if run_commands is None or len(run_commands) == 0:
-            run_commands = ["#!/usr/bin/env bash"]
+            run_commands: list[str] = ["#!/usr/bin/env bash"]
 
         # We do not want to change source context in prepare_sim_config, so we do this
         # here.

@@ -5,7 +5,6 @@ from typing import Any
 from abc import ABC, abstractmethod
 
 from simlify import SimlifyConfig
-from simlify.utils import get_obj_from_string
 
 
 class TopoGen(ABC):
@@ -96,7 +95,6 @@ class TopoGen(ABC):
 
 def run_gen_topo(
     path_structure: str,
-    import_string: str,
     simlify_config: SimlifyConfig,
 ) -> dict[str, Any]:
     """Driver function to instantiate and run a topology generator.
@@ -109,11 +107,6 @@ def run_gen_topo(
     Args:
         path_structure: The file path to the molecular structure file for which
             the topology will be generated.
-        import_string: A string representing the import path to the topology
-            generator class. This string should be in the format that can be used by
-            `simlify.utils.get_obj_from_string` (e.g., `"module.submodule.ClassName"`).
-            For example, to use the Amber topology generator, the import string might be
-            `"simlify.simulation.amber.topo.AmberTopoGen"`.
         simlify_config: An instance of the Simlify configuration object.
 
     Returns:
@@ -137,20 +130,16 @@ def run_gen_topo(
         >>> config = SimlifyConfig()
         >>> topo_info = run_gen_topo(
         ...     path_structure="input.pdb",
-        ...     import_string="simlify.simulation.amber.topo.AmberTopoGen",
         ...     simlify_config=config,
         ... )
         >>> print(topo_info)
         {'topology_file': '/path/to/input.prmtop', 'coordinate_file': '/path/to/input.inpcrd'}
     """
-
-    cls_topo = get_obj_from_string(import_string)
-
-    topo_info_dry_run: dict[str, Any] = cls_topo.dry_run(  # type: ignore
+    topo_info_dry_run: dict[str, Any] = simlify_config.engine.dry_run(  # type: ignore
         path_structure,
         simlify_config,
     )
-    topo_info: dict[str, Any] = cls_topo.run(  # type: ignore
+    topo_info: dict[str, Any] = simlify_config.engine.run(  # type: ignore
         path_structure,
         simlify_config,
         **topo_info_dry_run,

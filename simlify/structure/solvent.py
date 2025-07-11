@@ -141,12 +141,12 @@ def get_ion_counts(
     water_box_volume /= 1e27  # L
     n_ions = simlify_config.solution.solvent_ionic_strength * water_box_volume  # moles
     n_ions *= 6.0221409e23  # atoms
-    extra_ions = int(round(n_ions, 0))
-    ions = {
+    extra_ions: int = int(round(n_ions, 0))
+    ions: dict[str, int] = {
         "charge_cation_num": simlify_config.solution.charge_cation_extra,
         "charge_anion_num": simlify_config.solution.charge_anion_extra,
     }
-    ions = {k: v + extra_ions for k, v in ions.items()}
+    ions: dict[str, int] = {k: v + extra_ions for k, v in ions.items()}
     if simlify_config.solution.charge_neutralize:
         if charge_net < 0:
             ions["charge_cation_num"] += abs(int(charge_net))

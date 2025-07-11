@@ -12,7 +12,7 @@ class SlurmSchema(BaseModel, YamlIO, Render):
     """
 
     def render(self, with_newlines: bool = False) -> list[str]:
-        lines = ["#!/bin/bash", ""]
+        lines: list[str] = ["#!/bin/bash", ""]
 
         for key, value in self.model_dump(exclude_none=True).items():
             # Skip keys that we have to manually handle

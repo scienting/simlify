@@ -55,7 +55,7 @@ def add_topo_subparser(subparsers):
         help="Path to a structure file.",
     )
     parser.add_argument(
-        "import_string",
+        "--import-string",
         type=str,
         nargs="?",
         help="Import string to a topology generation class.",

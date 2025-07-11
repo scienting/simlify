@@ -7,9 +7,9 @@ from simlify import SimlifyConfig, enable_logging
 from simlify.schemas.amber import Amber22Schema
 from simlify.structure.io import load_mda
 
-TEST_DIR = os.path.dirname(__file__)
-TMP_DIR = os.path.join(TEST_DIR, "tmp")
-FILE_DIR = os.path.join(TEST_DIR, "files")
+TEST_DIR: str = os.path.dirname(__file__)
+TMP_DIR: str = os.path.join(TEST_DIR, "tmp")
+FILE_DIR: str = os.path.join(TEST_DIR, "files")
 
 
 @pytest.fixture
