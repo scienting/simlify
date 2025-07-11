@@ -2,10 +2,10 @@ import os
 
 from conftest import TMP_DIR
 
-from simlify.schemas.slurm import SlurmSchema
+from simlify.configs.slurm import SlurmConfig
 
 
 def test_render_slurm():
-    slurm_schema = SlurmSchema()
+    slurm_config = SlurmConfig()
     write_path = os.path.join(TMP_DIR, "job.slurm")
-    slurm_schema.write_render(write_path)
+    slurm_config.write_render(write_path)

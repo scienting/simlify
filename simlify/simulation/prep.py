@@ -10,7 +10,7 @@ from collections.abc import Collection
 
 from loguru import logger
 
-from simlify import SimlifyConfig
+from simlify.configs import SimlifyConfig
 
 
 class SimPrep(ABC):

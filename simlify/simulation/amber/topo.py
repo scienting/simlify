@@ -17,7 +17,7 @@ from collections.abc import Iterable
 
 from loguru import logger
 
-from simlify import SimlifyConfig
+from simlify.configs import SimlifyConfig
 from simlify.simulation.topo import TopoGen
 from simlify.structure.solvent import get_ion_counts
 from simlify.utils import simple_generator
@@ -72,7 +72,7 @@ class AmberTopoGen(TopoGen):
             command to load a specific force field.
 
         Examples:
-            >>> from simlify import SimlifyConfig
+            >>> from simlify.configs import SimlifyConfig
             >>> config = SimlifyConfig(
             ...     engine={
             ...         "ff": {

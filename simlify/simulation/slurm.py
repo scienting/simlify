@@ -2,7 +2,7 @@
 
 import os
 
-from simlify import SimlifyConfig
+from simlify.configs import SimlifyConfig
 
 
 def run_slurm_prep(
@@ -40,7 +40,8 @@ def run_slurm_prep(
         write the submission script to `submit.sh`:
 
         ```python
-        from simlify import SimlifyConfig
+        from simlify.configs import SimlifyConfig
+
         config = SimlifyConfig()
         run_slurm_prep(
             dir_work="my_simulation",

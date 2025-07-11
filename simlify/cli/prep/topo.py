@@ -4,7 +4,7 @@ Command-line interface for preparing simulation topology files.
 
 import argparse
 
-from simlify import SimlifyConfig
+from simlify.configs import SimlifyConfig
 from simlify.simulation.topo import run_gen_topo
 
 

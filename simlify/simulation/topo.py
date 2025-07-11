@@ -4,7 +4,7 @@ from typing import Any
 
 from abc import ABC, abstractmethod
 
-from simlify import SimlifyConfig
+from simlify.configs import SimlifyConfig
 
 
 class TopoGen(ABC):
@@ -126,7 +126,7 @@ def run_gen_topo(
         To generate an Amber topology for the structure file "input.pdb" using the
         `AmberTopoGen` class:
 
-        >>> from simlify import SimlifyConfig
+        >>> from simlify.configs import SimlifyConfig
         >>> config = SimlifyConfig()
         >>> topo_info = run_gen_topo(
         ...     path_structure="input.pdb",

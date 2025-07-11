@@ -2,7 +2,7 @@ import os
 
 from loguru import logger
 
-from simlify import SimlifyConfig
+from simlify.configs import SimlifyConfig
 from simlify.simulation.prep import SimPrep
 
 

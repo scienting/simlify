@@ -4,7 +4,7 @@ Provides methods to interact or prepare solvents for molecular simulation.
 
 from loguru import logger
 
-from simlify import SimlifyConfig
+from simlify.configs import SimlifyConfig
 
 
 def get_ion_counts(
@@ -65,7 +65,7 @@ def get_ion_counts(
         ionic strength:
 
         ```python
-        from simlify import SimlifyConfig
+        from simlify.configs import SimlifyConfig
         from simlify.solvate.ions import get_ion_counts
 
         # Create a SimlifyConfig instance
@@ -90,7 +90,7 @@ def get_ion_counts(
         neutralization:
 
         ```python
-        from simlify import SimlifyConfig
+        from simlify.configs import SimlifyConfig
         from simlify.solvate.ions import get_ion_counts
 
         # Create a SimlifyConfig instance with charge neutralization disabled
@@ -114,7 +114,7 @@ def get_ion_counts(
         Calculating ion counts for a neutral system with a specific ionic strength:
 
         ```python
-        from simlify import SimlifyConfig
+        from simlify.configs import SimlifyConfig
         from simlify.solvate.ions import get_ion_counts
 
         # Create a SimlifyConfig instance for a neutral system

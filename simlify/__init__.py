@@ -14,10 +14,6 @@ try:
 except PackageNotFoundError:
     __version__ = "0.0.0"
 
-from .config import SimlifyConfig
-
-__all__ = ["SimlifyConfig"]
-
 logger.disable("simlify")
 
 LOG_FORMAT = (
