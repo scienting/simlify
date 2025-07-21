@@ -2,7 +2,7 @@
 
 Contributor: Scienting Studio
 
-Source Code: https://github.com/scienting
+Source Code: https://github.com/scienting/simlify
 
 ## Purpose
 

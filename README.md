@@ -48,4 +48,4 @@ pixi shell
 ## License
 
 This software is licensed under the **Prosperity Public License 3.0.0**.  
-See [LICENSE.md](./LICENSE.md) for full terms, including noncommercial use and 30-day commercial trial conditions.
+See [LICENSE.md](https://github.com/scienting/simlify/blob/main/LICENSE.md) for full terms, including noncommercial use and 30-day commercial trial conditions.

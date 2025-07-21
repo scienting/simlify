@@ -1,9 +1,16 @@
+# This file is licensed under the Prosperity Public License 3.0.0.
+# You may use, copy, and share it for noncommercial purposes.
+# Commercial use is allowed for a 30-day trial only.
+#
+# Contributor: Scienting Studio
+# Source Code: https://github.com/scienting/simlify
+#
+# See the LICENSE.md file for full license terms.
+
 import os
-from pdb import line_prefix
 
 from conftest import download_pdb
 
-from simlify.structure.extract import extract_atoms
 from simlify.structure.pdb.names import replace_residue_names
 from simlify.structure.pdb.utils import keep_lines
 
