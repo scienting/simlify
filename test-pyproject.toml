@@ -1,7 +1,0 @@
-
-
-
-
-[tool.poetry.scripts]
-simlify-pdb-filter = "simlify.structure.pdb.utils:cli_filter_pdb"
-simlify-pdb-renumber = "simlify.structure.pdb.numbering.main:cli_unify_numbering"
