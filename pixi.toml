@@ -1,7 +1,7 @@
 [project]
 name = "simlify"
 authors = [
-    "OASCI <us@oasci.org>",
+    "Scienting Studio <us@scient.ing>",
 ]
 channels = ["conda-forge"]
 description = "Simplify your molecular simulation workflow."
@@ -11,7 +11,7 @@ readme = "README.md"
 
 [pypi-dependencies]
 simlify = { path = ".", editable = true }
-atomea = { git = "https://github.com/oasci/atomea", branch = "main" }
+atomea = { git = "https://github.com/scienting/atomea", branch = "main" }
 pyyaml = ">=6.0.2, <7"
 
 [environments]

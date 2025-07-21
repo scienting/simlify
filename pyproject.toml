@@ -2,7 +2,7 @@
 name = "simlify"
 description = "Simplify your molecular simulation workflow."
 authors = [
-    {name = "OASCI", email = "us@oasci.org"}
+    {name = "Scienting Studio", email = "us@scient.ing"}
 ]
 maintainers = [
     {name = "Alex M. Maldonado", email = "alex.maldonado@pitt.edu"}
@@ -34,10 +34,10 @@ dependencies = [
 ]
 
 [project.urls]
-Documentation = "https://simlify.oasci.org"
-Repository = "https://github.com/oasci/simlify"
-Issues = "https://github.com/oasci/simlify/issues"
-Changelog = "https://github.com/oasci/simlify/blob/main/CHANGELOG.md"
+Documentation = "https://simlify.scient.ing"
+Repository = "https://github.com/scienting/simlify"
+Issues = "https://github.com/scienting/simlify/issues"
+Changelog = "https://github.com/scienting/simlify/blob/main/CHANGELOG.md"
 
 
 [project.scripts]

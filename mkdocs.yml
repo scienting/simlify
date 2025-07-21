@@ -1,11 +1,11 @@
 docs_dir: docs
 
 site_name: simlify
-site_author: oasci
+site_author: scienting
 
-repo_name: oasci/simlify
-repo_url: https://github.com/oasci/simlify
-copyright: <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> by OASCI
+repo_name: scienting/simlify
+repo_url: https://github.com/scienting/simlify
+copyright: <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> by Scienting Studio
 
 # https://squidfunk.github.io/mkdocs-material/
 theme:
@@ -64,7 +64,7 @@ plugins:
         python:
           inventories:
             - "https://docs.python.org/3/objects.inv"
-            - "https://atomea.oasci.org/objects.inv"
+            - "https://atomea.scient.ing/objects.inv"
             - "https://docs.mdanalysis.org/stable/objects.inv"
           paths: ["simlify"]
           options:
@@ -94,10 +94,6 @@ plugins:
       type: iso_datetime
       timezone: America/Detroit
       fallback_to_build_date: true
-
-hooks:
-  - hooks/launchy.py
-colab_base_url: https://colab.research.google.com/github/oasci/simlify/blob/main/study
 
 
 extra:

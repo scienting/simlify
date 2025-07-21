@@ -105,23 +105,6 @@ class AmberCLIBase(BaseModel, YamlIO, Render):
     |  Compiled date/time: Thu Apr 14 14:06:37 2022
     ```
 
-    **File paths.**
-
-    ```text
-    File Assignments:
-    |   MDIN: /bgfs/jdurrant/amm503/oasci/metalflare/study/data/001-rogfp-md/simulat
-    |  MDOUT: /bgfs/jdurrant/amm503/oasci/metalflare/study/data/001-rogfp-md/simulat
-    | INPCRD: /bgfs/jdurrant/amm503/oasci/metalflare/study/data/001-rogfp-md/simulat
-    |   PARM: /bgfs/jdurrant/amm503/oasci/metalflare/study/data/001-rogfp-md/simulat
-    | RESTRT: /bgfs/jdurrant/amm503/oasci/metalflare/study/data/001-rogfp-md/simulat
-    |   REFC: /bgfs/jdurrant/amm503/oasci/metalflare/study/data/001-rogfp-md/simulat
-    |  MDVEL: mdvel
-    |   MDEN: mden
-    |  MDCRD: /bgfs/jdurrant/amm503/oasci/metalflare/study/data/001-rogfp-md/simulat
-    | MDINFO: /bgfs/jdurrant/amm503/oasci/metalflare/study/data/001-rogfp-md/simulat
-    |LOGFILE: logfile
-    |  MDFRC: mdfrc
-    ```
 
     Then it will provide any notes and information about the chosen methods and system.
 

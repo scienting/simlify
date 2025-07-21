@@ -35,7 +35,7 @@ def cli_main():
         function, which takes the parsed arguments (specifically logging-related
         arguments) to determine the logging level and output format.
 
-    4.  **Version Information**: Logs the Simlify version and the OASCI organization
+    4.  **Version Information**: Logs the Simlify version and the Scienting Studio organization
         information to provide context about the running software.
 
     5.  **Configuration Loading (Optional)**: Checks if the user provided a path to a
@@ -71,7 +71,7 @@ def cli_main():
     print_help_if_no_subcommand(parser, args)
 
     setup_logging(args)
-    logger.info(f"Simlify v{__version__} by OASCI <us@oasci.org>")
+    logger.info(f"Simlify v{__version__} by Scienting Studio <us@scient.ing>")
 
     # Load configuration file if provided
     if args.config:
