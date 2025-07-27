@@ -13,6 +13,7 @@ exclude = [
     "dist",
     "env",
     "venv",
+    "_version.py",
 ]
 
 [format]

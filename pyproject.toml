@@ -2,14 +2,14 @@
 name = "simlify"
 description = "Simplify your molecular simulation workflow."
 authors = [
-    {name = "Scienting Studio", email = "us@scient.ing"}
+    {name = "Scientific Computing Studio", email = "us@scient.ing"}
 ]
 maintainers = [
     {name = "Alex M. Maldonado", email = "alex.maldonado@pitt.edu"}
 ]
 dynamic = ["version"]
 readme = "README.md"
-requires-python = ">=3.11"
+requires-python = ">=3.12"
 license = "Apache-2.0"
 classifiers = [
     "Development Status :: 3 - Alpha",
@@ -23,7 +23,6 @@ classifiers = [
     "Topic :: Scientific/Engineering :: Chemistry",
 ]
 
-# TODO: Keep this here until pixi releases building capabilities
 dependencies = [
     "loguru>=0.7.2,<1.0",
     "numpy>=1.2.6,<3",

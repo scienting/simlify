@@ -2,7 +2,7 @@
 # You may use, copy, and share it for noncommercial purposes.
 # Commercial use is allowed for a 30-day trial only.
 #
-# Contributor: Scienting Studio
+# Contributor: Scientific Computing Studio
 # Source Code: https://github.com/scienting/simlify
 #
 # See the LICENSE.md file for full license terms.
@@ -44,7 +44,7 @@ def cli_main():
         function, which takes the parsed arguments (specifically logging-related
         arguments) to determine the logging level and output format.
 
-    4.  **Version Information**: Logs the Simlify version and the Scienting Studio organization
+    4.  **Version Information**: Logs the Simlify version and the Scientific Computing Studio organization
         information to provide context about the running software.
 
     5.  **Configuration Loading (Optional)**: Checks if the user provided a path to a
@@ -80,7 +80,9 @@ def cli_main():
     print_help_if_no_subcommand(parser, args)
 
     setup_logging(args)
-    logger.info(f"Simlify v{__version__} by Scienting Studio <us@scient.ing>")
+    logger.info(
+        f"Simlify v{__version__} by Scientific Computing Studio <us@scient.ing>"
+    )
 
     # Load configuration file if provided
     if args.config:

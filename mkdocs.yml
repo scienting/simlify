@@ -5,7 +5,7 @@ site_author: scienting
 
 repo_name: scienting/simlify
 repo_url: https://github.com/scienting/simlify
-copyright: <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> by Scienting Studio
+copyright: <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> by Scientific Computing Studio
 
 # https://squidfunk.github.io/mkdocs-material/
 theme:
