@@ -12,24 +12,9 @@ class GninaInputsBase(BaseModel, YamlIO, Render):
     """
     The following parameters below control Gnina's flexible docking schema.    
     """
-    flex: bool | None = Field(default=None)
+    flex: str | None = Field(default=None)
     """Flag for using flexible docking.
-
-    <hr>
-
-    **`True`**
-
-    <hr>
-    
     Use gnina's flexible docking on flexible side chains, if any (PDBQT).
-
-    <hr>
-
-    **`False`**
-
-    <hr>
-
-    Do not use gnina's flexible docking procedure.
     """
 
     flexres: list[str] | None = Field(default=None)
@@ -148,30 +133,16 @@ class GninaInputsBase(BaseModel, YamlIO, Render):
 
     scoring: str | None = Field(default=None)
     """Specify alternative built-in scoring function:
-    <hr>
     `ad4_scoring`
-    <hr>
-    <hr>
     `default`
-    <hr>
-    <hr>
     `dkoes_fast`
-    <hr>
-    <hr> 
     `dkoes_scoring`
-    <hr>
-    <hr>
     `dkoes_scoring_old`
-    <hr>
-    <hr>
     `vina`
-    <hr>
-    <hr>
     `vinardo`
-    <hr>
     """
 
-    customr_scoring: str | None = Field(default=None)
+    custom_scoring: str | None = Field(default=None)
     """Custom scoring function file.
     """
 
@@ -183,10 +154,262 @@ class GninaInputsBase(BaseModel, YamlIO, Render):
     """Score provided ligand pose
     """
 
+    local_only: bool | None = Field(default=None)
+    """Local search only using autobox (you probably want to use `minimize`)
+    """
+
+    minimize: bool | None = Field(default=None)
+    """Energy minimization.       
+    """
+
+    randomize_only: bool | None = Field(default=None)
+    """Generate random poses, attempting to avoid clashes. 
+    """
+
+    num_mc_steps: int | None = Field(default=None)
+    """Fixed number of monte carlo steps to take in each chain.
+    """
+
+    max_mc_steps: int | None = Field(default=None)
+    """Cap on number of monte carlo steps to take in each chain.
+    """
+
+    num_mc_saved: int | None = Field(default=None)
+    """Number of top poses saved in each monte carlo chain.
+    """
+
+    temperature: float | None = Field(default=None)
+    """Temperature for metropolis accept criterion.
+    """
+
+    minimize_iters: float | None = Field(default=None)
+    """number iterations of steepest descent; default scales with
+    rotors and usually isn't sufficient for convergence.    
+    """
+
+    accurate_line: bool | None = Field(default=None)
+    """Use accurate line search.
+    """
+
+    simple_ascent: bool | None = Field(default=None)
+    """Use simple gradient ascent.
+    """
+
+    minimize_early_term: bool | None = Field(default=None)
+    """Stop minimization before convergence conditions are fully met.
+    """
+
+    minimize_single_full: bool | None = Field(default=None)
+    """During docking perform a single full minimization instead of
+    a truncated pre-evaluate followed by a full.
+    """
+
+    approximation: str | None = Field(default=None)
+    """Approximation to use:
+    `linear`
+    `spline`
+    `exact`
+    """
+
+    factor: float | None = Field(default=None)
+    """Approximation factor: higher results in a finer-grained approximation.
+    """
+
+    force_cap: float | None = Field(default=None)
+    """Max allowed force; lower values more gently minimize clashing structures. 
+    """
+
+    user_grid: str | None = Field(default=None)
+    """Autodock map file for user grid data based calculations.
+    """
+
+    user_grid_lambda: float | None = Field(default=None)
+    """Scales user_grid and functional scoring.        
+    """
+
+    print_terms: bool | None = Field(default=None)
+    """Print all available terms with default parameterizations.
+    """
+
+    print_atom_types: bool | None = Field(default=None)
+    """Print all available atom types.
+    """
+
     """
     The following control Gnina's Convolutional Neural Net (CNN) scoring.
     """
 
+    cnn_scoring: str | None = Field(default=None)
+    """Amount of CNN scoring:
+    `none`
+    `rescore`
+    `(default)`
+    `refinement`
+    `metrorescore`
+    `metropolis+rescore`
+    `metrorefine` 
+    `metropolis+refine`
+    `all`
+    """
+
+    cnn: str | None = Field(default=None)
+    """Built-in model to use, specify PREFIX_ensemble to evaluate an ensemble of
+    models starting with PREFIX:
+    `all_default_to_default_1_3_1`
+    `all_default_to_default_1_3_2` 
+    `all_default_to_default_1_3_3` 
+    `crossdock_default2018` 
+    `crossdock_default2018_1` 
+    `crossdock_default2018_1_3` 
+    `crossdock_default2018_1_3_1` 
+    `crossdock_default2018_1_3_2` 
+    `crossdock_default2018_1_3_3` 
+    `crossdock_default2018_1_3_4` 
+    `crossdock_default2018_2` 
+    `crossdock_default2018_3` 
+    `crossdock_default2018_4` 
+    `crossdock_default2018_KD_1` 
+    `crossdock_default2018_KD_2` 
+    `crossdock_default2018_KD_3` 
+    `crossdock_default2018_KD_4` 
+    `crossdock_default2018_KD_5 default1.0` 
+    `default2017 dense dense_1 dense_1_3` 
+    `dense_1_3_1 dense_1_3_2 dense_1_3_3` 
+    `dense_1_3_4 dense_1_3_PT_KD` 
+    `dense_1_3_PT_KD_1 dense_1_3_PT_KD_2` 
+    `dense_1_3_PT_KD_3 dense_1_3_PT_KD_4` 
+    `dense_1_3_PT_KD_def2018` 
+    `dense_1_3_PT_KD_def2018_1` 
+    `dense_1_3_PT_KD_def2018_2` 
+    `dense_1_3_PT_KD_def2018_3` 
+    `dense_1_3_PT_KD_def2018_4 dense_2 dense_3` 
+    `dense_4 fast general_default2018` 
+    `general_default2018_1` 
+    `general_default2018_2` 
+    `general_default2018_3` 
+    `general_default2018_4` 
+    `general_default2018_KD_1` 
+    `general_default2018_KD_2` 
+    `general_default2018_KD_3` 
+    `general_default2018_KD_4` 
+    `general_default2018_KD_5` 
+    `redock_default2018 redock_default2018_1` 
+    `redock_default2018_1_3` 
+    `redock_default2018_1_3_1` 
+    `redock_default2018_1_3_2` 
+    `redock_default2018_1_3_3` 
+    `redock_default2018_1_3_4` 
+    `redock_default2018_2 redock_default2018_3` 
+    `redock_default2018_4 redock_default2018_KD`
+    ``_1 redock_default2018_KD_2` 
+    `redock_default2018_KD_3` 
+    `redock_default2018_KD_4` 
+    `redock_default2018_KD_5`        
+    """
+
+    cnn_model: str | None = Field(default=None)
+    """Torch cnn model file; if not specified a default model ensemble will be used.
+    """
+
+    cnn_rotation: int | None = Field(default=None)
+    """Evaluate multiple rotations of pose (max `24`).
+    """
+
+    cnn_mix_emp_force: bool | None = Field(default=None)
+    """Merge CNN and empirical minus forces.
+    """
+
+    cnn_mix_emp_energy: bool | None = Field(default=None)
+    """Merge CNN and empirical energy.
+    """
+
+    cnn_empirical_weight: float | None = Field(default=None)
+    """Weight for scaling and merging empirical force and energy.
+    """
+
+    cnn_center_x: float | None = Field(default=None)
+    """X coordinate of the CNN center.
+    """
+
+    cnn_center_y: float | None = Field(default=None)
+    """Y coordinate of the CNN center.
+    """
+
+    cnn_center_z: float | None = Field(default=None)
+    """Z coordinate of the CNN center.
+    """
+
+    cnn_verbose: bool | None = Field(default=None)
+    """Enable verbose output for CNN debugging.
+    """
+
     """
     The following control Gnina's optional miscellaeneous parameters.
+    """
+
+    out_flex: str | None = Field(default=None)
+    """Output file for flexible receptor residues.
+    """
+
+    atom_terms: str | None = Field(default=None)
+    """Optionally write per-atom interaction term values
+    """
+
+    atom_term_data: bool | None = Field(default=None)
+    """Embedded per-atom interaction terms in output sd data.
+    """
+
+    pose_sort_order: str | None = Field(default=None)
+    """How to sort docking results:
+    `CNNscore` 
+    `default`
+    `CNNaffinity`
+    `Energy`    
+    """
+
+    full_flex_output: bool | None = Field(default=None)
+    """Output entire structure for out_flex, not just flexible residues.
+    """
+
+    cpu: int = Field(default=1)
+    """The number of CPUs to use (the default is to try to detect the
+    number of CPUs or, failing that, use 1)    
+    """
+
+    seed: int | None = Field(default=None)
+    """Explicit random seed.
+    """
+
+    exhaustiveness: int = Field(default=8)
+    """Exhaustiveness of the global search (roughly proportional to time).
+    Defaults to `8`.
+    """
+
+    num_modes: int = Field(default=9)
+    """Maximum number of binding modes to generate.
+    """
+
+    min_rmsd_filter: float = Field(default=1)
+    """RMSD value used to filter final poses to remove redundancy.        
+    """
+
+    quiet: bool | None = Field(default=None)
+    """Suppress output messages
+    """
+
+    addH: str | None = Field(default=None)
+    """Automatically add hydrogens in ligands (on by default).
+    """
+
+    stripH: str | None = Field(default=None)
+    """Remove polar hydrogens from molecule *after* performing
+    atom typing for efficiency (off by default - nonpolar are always removed)
+    """
+
+    device: int | None = Field(default=0)
+    """GPU device to use
+    """
+
+    no_gpu: bool | None = Field(default=None)
+    """Disable GPU acceleration, even if available.
     """
