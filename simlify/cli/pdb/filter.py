@@ -13,6 +13,8 @@ Command-line interface for filtering specific records within a PDB file.
 
 import argparse
 
+from loguru import logger
+
 from simlify.structure.pdb.utils import run_filter_pdb
 
 
@@ -59,6 +61,7 @@ def add_pdb_filter_subparser(subparsers):
         help="Path to PDB file",
     )
     parser.add_argument(
+        "-o",
         "--output",
         type=str,
         nargs="?",
@@ -67,8 +70,7 @@ def add_pdb_filter_subparser(subparsers):
     parser.add_argument(
         "--records",
         type=str,
-        nargs="*",
-        help="Records to keep in the PDB file.",
+        help="PDB records to keep. For example: ATOM,HETATM,MODEL",
     )
     parser.set_defaults(func=lambda args: cli_filter_pdb(args, parser))
     return parser
@@ -100,4 +102,9 @@ def cli_filter_pdb(args: argparse.Namespace, parser: argparse.ArgumentParser) ->
     It then directly calls the [`run_filter_pdb`][structure.pdb.utils.run_filter_pdb]
     function with these arguments to perform the filtering of the PDB file.
     """
-    run_filter_pdb(args.pdb_path, args.output, args.records)
+    records = args.records
+    if records is not None:
+        records = tuple(r.strip() for r in args.records.split(","))
+    pdb_filtered = run_filter_pdb(args.pdb_path, args.output, records)
+    if args.output is None:
+        print("".join(pdb_filtered))

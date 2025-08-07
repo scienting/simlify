@@ -13,7 +13,7 @@ Command-line interface for preparing SLURM submission scripts for simulations.
 
 import argparse
 
-from simlify import SimlifyConfig
+from simlify.configs import SimlifyConfig
 from simlify.simulation.slurm import run_slurm_prep
 
 

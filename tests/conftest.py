@@ -13,13 +13,14 @@ import urllib.request
 
 import pytest
 
-from simlify import SimlifyConfig, enable_logging
-from simlify.schemas.amber import Amber22Schema
+from simlify import enable_logging
+from simlify.configs import SimlifyConfig
+from simlify.configs.amber import Amber22Config
 from simlify.structure.io import load_mda
 
-TEST_DIR = os.path.dirname(__file__)
-TMP_DIR = os.path.join(TEST_DIR, "tmp")
-FILE_DIR = os.path.join(TEST_DIR, "files")
+TEST_DIR: str = os.path.dirname(__file__)
+TMP_DIR: str = os.path.join(TEST_DIR, "tmp")
+FILE_DIR: str = os.path.join(TEST_DIR, "files")
 
 
 @pytest.fixture
@@ -64,7 +65,7 @@ def path_cro_lib():
 @pytest.fixture
 def amber_sim_standard_config():
     simlify_config = SimlifyConfig()
-    simlify_config.engine = Amber22Schema()
+    simlify_config.engine = Amber22Config()
     simlify_config.label = "01_min"
     simlify_config.run.dir_work = os.path.join(TEST_DIR, "tmp")
     simlify_config.engine.cli.compute_platform = "pmemd.MPI"

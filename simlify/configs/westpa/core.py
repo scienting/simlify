@@ -1,0 +1,21 @@
+# This file is licensed under the Prosperity Public License 3.0.0.
+# You may use, copy, and share it for noncommercial purposes.
+# Commercial use is allowed for a 30-day trial only.
+#
+# Contributor: Scientific Computing Studio
+# Source Code: https://github.com/scienting/simlify
+#
+# See the LICENSE.md file for full license terms.
+
+from pydantic import BaseModel, Field
+
+from simlify.configs.utils import YamlIO
+from simlify.configs.westpa import WestpaEnv
+from simlify.configs.westpa.cfg.core import WestpaConfigConfig
+
+
+class WestpaConfig(BaseModel, YamlIO):
+    """The root configuration for `west.cfg` files."""
+
+    west: WestpaConfigConfig = Field(default_factory=WestpaConfigConfig)
+    env: WestpaEnv = Field(default_factory=WestpaEnv)

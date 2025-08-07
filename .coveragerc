@@ -1,9 +1,9 @@
 [run]
 branch = true
-source = tests
+source = "tests"
 
 [paths]
-source = metalflare
+source = "simlify"
 
 [report]
 show_missing = true

@@ -13,7 +13,7 @@ Command-line interface for preparing simulation topology files.
 
 import argparse
 
-from simlify import SimlifyConfig
+from simlify.configs import SimlifyConfig
 from simlify.simulation.topo import run_gen_topo
 
 
@@ -64,7 +64,7 @@ def add_topo_subparser(subparsers):
         help="Path to a structure file.",
     )
     parser.add_argument(
-        "import_string",
+        "--import-string",
         type=str,
         nargs="?",
         help="Import string to a topology generation class.",

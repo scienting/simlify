@@ -79,14 +79,6 @@ plugins:
             parameter_headings: false
             show_symbol_type_heading: true
             show_symbol_type_toc: true
-  - mkdocs-jupyter:
-        no_input: False
-        include_requirejs: true
-        include_source: True
-        ignore: ["*.py"]
-        remove_tag_config:
-            remove_input_tags:
-                - hide_code
   - awesome-nav
   - glightbox
   - macros
@@ -94,7 +86,6 @@ plugins:
       type: iso_datetime
       timezone: America/Detroit
       fallback_to_build_date: true
-
 
 extra:
   generator: false

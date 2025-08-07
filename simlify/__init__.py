@@ -11,24 +11,24 @@
 
 from typing import Any
 
+from importlib.metadata import version, PackageNotFoundError
 import os
 import sys
 from ast import literal_eval
 
 from loguru import logger
 
-from .config import SimlifyConfig
-
-__all__ = ["SimlifyConfig"]
-
-__version__ = "0.0.0"
+try:
+    __version__ = version("simlify")
+except PackageNotFoundError:
+    __version__ = "0.0.0"
 
 logger.disable("simlify")
 
 LOG_FORMAT = (
     "<green>{time:HH:mm:ss}</green> | "
     "<level>{level: <8}</level> | "
-    "<cyan>{name}</cyan>:<cyan>{function}</cyan>:<cyan>{line}</cyan> - <level>{message}</level>"
+    "<level>{message}</level>"
 )
 
 

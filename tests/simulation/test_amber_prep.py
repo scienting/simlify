@@ -58,9 +58,12 @@ class TestPrep:
             f"loadOff {path_cro_lib}",
         ]
 
+        amber_sim_standard_config.update(
+            {"import": {"engine": "simlify.simulation.amber.topo.AmberTopoGen"}}
+        )
+
         run_gen_topo(
             path_1jc0_prepped,
-            "simlify.simulation.amber.topo.AmberTopoGen",
             amber_sim_standard_config,
         )
 

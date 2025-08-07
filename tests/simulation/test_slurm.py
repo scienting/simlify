@@ -9,7 +9,7 @@
 
 import os
 
-from simlify import SimlifyConfig
+from simlify.configs import SimlifyConfig
 from simlify.simulation.slurm import run_slurm_prep
 
 
