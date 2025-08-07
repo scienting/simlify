@@ -1,3 +1,12 @@
+# This file is licensed under the Prosperity Public License 3.0.0.
+# You may use, copy, and share it for noncommercial purposes.
+# Commercial use is allowed for a 30-day trial only.
+#
+# Contributor: Scientific Computing Studio
+# Source Code: https://github.com/scienting/simlify
+#
+# See the LICENSE.md file for full license terms.
+
 """Simplify your molecular simulation workflow."""
 
 from typing import Any
@@ -35,7 +44,7 @@ def enable_logging(
         level: Requested log level: `10` is debug, `20` is info.
         file_path: Also write logs to files here.
     """
-    config: dict[str, Any] = {"handlers": []}
+    config: dict[str, list[dict[str, Any]]] = {"handlers": []}
     if stdout_set:
         config["handlers"].append(
             {
@@ -50,7 +59,7 @@ def enable_logging(
             {"sink": file_path, "level": level_set, "format": log_format}
         )
     # https://loguru.readthedocs.io/en/stable/api/logger.html#loguru._logger.Logger.configure
-    logger.configure(**config)
+    _ = logger.configure(**config)
 
     logger.enable("simlify")
 

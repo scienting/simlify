@@ -2,14 +2,14 @@
 name = "simlify"
 description = "Simplify your molecular simulation workflow."
 authors = [
-    {name = "OASCI", email = "us@oasci.org"}
+    {name = "Scientific Computing Studio", email = "us@scient.ing"}
 ]
 maintainers = [
     {name = "Alex M. Maldonado", email = "alex.maldonado@pitt.edu"}
 ]
 dynamic = ["version"]
 readme = "README.md"
-requires-python = ">=3.11"
+requires-python = ">=3.12"
 license = "Apache-2.0"
 classifiers = [
     "Development Status :: 3 - Alpha",
@@ -23,7 +23,6 @@ classifiers = [
     "Topic :: Scientific/Engineering :: Chemistry",
 ]
 
-# TODO: Keep this here until pixi releases building capabilities
 dependencies = [
     "loguru>=0.7.2,<1.0",
     "numpy>=1.2.6,<3",
@@ -34,10 +33,10 @@ dependencies = [
 ]
 
 [project.urls]
-Documentation = "https://simlify.oasci.org"
-Repository = "https://github.com/oasci/simlify"
-Issues = "https://github.com/oasci/simlify/issues"
-Changelog = "https://github.com/oasci/simlify/blob/main/CHANGELOG.md"
+Documentation = "https://simlify.scient.ing"
+Repository = "https://github.com/scienting/simlify"
+Issues = "https://github.com/scienting/simlify/issues"
+Changelog = "https://github.com/scienting/simlify/blob/main/CHANGELOG.md"
 
 
 [project.scripts]
