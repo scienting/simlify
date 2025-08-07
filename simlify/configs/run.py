@@ -7,7 +7,6 @@
 #
 # See the LICENSE.md file for full license terms.
 
-from atomea.schemas.io import YamlIO
 from pydantic import BaseModel
 
 from simlify.configs.utils import YamlIO

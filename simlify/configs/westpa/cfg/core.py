@@ -7,7 +7,6 @@
 #
 # See the LICENSE.md file for full license terms.
 
-from atomea.schemas import Render
 from pydantic import BaseModel, Field
 
 from simlify.configs.utils import Render
